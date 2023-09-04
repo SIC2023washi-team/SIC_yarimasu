@@ -1,5 +1,6 @@
 #include "DemoPlayer.h"
 #include "Mouse.h"
+#include "Lemur/Graphics/Camera.h"
 
 #define PlayerHitPoint 3.0f
 
@@ -10,10 +11,10 @@ void DemoPlayerPhysicsComponent::Initialize(GameObject& gameobj)
 
 void DemoPlayerPhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
 {
-	gameobj.rotation.y += elapsedTime;
+	//gameobj.rotation.y += elapsedTime;
 
-	/*float targetx = ;
-	float targetz = ;*/
+	/*float targetx = GetCursorPos();
+	float targetz = GetCursorPos();*/
 }
 
 void DemoPlayerGraphicsComponent::Initialize(GameObject& gameobj)
@@ -102,4 +103,7 @@ void DemoPlayerInputComponent::Update(GameObject& gameobj, float elapsedTime)
 
 	float lx = gamePad.GetAxisLX();
 	float ly = gamePad.GetAxisLY();
+
+	gameobj.rotation.y += lx * elapsedTime;
+	gameobj.rotation.y += ly * elapsedTime;
 }

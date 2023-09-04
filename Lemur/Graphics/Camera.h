@@ -57,10 +57,10 @@ private:
 
     // デバッグ用
     DirectX::XMFLOAT3   target = { 0,0,0 };
-    DirectX::XMFLOAT3   angle = { 0,0,0 };
+    DirectX::XMFLOAT3   angle = { DirectX::XMConvertToRadians(90),0,0 };
     float               rollSpeed = DirectX::XMConvertToRadians(180);
     float               range = 10.0f;
 
-    float               maxAngleX = DirectX::XMConvertToRadians(45);
-    float               minAngleX = DirectX::XMConvertToRadians(-45);
+    float               maxAngleX = DirectX::XMConvertToRadians(90);
+    float               minAngleX = DirectX::XMConvertToRadians(-90);
 };
