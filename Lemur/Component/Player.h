@@ -8,24 +8,24 @@
 
 
 
-class DemoPlayerInputComponent :public InputComponent
+class PlayerInputComponent :public InputComponent
 {
     void Initialize(GameObject& gameobj) override {}
     void Update(GameObject& gameobj, float elapsedTime) override;
 };
 
-class DemoPlayerPhysicsComponent :public PhysicsComponent
+class PlayerPhysicsComponent :public PhysicsComponent
 {
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj, float elapsedTime) override;
+    void Initialize(GameObject& gameobj) override {}
+    void Update(GameObject& gameobj, float elapsedTime) override {}
 };
 
-class DemoPlayerGraphicsComponent:public GraphicsComponent
+class PlayerGraphicsComponent :public GraphicsComponent
 {
     void Initialize(GameObject& gameobj) override;
     void Update(GameObject& gameobj) override;
     void Render(GameObject& gameobj, float elapsedTime) override;
 
 private:
-    std::shared_ptr<skinned_mesh> DemoPlayerModel;
+    std::shared_ptr<skinned_mesh> PlayerModel;
 };

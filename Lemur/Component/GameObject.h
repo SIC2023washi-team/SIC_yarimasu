@@ -41,9 +41,14 @@ public:
 
 public:
     DirectX::XMFLOAT3 translation{ 0, 0, 0 };
-    DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
+    DirectX::XMFLOAT3 scaling{ 3.0f, 3.0f, 3.0f };
     DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
     DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
+
+    DirectX::XMFLOAT3 player_translation{ 0, 0, 0 };
+    DirectX::XMFLOAT3 player_scaling{ 1, 1, 1 };
+    DirectX::XMFLOAT3 player_rotation{ 0, 0, 0 };
+    DirectX::XMFLOAT4 player_material_color{ 1, 1, 1, 1 };
 
 private:
     InputComponent* input;
