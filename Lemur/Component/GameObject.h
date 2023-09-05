@@ -36,7 +36,12 @@ public:
 
     void Render(float elapsedTime)
     {
-        graphics->Render(*this,elapsedTime);
+        graphics->Render(*this,elapsedTime, pixelShader);
+    }
+
+    void  ShadowRender(float elapsedTime)
+    {
+        graphics->ShadowRender(*this, elapsedTime);
     }
 
 public:
@@ -44,6 +49,8 @@ public:
     DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
     DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
     DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
+
+    ID3D11PixelShader* pixelShader = nullptr;
 
 private:
     InputComponent* input;

@@ -138,33 +138,6 @@ namespace Lemur::Graphics
 			// 画を描く場所を決める
 			immediate_context->RSSetViewports(1, &viewport);
 		}
-		// サンプラーステートオブジェクトを生成する
-		{
-			D3D11_SAMPLER_DESC sampler_desc;
-			sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;// テクスチャのサンプリング時に使用するフィルター処理方法
-			sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;// 0 から 1 の範囲外の u テクスチャ座標を解決するために使用するメソッド
-			sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;// 0 から 1 の範囲外の v テクスチャ座標を解決するために使用するメソッド
-			sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;// 0 から 1 の範囲外の w テクスチャ座標を解決するために使用するメソッド
-			sampler_desc.MipLODBias = 0;// 計算されたミップマップ レベルからのオフセット
-			sampler_desc.MaxAnisotropy = 16;// 有効な値は 1 ～ 16
-			sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;// サンプリングされたデータを既存のサンプリングされたデータと比較する関数
-			sampler_desc.BorderColor[0] = 0;// 境界線の色
-			sampler_desc.BorderColor[1] = 0;
-			sampler_desc.BorderColor[2] = 0;
-			sampler_desc.BorderColor[3] = 0;
-			sampler_desc.MinLOD = 0;// アクセスをクランプするミップマップ範囲の下端(0がいちばん詳細)
-			sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;// アクセスをクランプするミップマップ範囲の上限
-			hr = device->CreateSamplerState(&sampler_desc, sampler_states[static_cast<size_t>(SAMPLER_STATE::POINT)].GetAddressOf());
-			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-			sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-			hr = device->CreateSamplerState(&sampler_desc, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
-			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-			sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
-			hr = device->CreateSamplerState(&sampler_desc, sampler_states[static_cast<size_t>(SAMPLER_STATE::ANISOTROPIC)].GetAddressOf());
-			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-		}
 	}
 
 	void Graphics::initialize(HWND hwnd, bool fullscreen)

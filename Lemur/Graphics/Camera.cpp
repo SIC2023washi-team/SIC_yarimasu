@@ -11,7 +11,6 @@ void Camera::SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& fo
 
     // ビュー行列を逆行列化し、ワールド行列に戻す
     DirectX::XMMATRIX World = DirectX::XMMatrixInverse(nullptr, View);
-    DirectX::XMFLOAT4X4 world;
     DirectX::XMStoreFloat4x4(&world, World);
 
     // カメラ方向を取り出す
