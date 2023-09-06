@@ -1,4 +1,6 @@
 #include "DemoScene.h"
+#include "Lemur/Component/Stage.h"
+#include "Lemur/Component/GameObject.h"
 #include "../Graphics/Camera.h"
 #include "../Resource/ResourceManager.h"
 
@@ -27,7 +29,8 @@ void DemoScene::Initialize()
 			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
 	}
-
+	stage = CreateStage();
+	stage->Initialize();
 
 	player = CreatePlayer();
 	player->Initialize();
@@ -66,20 +69,30 @@ void DemoScene::Initialize()
 			"./Shader/sprite_dissolve_ps.cso",
 			sprite_pixel_shader.GetAddressOf());
 	}
+
+
 	//skinned_meshes[0] = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\plantune.fbx");
 	//skinned_meshes[0] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\plantune.fbx");
 }
 
 void DemoScene::Finalize()
 {
+	/*if (stage != nullptr)
+	{
+		delete stage;
+		stage = nullptr;
+	}*/
 }
 
 void DemoScene::Update(float elapsedTime)
 {
 	Camera& camera = Camera::Instance();
+	//Stage& stage = Stage::Instance();
 
 	camera.Update(elapsedTime);
+	stage->Update(elapsedTime);
 	player->Update(elapsedTime);
+	
 
 	ImGui::Begin("ImGUI");
 	ImGui::SliderFloat("dissolve_value", &dissolve_value, 0.0f, +1.0f);
@@ -177,7 +190,12 @@ void DemoScene::Render(float elapsedTime)
 	bit_block_transfer_sky->blit(immediate_context, skymap.GetAddressOf(), 0, 1, pixel_shaders[1].Get());
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
-	player->Render(elapsedTime);
+	//player->Render(elapsedTime);
+
+	stage->Render(elapsedTime);
+
+
+
 
 	// sprite•`‰æ
 	{

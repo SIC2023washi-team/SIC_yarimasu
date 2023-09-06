@@ -5,28 +5,30 @@
 #include "../Graphics/Graphics.h"
 #include "../Resource/ResourceManager.h"
 #include"../Input/Input.h"
+#include <Lemur/Component/Collision.h>
 
 
 
-class DemoPlayerInputComponent :public InputComponent
+class StageInputComponent :public InputComponent
 {
     void Initialize(GameObject& gameobj) override {}
     void Update(GameObject& gameobj, float elapsedTime) override;
 };
 
-class DemoPlayerPhysicsComponent :public PhysicsComponent
+class StagePhysicsComponent :public PhysicsComponent
 {
     void Initialize(GameObject& gameobj) override;
     void Update(GameObject& gameobj, float elapsedTime) override;
+    
 };
 
-class DemoPlayerGraphicsComponent:public GraphicsComponent
+class StageGraphicsComponent :public GraphicsComponent
 {
     void Initialize(GameObject& gameobj) override;
     void Update(GameObject& gameobj) override;
     void Render(GameObject& gameobj, float elapsedTime) override;
 
 private:
-    std::shared_ptr<skinned_mesh> DemoPlayerModel;
-    
+    std::shared_ptr<skinned_mesh> stage;
+
 };

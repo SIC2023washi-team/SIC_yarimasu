@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseScene.h"
+#include "Lemur/Component/Stage.h"
 #include "../Component/GameObject.h"
 #include "../Component/DemoPlayer.h"
 #include "../Graphics/shader.h"
@@ -36,6 +37,15 @@ public:
         );
     }
 
+    GameObject* CreateStage()
+    {
+        return new GameObject(
+            new StageInputComponent(),
+            new StagePhysicsComponent(),
+            new StageGraphicsComponent()
+        );
+    }
+
 private:
 
     std::unique_ptr<framebuffer> framebuffers[8];
@@ -65,6 +75,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> sprite_input_layout;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> sprite_pixel_shader;
 
+    //Map
+    GameObject* stage;
 
     //DemoPlayer
     GameObject* player;

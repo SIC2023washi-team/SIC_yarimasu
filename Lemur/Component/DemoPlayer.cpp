@@ -1,20 +1,34 @@
+#include "GameObject.h"
 #include "DemoPlayer.h"
-#include "Mouse.h"
+#include "Lemur/Input/Mouse.h"
 #include "Lemur/Graphics/Camera.h"
 
 #define PlayerHitPoint 3.0f
 
 void DemoPlayerPhysicsComponent::Initialize(GameObject& gameobj)
 {
-	float HitPoint = PlayerHitPoint;
+	gameobj.HitPoint = PlayerHitPoint;
 }
 
 void DemoPlayerPhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
 {
-	//gameobj.rotation.y += elapsedTime;
+	/////敵に接触したとき/////
+	//if (gameobj.HitPoint != 0 && /*ダメージを食らう*/)
+	//{
+	//	gameobj.HitPoint--;
+	//}
 
-	/*float targetx = GetCursorPos();
-	float targetz = GetCursorPos();*/
+	/////マウスのクリック/////
+	//if (/*左クリックしたとき*/)
+	//{
+	//	/////弾の発射/////
+	//	///方向の取得///
+	//	sqrtf(((gameobj.rotation.x - 0.0f) * (gameobj.rotation.x - 0.0f)) + ((gameobj.rotation.y - 0.0f) * (gameobj.rotation.y - 0.0f)) + ((gameobj.rotation.z - 0.0f) * (gameobj.rotation.z - 0.0f)));
+
+	//}
+
+	
+	
 }
 
 void DemoPlayerGraphicsComponent::Initialize(GameObject& gameobj)
@@ -104,6 +118,62 @@ void DemoPlayerInputComponent::Update(GameObject& gameobj, float elapsedTime)
 	float lx = gamePad.GetAxisLX();
 	float ly = gamePad.GetAxisLY();
 
-	gameobj.rotation.y += lx * elapsedTime;
-	gameobj.rotation.y += ly * elapsedTime;
+	/*gameobj.rotation.y += lx * elapsedTime;
+	gameobj.rotation.y += ly * elapsedTime;*/
+
+	
+
+	Mouse& mouse = Input::Instance().GetMouse();
+
+	gameobj.rotation.y = mouse.GetPositionX() + SCREEN_WIDTH / 2;
+	gameobj.rotation.y = mouse.GetPositionY() + SCREEN_HEIGHT / 2;
+
+	//ビューポート
+	D3D11_VIEWPORT viewport;
+	UINT numViewports = 1;
+	//dc->RSGetViewports(&numViewports, &viewport);
+
+	//変換行列
+	DirectX::XMMATRIX View = Camera::Instance().GetViewMatrix();
+	DirectX::XMMATRIX Projection = Camera::Instance().GetProjectionMatrix();
+	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
+
+
+	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	//{
+	////マウスカーソル座標
+	//DirectX::XMFLOAT3 screenPosition;
+	//screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
+	//screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
+	//screenPosition.z = 0.0f;
+	//
+	//DirectX::XMVECTOR WorldPosition0 = DirectX::XMVector3Unproject(
+	//	DirectX::XMLoadFloat3(&screenPosition),
+	//	viewport.TopLeftX, viewport.TopLeftY,
+	//	viewport.Width, viewport.Height,
+	//	viewport.MinDepth, viewport.MaxDepth,
+	//	Projection, View, World
+	//);
+	//
+	//DirectX::XMVECTOR WorldPosition1 = DirectX::XMVector3Unproject(
+	//	DirectX::XMLoadFloat3(&screenPosition),
+	//	viewport.TopLeftX, viewport.TopLeftY,
+	//	viewport.Width, viewport.Height,
+	//	viewport.MinDepth, viewport.MaxDepth,
+	//	Projection, View, World
+	//);
+	//
+	//DirectX::XMFLOAT3 worldPosition0;
+	//DirectX::XMFLOAT3 worldPosition1;
+	//DirectX::XMStoreFloat3(&worldPosition0, WorldPosition0);
+	//DirectX::XMStoreFloat3(&worldPosition1, WorldPosition1);
+	//
+	//DirectX::XMFLOAT3 start = worldPosition0;
+	//DirectX::XMFLOAT3 end = worldPosition1;
+	//HitResult hit;
+
+	//if (Stage::Instance().RayCast(start, end, hit))
+	//{
+
+	//}
 }
