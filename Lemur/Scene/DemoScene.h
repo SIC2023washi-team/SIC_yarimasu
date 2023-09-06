@@ -19,9 +19,7 @@ class DemoScene :public Lemur::Scene::BaseScene
 {
 public:
     DemoScene() {}
-    ~DemoScene() override {
-        delete player;
-    }
+    ~DemoScene() override {}
 
     // èâä˙âª
     void Initialize()override;
@@ -46,8 +44,8 @@ public:
 
 private:
     std::unique_ptr<framebuffer> framebuffers[8];
-    std::unique_ptr<fullscreen_quad> bit_block_transfer;
 
+    // Zelda_Shader
     Microsoft::WRL::ComPtr<ID3D11PixelShader> zelda_ps;
 
     // SKYMAP
@@ -57,6 +55,7 @@ private:
 
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders[8];
     // BLOOM
+    std::unique_ptr<fullscreen_quad> bit_block_transfer;
     std::unique_ptr<bloom> bloomer;
 
     // MASK
@@ -66,7 +65,7 @@ private:
     float dissolve_value{ 0.5f };
     Microsoft::WRL::ComPtr<ID3D11Buffer> dissolve_constant_buffer;
 
-    D3D11_TEXTURE2D_DESC mask_texture2dDesc;
+    D3D11_TEXTURE2D_DESC mask_texture2dDesc{};
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
     std::shared_ptr<sprite> dummy_sprite;
     Microsoft::WRL::ComPtr<ID3D11VertexShader> sprite_vertex_shader;
@@ -90,7 +89,7 @@ private:
     std::unique_ptr<Lemur::Audio::audio> se[8];
 
     //DemoPlayer
-    GameObject* player;
+    GameObject* player = nullptr;
 
     // skkind
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
