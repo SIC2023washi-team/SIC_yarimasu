@@ -174,8 +174,18 @@ void Lemur::Scene::BaseScene::SetState()
 		sampler_desc.BorderColor[3] = 1;
 		hr = graphics.GetDevice()->CreateSamplerState(&sampler_desc, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_BORDER_WHITE)].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
+		// SHADOW
+		sampler_desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+		sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+		sampler_desc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL; //D3D11_COMPARISON_LESS_EQUAL
+		sampler_desc.BorderColor[0] = 1;
+		sampler_desc.BorderColor[1] = 1;
+		sampler_desc.BorderColor[2] = 1;
+		sampler_desc.BorderColor[3] = 1;
+		hr = graphics.GetDevice()->CreateSamplerState(&sampler_desc, sampler_states[static_cast<size_t>(SAMPLER_STATE::COMPARISON_LINEAR_BORDER_WHITE)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
-	
 
 }

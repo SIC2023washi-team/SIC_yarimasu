@@ -17,6 +17,9 @@
 // BLOOM
 #include "bloom.h"
 
+// SHADOW
+#include "shadow_map.h"
+
 #include <d3d11.h>
 #include <directxmath.h>
 #include <wrl.h>

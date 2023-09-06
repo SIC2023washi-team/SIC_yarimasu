@@ -9,6 +9,10 @@
 // BLOOM
 #include "../Graphics/bloom.h"
 
+// Audio
+#include <wrl.h>
+#include "../Audio/audio.h"
+
 class DemoScene :public Lemur::Scene::BaseScene
 {
 public:
@@ -39,8 +43,9 @@ public:
 private:
 
     std::unique_ptr<framebuffer> framebuffers[8];
-
     std::unique_ptr<fullscreen_quad> bit_block_transfer;
+
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> zelda_ps;
 
     // SKYMAP
     std::unique_ptr<fullscreen_quad> bit_block_transfer_sky;
@@ -65,6 +70,21 @@ private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> sprite_input_layout;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> sprite_pixel_shader;
 
+    // SHADOW
+    const uint32_t shadowmap_width = 2048;
+    const uint32_t shadowmap_height = 2048;
+    std::unique_ptr<shadow_map> double_speed_z;
+    DirectX::XMFLOAT4 light_view_focus{ 0, 0, 0, 1 };
+    float light_view_distance{ 10.0f };
+    float light_view_size{ 12.0f };
+    float light_view_near_z{ 2.0f };
+    float light_view_far_z{ 18.0f };
+
+    // Audio
+    Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
+    IXAudio2MasteringVoice* master_voice = nullptr;
+    std::unique_ptr<Lemur::Audio::audio> bgm[8];
+    std::unique_ptr<Lemur::Audio::audio> se[8];
 
     //DemoPlayer
     GameObject* player;
@@ -82,14 +102,16 @@ private:
     {
         DirectX::XMFLOAT4X4 view_projection; // ビュー・プロジェクション変換行列 
         DirectX::XMFLOAT4 light_direction; // ライトの向き
-        DirectX::XMFLOAT4 camera_position; // カメラ位置
+        DirectX::XMFLOAT4 camera_position; // ライトの向き
 		// SKYMAP
         DirectX::XMFLOAT4X4 inv_view_projection;
+        // SHADOW
+        DirectX::XMFLOAT4X4 light_view_projection;
     };
     Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffers[8];
 
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, -10.0f, 1.0f };
-    DirectX::XMFLOAT4 light_direction{ 0.0f, 0.0f, 1.0f, 0.0f };
+    DirectX::XMFLOAT4 light_direction{ -0.113f, -0.556f, 1.0f, 0.0f };
 
     DirectX::XMFLOAT3 translation{ 0, 0, 0 };
     DirectX::XMFLOAT3 scaling{ 1, 1, 1 };

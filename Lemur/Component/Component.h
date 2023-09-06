@@ -1,6 +1,14 @@
 #pragma once
 #include "GameObject.h"
+#include "misc.h"
+#include "../Graphics/skinned_mesh.h"
+#include "../Graphics/shader.h"
+#include "../Graphics/texture.h"
+#include <filesystem>
+#include <sstream>
+#include <functional>
 
+#include <fstream>
 class GameObject;
 
 // コンポーネント基底クラス
@@ -26,7 +34,8 @@ public:
     virtual ~GraphicsComponent() {}
     virtual void Initialize(GameObject& gameobj) = 0;
     virtual void Update(GameObject& gameobj) = 0;
-    virtual void Render(GameObject& gameobj, float elapsedTime) = 0;
+    virtual void Render(GameObject& gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) = 0;
+    virtual void ShadowRender(GameObject& gameobj, float elapsedTime) {};
 };
 
 // 物理用基底クラス

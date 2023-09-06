@@ -304,8 +304,10 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
         { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT },
         { "BONES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT },
     };
+
     create_vs_from_cso(device, "Shader/skinned_mesh_vs.cso", vertex_shader.ReleaseAndGetAddressOf(), input_layout.ReleaseAndGetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
     create_ps_from_cso(device, "Shader/skinned_mesh_ps.cso", pixel_shader.ReleaseAndGetAddressOf());
+
     D3D11_BUFFER_DESC buffer_desc{};
     buffer_desc.ByteWidth = sizeof(constants);
     buffer_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -314,7 +316,7 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 }
 
-void skinned_mesh::render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color, const animation::keyframe* keyframe)
+void skinned_mesh::render(ID3D11DeviceContext* immediate_context, const XMFLOAT4X4& world, const XMFLOAT4& material_color, const animation::keyframe* keyframe/*UNIT.25*/, ID3D11PixelShader* replaced_pixel_shader)
 {
     for (const mesh& mesh : meshes)
     {
@@ -326,7 +328,14 @@ void skinned_mesh::render(ID3D11DeviceContext* immediate_context, const DirectX:
         immediate_context->IASetInputLayout(input_layout.Get());
 
         immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
-        immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+        if (replaced_pixel_shader)
+        {
+            immediate_context->PSSetShader(replaced_pixel_shader, nullptr, 0);
+        }
+        else
+        {
+            immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+        }
 
         constants data;
 

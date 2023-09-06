@@ -297,7 +297,7 @@ public:
     skinned_mesh(ID3D11Device* device, const char* fbx_filename, std::vector<std::string>& animation_filenames, bool triangulate = false, float sampling_rate = 0);
     virtual ~skinned_mesh() = default;
 
-    void render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color, const animation::keyframe* keyframe);
+    void render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color, const animation::keyframe* keyframe, ID3D11PixelShader* replaced_pixel_shader);
     void update_animation(animation::keyframe& keyframe);
 
     bool append_animations(const char* animation_filename, float sampling_rate /*0:use default value*/);

@@ -16,8 +16,7 @@ namespace Lemur
 
     }
 
-    namespace App
+    namespace Audio
     {
-
     }
 }
