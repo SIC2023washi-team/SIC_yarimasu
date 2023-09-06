@@ -2,6 +2,9 @@
 #include "../Graphics/Camera.h"
 #include "../Resource/ResourceManager.h"
 
+// Effect
+#include "../Effekseer/EffekseerManager.h"
+
 void DemoScene::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -44,8 +47,6 @@ void DemoScene::Initialize()
 	//create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[1].GetAddressOf());
 	//load_texture_from_file(graphics.GetDevice(), L".\\resources\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
-
-
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/zelda_ps.cso", zelda_ps.GetAddressOf());
 
 	// シェーダーの決定
@@ -82,6 +83,7 @@ void DemoScene::Initialize()
 		}
 	}
 
+
 }
 
 void DemoScene::Finalize()
@@ -90,6 +92,9 @@ void DemoScene::Finalize()
 
 void DemoScene::Update(float elapsedTime)
 {
+
+	// エフェクト更新処理
+	EffectManager::Instance().Update(elapsedTime);
 
 	Camera& camera = Camera::Instance();
 
@@ -274,4 +279,17 @@ void DemoScene::Render(float elapsedTime)
 		}
 	}
 #endif
+
+	// 3Dエフェクト描画
+	{
+		DirectX::XMFLOAT4X4 view{};
+		DirectX::XMFLOAT4X4 projection{};
+
+		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+
+		EffectManager::Instance().Render(view, projection);
+	}
+
+
 }

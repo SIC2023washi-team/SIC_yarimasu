@@ -31,6 +31,7 @@ namespace Lemur::Scene
         // ƒV[ƒ“‚ÌØ‚è‘Ö‚¦
         void ChangeScene(BaseScene* scene);
 
+        void Finalize();
     private:
         BaseScene* currentScene = nullptr;
         BaseScene* nextScene = nullptr;
