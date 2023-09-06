@@ -7,6 +7,9 @@
 // Effect
 #include "../Effekseer/EffekseerManager.h"
 
+// SceneGame
+#include "./Game/SceneGame.h"
+
 framework::framework(HWND hwnd) 
 	: hwnd(hwnd),
 	graphics(hwnd,FALSE),
@@ -20,7 +23,7 @@ bool framework::initialize()
 	EffectManager::Instance().Initialize();
 
 	// シーン初期化
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
 
 	return true;
 }

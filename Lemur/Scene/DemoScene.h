@@ -6,6 +6,12 @@
 #include "../Graphics/texture.h"
 #include "../Graphics/framework.h"
 
+// Player
+#include "./Game/Player.h"
+
+// Stage
+#include "./Game/Stage.h"
+
 // BLOOM
 #include "../Graphics/bloom.h"
 
@@ -33,16 +39,38 @@ public:
     // ï`âÊèàóù
     void Render(float elapsedTime)override;
 
+    //GameObject* CreatePlayer()
+    //{
+    //    return new GameObject(
+    //        new DemoPlayerInputComponent(),
+    //        new DemoPlayerPhysicsComponent(),
+    //        new DemoPlayerGraphicsComponent()
+    //    );
+    //}
+
+    // ÉvÉåÉCÉÑÅ[ê∂ê¨
     GameObject* CreatePlayer()
     {
         return new GameObject(
-            new DemoPlayerInputComponent(),
-            new DemoPlayerPhysicsComponent(),
-            new DemoPlayerGraphicsComponent()
+            new PlayerInputComponent(),
+            new PlayerPhysicsComponent(),
+            new PlayerGraphicsComponent()
         );
     }
 
+    GameObject* CreateStage()
+    {
+        return new GameObject(
+            new StageInputComponent(),
+            new StagePhysicsComponent(),
+            new StageGraphicsComponent()
+        );
+    }
 private:
+    // Stage
+    GameObject* stage;
+
+
     std::unique_ptr<framebuffer> framebuffers[8];
 
     // Zelda_Shader

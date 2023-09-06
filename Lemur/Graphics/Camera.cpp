@@ -78,24 +78,25 @@ void Camera::Update(float elapsedTime)
     angle.x = min(angle.x, maxAngleX);
     angle.x = max(angle.x, minAngleX);
     //模範解答↓
-    if (angle.x < minAngleX)
+    /*if (angle.x < minAngleX)
     {
         angle.x = minAngleX;
     }
     if (angle.x > maxAngleX)
     {
         angle.x = maxAngleX;
-    }
+    }*/
 
     // Y軸の回転値を-3.14~3.14に収まるようにする
-    if (angle.y < -DirectX::XM_PI)
+    /*if (angle.y < -DirectX::XM_PI)
     {
         angle.y += DirectX::XM_2PI;
     }
     if (angle.y > -DirectX::XM_PI)
     {
         angle.y -= DirectX::XM_2PI;
-    }
+    }*/
+
 
     //カメラの視点と注視点を設定
     SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));

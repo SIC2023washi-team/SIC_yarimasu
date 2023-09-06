@@ -31,6 +31,10 @@ void DemoScene::Initialize()
 		}
 	}
 
+	// Stage
+	stage = CreateStage();
+	stage->Initialize();
+
 	player = CreatePlayer();
 	player->Initialize();
 
@@ -50,7 +54,7 @@ void DemoScene::Initialize()
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/zelda_ps.cso", zelda_ps.GetAddressOf());
 
 	// シェーダーの決定
-	player->pixelShader = zelda_ps.Get();
+	//player->pixelShader = zelda_ps.Get();
 
 	// SHADOW
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
@@ -100,6 +104,7 @@ void DemoScene::Update(float elapsedTime)
 
 	camera.Update(elapsedTime);
 	player->Update(elapsedTime);
+	stage->Update(elapsedTime);
 
 	ImGui::Begin("ImGUI");
 	ImGui::SliderFloat("dissolve_value", &dissolve_value, 0.0f, +1.0f);
@@ -209,30 +214,30 @@ void DemoScene::Render(float elapsedTime)
 #endif
 
 
-	// SHADOW : make shadow map
-	{
-		using namespace DirectX;
+	//// SHADOW : make shadow map
+	//{
+	//	using namespace DirectX;
 
-		const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
-		XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
-		XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
-		XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
-		XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
-		XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
+	//	const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
+	//	XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
+	//	XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
+	//	XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
+	//	XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
+	//	XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
 
-		DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
-		data.light_view_projection = data.view_projection;
-		immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
-		immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+	//	DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
+	//	data.light_view_projection = data.view_projection;
+	//	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
+	//	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
 
-		double_speed_z->clear(immediate_context, 1.0f);
-		double_speed_z->activate(immediate_context);
+	//	double_speed_z->clear(immediate_context, 1.0f);
+	//	double_speed_z->activate(immediate_context);
 
-		ID3D11PixelShader* null_pixel_shader{ NULL };
-		player->ShadowRender(elapsedTime);
-		skinned_meshes[1]->render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, null_pixel_shader);
-		double_speed_z->deactivate(immediate_context);
-	}
+	//	ID3D11PixelShader* null_pixel_shader{ NULL };
+	//	player->ShadowRender(elapsedTime);
+	//	skinned_meshes[1]->render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, null_pixel_shader);
+	//	double_speed_z->deactivate(immediate_context);
+	//}
 
 	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix()* camera.GetProjectionMatrix());
 
@@ -248,8 +253,9 @@ void DemoScene::Render(float elapsedTime)
 
 	// SHADOW : bind shadow map at slot 8
 	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
-
 	player->Render(elapsedTime);
+
+	stage->Render(elapsedTime);
 	skinned_meshes[1]->render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, nullptr);
 
 #if 0

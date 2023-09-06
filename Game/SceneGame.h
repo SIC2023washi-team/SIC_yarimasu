@@ -3,7 +3,12 @@
 #include"./Lemur/Graphics/shader.h"
 #include"./Lemur/Graphics/texture.h"
 #include"./Lemur/Graphics/framework.h"
-#include"./Lemur/Graphics/framework.h"
+
+// Player
+#include "Player.h"
+
+// Stage
+#include "Stage.h"
 
 // Audio
 #include <wrl.h>
@@ -14,6 +19,7 @@
 
 class SceneGame :public Lemur::Scene::BaseScene
 {
+public:
     SceneGame() {}
     ~SceneGame() override {}
 
@@ -29,6 +35,25 @@ class SceneGame :public Lemur::Scene::BaseScene
     // ï`âÊèàóù
     void Render(float elapsedTime)override;
 
+    // ÉvÉåÉCÉÑÅ[ê∂ê¨
+    GameObject* CreatePlayer()
+    {
+        return new GameObject(
+            new PlayerInputComponent(),
+            new PlayerPhysicsComponent(),
+            new PlayerGraphicsComponent()
+        );
+    }
+
+    GameObject* CreateStage()
+    {
+        return new GameObject(
+            new StageInputComponent(),
+            new StagePhysicsComponent(),
+            new StageGraphicsComponent()
+        );
+    }
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -39,6 +64,12 @@ private:
     DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
     DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
     DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
+
+    // Stage
+    GameObject* stage;
+
+    // Player
+    GameObject* player;
 
 
 //----------------------------------------------------------------------------------------------------
