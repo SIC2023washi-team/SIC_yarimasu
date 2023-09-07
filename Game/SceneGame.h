@@ -78,17 +78,15 @@ private:
     // Player
     GameObject* player;
 
-<<<<<<< HEAD
+
     //Enemy
     GameObject* enemy;
 
-
-=======
     // ポーズ（ショップ）
     bool isPaused = false;
     std::shared_ptr<sprite> pause;
     DirectX::XMFLOAT2 pausePosition = { 1920,0 };
->>>>>>> origin/muta
+
 //----------------------------------------------------------------------------------------------------
 //  ↓シェーダー関連
 //----------------------------------------------------------------------------------------------------

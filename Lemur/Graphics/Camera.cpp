@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include"..\Input/Input.h"
+#include <imgui.h>
 
 void Camera::SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& focus, const DirectX::XMFLOAT3& up)
 {
@@ -100,6 +101,14 @@ void Camera::Update(float elapsedTime)
 
     //ƒJƒƒ‰‚Ì‹“_‚Æ’‹“_‚ğİ’è
     SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
+
+    if (ImGui::TreeNode("camera"))
+    {
+        ImGui::DragFloat3("pos", &target.x,0.1f);
+        ImGui::DragFloat3("rotate", &angle.x,0.1f);
+        ImGui::TreePop();
+    }
+
 }
 
 void Camera::DrawDebug()

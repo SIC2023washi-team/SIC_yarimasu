@@ -37,13 +37,12 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-<<<<<<< HEAD
 	enemy = CreateEnemy();
 	enemy->Initialize();
-=======
+
 	//TODO 追加(エネミーも同様に)
 	stage->player_ = player;
->>>>>>> origin/muta
+
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
@@ -103,6 +102,8 @@ void SceneGame::Update(float elapsedTime)
 	Camera& camera = Camera::Instance();
 
 	// エフェクト更新処理
+	ImGui::Begin("ImGUI");
+
 	EffectManager::Instance().Update(elapsedTime);
 
 	camera.Update(elapsedTime);
@@ -113,7 +114,7 @@ void SceneGame::Update(float elapsedTime)
 
 
 
-	ImGui::Begin("ImGUI");
+	
 
 	enemy->Update(elapsedTime);
 	ImGui::End();
