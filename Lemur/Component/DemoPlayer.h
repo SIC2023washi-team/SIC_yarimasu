@@ -8,7 +8,9 @@
 
 class DemoPlayer :public GameObject
 {
-
+    DemoPlayer(InputComponent* input_,
+        PhysicsComponent* physics_,
+        GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
 };
 
 class DemoPlayerInputComponent :public InputComponent

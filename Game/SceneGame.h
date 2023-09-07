@@ -36,18 +36,18 @@ public:
     void Render(float elapsedTime)override;
 
     // ÉvÉåÉCÉÑÅ[ê∂ê¨
-    GameObject* CreatePlayer()
+    Player* CreatePlayer()
     {
-        return new GameObject(
+        return new Player(
             new PlayerInputComponent(),
             new PlayerPhysicsComponent(),
             new PlayerGraphicsComponent()
         );
     }
 
-    GameObject* CreateStage()
+    Stage* CreateStage()
     {
-        return new GameObject(
+        return new Stage(
             new StageInputComponent(),
             new StagePhysicsComponent(),
             new StageGraphicsComponent()
