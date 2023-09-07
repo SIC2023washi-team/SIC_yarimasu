@@ -8,7 +8,12 @@
 class Enemy :public GameObject
 {
 public:
+    Enemy(InputComponent* input_,
+        PhysicsComponent* physics_,
+        GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
     float HitPoint = 0.0f;
+
+
 };
 
 class EnemyInputComponent :public InputComponent

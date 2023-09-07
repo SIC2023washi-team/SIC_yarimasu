@@ -37,7 +37,8 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-	
+	enemy = CreateEnemy();
+	enemy->Initialize();
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());

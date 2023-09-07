@@ -10,6 +10,9 @@
 // Stage
 #include "Stage.h"
 
+//Enemy
+#include "Enemy.h"
+
 // Audio
 #include <wrl.h>
 #include"./Lemur/Audio/audio.h"
@@ -54,6 +57,15 @@ public:
         );
     }
 
+
+    Enemy* CreateEnemy()
+    {
+        return new Enemy(
+            new EnemyInputComponent(),
+            new EnemyPhysicsComponent(),
+            new EnemyGraphicsComponent()
+        );
+    }
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -70,6 +82,9 @@ private:
 
     // Player
     GameObject* player;
+
+    //Enemy
+    GameObject* enemy;
 
 
 //----------------------------------------------------------------------------------------------------
