@@ -42,6 +42,7 @@ void SceneGame::Initialize()
 
 	//TODO 追加(エネミーも同様に)
 	stage->player_ = player;
+	
 
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
@@ -95,6 +96,8 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(float elapsedTime)
 {
+	enemy->player_ = player;
+
 	//pausePosition.x -= 1.0f;
 
 	if (isPaused)return;

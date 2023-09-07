@@ -45,15 +45,26 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->scale.x = 16.f;
 	enemy->scale.y = 16.f;
 	enemy->scale.z = 16.f;
+	enemy->position.y = 1.5f;
 }
 
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
-	//DirectX::XMFLOAT3 moveVec = GetMoveVec();
+	
+	float px = (enemy->player_->position.x -enemy->position.x);
+	float pz = (enemy->player_->position.z - enemy->position.z);
+	DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
+	DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
+	vec_x  = DirectX::XMVector3Normalize(vec_x);
+	vec_z  = DirectX::XMVector3Normalize(vec_z);
+	float floatX = DirectX::XMVectorGetX(vec_x);
+	float floatZ = DirectX::XMVectorGetX(vec_z);
+	enemy->position.x += floatX * enemy->Speed;
+	//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
+	enemy->position.z += floatZ * enemy->Speed;
 
-	enemy->position.x += sin(enemy->rotation.y) *0.001f;
-	enemy->position.z += cos(enemy->rotation.y) * 0.001f;
+	
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)

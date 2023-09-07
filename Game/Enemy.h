@@ -12,7 +12,7 @@ public:
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
     float HitPoint = 0.0f;
-
+    float Speed = 0.001f;
     static void DrawDebugGUI(GameObject* gameobj);
 };
 
