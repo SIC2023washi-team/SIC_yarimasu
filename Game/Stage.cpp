@@ -28,7 +28,7 @@ void StageGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 {
 	Stage* stage = dynamic_cast<Stage*> (gameobj);
 
-	//TODO 追加
+	//TODO 追加(エネミーも同様に)
 	stage->position = stage->player_->position;
 
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();

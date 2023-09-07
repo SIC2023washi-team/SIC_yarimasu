@@ -37,7 +37,7 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-	//TODO 追加
+	//TODO 追加(エネミーも同様に)
 	stage->player_ = player;
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
