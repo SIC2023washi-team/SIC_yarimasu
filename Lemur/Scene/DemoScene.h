@@ -6,6 +6,12 @@
 #include "../Graphics/texture.h"
 #include "../Graphics/framework.h"
 
+// Player
+#include "./Game/Player.h"
+
+// Stage
+#include "./Game/Stage.h"
+
 // BLOOM
 #include "../Graphics/bloom.h"
 
@@ -13,11 +19,13 @@
 #include <wrl.h>
 #include "../Audio/audio.h"
 
+#include "../Effekseer/Effect.h"
+
 class DemoScene :public Lemur::Scene::BaseScene
 {
 public:
     DemoScene() {}
-    ~DemoScene() override {};
+    ~DemoScene() override {}
 
     // 初期化
     void Initialize()override;
@@ -31,20 +39,41 @@ public:
     // 描画処理
     void Render(float elapsedTime)override;
 
+    //GameObject* CreatePlayer()
+    //{
+    //    return new GameObject(
+    //        new DemoPlayerInputComponent(),
+    //        new DemoPlayerPhysicsComponent(),
+    //        new DemoPlayerGraphicsComponent()
+    //    );
+    //}
+
+    // プレイヤー生成
     GameObject* CreatePlayer()
     {
         return new GameObject(
-            new DemoPlayerInputComponent(),
-            new DemoPlayerPhysicsComponent(),
-            new DemoPlayerGraphicsComponent()
+            new PlayerInputComponent(),
+            new PlayerPhysicsComponent(),
+            new PlayerGraphicsComponent()
         );
     }
 
+    GameObject* CreateStage()
+    {
+        return new GameObject(
+            new StageInputComponent(),
+            new StagePhysicsComponent(),
+            new StageGraphicsComponent()
+        );
+    }
 private:
+    // Stage
+    GameObject* stage;
+
 
     std::unique_ptr<framebuffer> framebuffers[8];
-    std::unique_ptr<fullscreen_quad> bit_block_transfer;
 
+    // Zelda_Shader
     Microsoft::WRL::ComPtr<ID3D11PixelShader> zelda_ps;
 
     // SKYMAP
@@ -54,6 +83,7 @@ private:
 
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders[8];
     // BLOOM
+    std::unique_ptr<fullscreen_quad> bit_block_transfer;
     std::unique_ptr<bloom> bloomer;
 
     // MASK
@@ -63,7 +93,7 @@ private:
     float dissolve_value{ 0.5f };
     Microsoft::WRL::ComPtr<ID3D11Buffer> dissolve_constant_buffer;
 
-    D3D11_TEXTURE2D_DESC mask_texture2dDesc;
+    D3D11_TEXTURE2D_DESC mask_texture2dDesc{};
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
     std::shared_ptr<sprite> dummy_sprite;
     Microsoft::WRL::ComPtr<ID3D11VertexShader> sprite_vertex_shader;
@@ -87,7 +117,7 @@ private:
     std::unique_ptr<Lemur::Audio::audio> se[8];
 
     //DemoPlayer
-    GameObject* player;
+    GameObject* player = nullptr;
 
     // skkind
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -99,7 +129,7 @@ private:
     // 　パラメータを定数バッファに書き込むことで、
     // 　シェーダー内で座標変換の計算ができる
     struct scene_constants
-    {
+    {// 中の値の位置はシェーダー側と一致させる
         DirectX::XMFLOAT4X4 view_projection; // ビュー・プロジェクション変換行列 
         DirectX::XMFLOAT4 light_direction; // ライトの向き
         DirectX::XMFLOAT4 camera_position; // ライトの向き

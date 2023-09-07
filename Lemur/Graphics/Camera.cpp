@@ -96,6 +96,10 @@ void Camera::Update(float elapsedTime)
     {
         angle.y -= DirectX::XM_2PI;
     }*/
+<<<<<<< HEAD
+=======
+
+>>>>>>> d8f7efbbd44196f7b2e8607234d9fcb98c834910
 
     //ƒJƒƒ‰‚Ì‹“_‚Æ’‹“_‚ğİ’è
     SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
