@@ -9,11 +9,16 @@
 #include <functional>
 
 #include <fstream>
+
+
 class GameObject;
 
+class Compornent
+{
+};
 
 // インプット用基底クラス
-class InputComponent 
+class InputComponent :public Compornent
 {
 public:
     virtual ~InputComponent() {}
@@ -22,7 +27,7 @@ public:
 };
 
 // グラフィック用基底クラス
-class GraphicsComponent 
+class GraphicsComponent :public Compornent
 {
 public:
     virtual ~GraphicsComponent() {}
@@ -33,7 +38,7 @@ public:
 };
 
 // 物理用基底クラス
-class PhysicsComponent 
+class PhysicsComponent :public Compornent
 {
 public:
     virtual ~PhysicsComponent() {}

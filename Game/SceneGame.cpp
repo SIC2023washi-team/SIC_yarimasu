@@ -37,7 +37,8 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-	
+	//TODO 追加
+	stage->player_ = player;
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
@@ -52,7 +53,7 @@ void SceneGame::Initialize()
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
-
+	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
 
 #if 0
 	// BLOOM
@@ -90,6 +91,10 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(float elapsedTime)
 {
+	//pausePosition.x -= 1.0f;
+
+	if (isPaused)return;
+
 	Camera& camera = Camera::Instance();
 
 	// エフェクト更新処理
@@ -320,9 +325,10 @@ void SceneGame::Render(float elapsedTime)
 
 	// ここにRender
 	
+#endif
 	// sprite描画
 	{
-		if (dummy_sprite)
+		if (pause)
 		{
 			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
@@ -342,10 +348,9 @@ void SceneGame::Render(float elapsedTime)
 				immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 			}
-			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			pause->render(immediate_context, pausePosition.x, pausePosition.y, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 	}
-#endif
 
 	// 3Dエフェクト描画
 	{
