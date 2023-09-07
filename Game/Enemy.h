@@ -13,7 +13,7 @@ public:
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
     float HitPoint = 0.0f;
 
-
+    static void DrawDebugGUI(GameObject* gameobj);
 };
 
 class EnemyInputComponent :public InputComponent

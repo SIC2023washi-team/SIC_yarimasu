@@ -102,8 +102,11 @@ void SceneGame::Update(float elapsedTime)
 
 	player->Update(elapsedTime);
 
+
+
 	ImGui::Begin("ImGUI");
 
+	enemy->Update(elapsedTime);
 	ImGui::End();
 }
 
@@ -236,6 +239,8 @@ void SceneGame::Render(float elapsedTime)
 	player->Render(elapsedTime);
 
 	stage->Render(elapsedTime);
+
+	enemy->Render(elapsedTime);
 
 #if 0
 

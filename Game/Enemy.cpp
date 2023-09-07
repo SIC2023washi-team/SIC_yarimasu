@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include <imgui.h>
 
 #define EnemyHitPoint 3.0f
 
@@ -9,7 +10,32 @@
 
 void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
 {
+	//Enemy::DrawDebugGUI(gameobj);
+	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
+	if (ImGui::TreeNode("TreeNode"))
+	{
+		ImGui::DragFloat3("pos", &enemy->position.x);
+		ImGui::DragFloat3("rotate", &enemy->rotation.x);
+		ImGui::DragFloat3("scale", &enemy->scale.x);
+		ImGui::TreePop();
+	}
+
+	//if (ImGui::BeginMenu("menu"))
+	//{
+	//	ImGui::InputFloat3("Positon", &enemy->position.x);
+	//	ImGui::EndMenu();
+	//}
+
+	//ImGui::Begin("Enemy"/*, nullptr, ImGuiWindowFlags_None)*/);
+
+	//ImGui::InputFloat3("Positon", &enemy->position.x);
+
+	//ImGui::DragFloat3("pos", &enemy->position.x);
+
+	//ImGui::SliderFloat3("p", &enemy->position.x, 0.0f, 10.0f);
+
+	//ImGui::End();
 }
 
 void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
@@ -21,7 +47,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
-	enemy->position.x = 100.0f;
+	//enemy->position.x = 100.0f;
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
@@ -32,7 +58,7 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 
 void EnemyGraphicsComponent::Update(GameObject* gameobj)
 {
-	
+
 }
 
 void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
@@ -101,4 +127,23 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	{
 		EnemyModel->render(immediate_context, world, enemy->material_color, nullptr, replaced_pixel_shader);
 	}
+
+	
+}
+
+void Enemy::DrawDebugGUI(GameObject* gameobj)
+{
+	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+
+	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
+	if (ImGui::Begin("Enemy", nullptr, ImGuiWindowFlags_None))
+	{
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::InputFloat3("Positon", &enemy->position.x);
+		}
+
+	}
+
 }
