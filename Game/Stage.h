@@ -7,28 +7,31 @@
 #include"../Lemur/Input/Input.h"
 #include "../Lemur/Collision/Collision.h"
 
+class Stage :public GameObject
+{
 
+};
 
 class StageInputComponent :public InputComponent
 {
-    void Initialize(GameObject& gameobj) override {}
-    void Update(GameObject& gameobj, float elapsedTime) override;
+    void Initialize(GameObject* gameobj) override {}
+    void Update(GameObject* gameobj, float elapsedTime) override;
 };
 
 class StagePhysicsComponent :public PhysicsComponent
 {
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj, float elapsedTime) override;
+    void Initialize(GameObject* gameobj) override;
+    void Update(GameObject* gameobj, float elapsedTime) override;
 
 };
 
 class StageGraphicsComponent :public GraphicsComponent
 {
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj) override;
-    void Render(GameObject& gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
+    void Initialize(GameObject* gameobj) override;
+    void Update(GameObject* gameobj) override;
+    void Render(GameObject* gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
 
 private:
-    std::shared_ptr<skinned_mesh> stage;
+    std::shared_ptr<skinned_mesh> stageModel;
 
 };

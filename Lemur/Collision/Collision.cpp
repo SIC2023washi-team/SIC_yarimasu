@@ -1,12 +1,12 @@
 #include "Collision.h"
 
 
-void CollisionPhysicsComponent::Initialize(GameObject& gameobj)
+void CollisionPhysicsComponent::Initialize(GameObject* gameobj)
 {
 
 }
 
-void CollisionPhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
+void CollisionPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 
 }

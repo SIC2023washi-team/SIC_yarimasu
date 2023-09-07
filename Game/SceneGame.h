@@ -60,10 +60,10 @@ private:
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, -10.0f, 1.0f };
     DirectX::XMFLOAT4 light_direction{ -0.113f, -0.556f, 1.0f, 0.0f };
 
-    DirectX::XMFLOAT3 translation{ 0, 0, 0 };
-    DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
-    DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
-    DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
+    //DirectX::XMFLOAT3 translation{ 0, 0, 0 };
+    //DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
+    //DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
+    //DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
 
     // Stage
     GameObject* stage;

@@ -2,29 +2,31 @@
 #include "Lemur/Input/Mouse.h"
 #include "Lemur/Graphics/Camera.h"
 
-void StagePhysicsComponent::Initialize(GameObject& gameobj)
+void StagePhysicsComponent::Initialize(GameObject* gameobj)
 {
 
 }
 
-void StagePhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
+void StagePhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 
 }
 
-void StageGraphicsComponent::Initialize(GameObject& gameobj)
+void StageGraphicsComponent::Initialize(GameObject* gameobj)
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-	stage = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\ExampleStage\\ExampleStage.fbx");
+	stageModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\ExampleStage\\ExampleStage.fbx");
 }
 
-void StageGraphicsComponent::Update(GameObject& gameobj)
+void StageGraphicsComponent::Update(GameObject* gameobj)
 {
 
 }
 
-void StageGraphicsComponent::Render(GameObject& gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
+void StageGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
+	Stage* stage = dynamic_cast<Stage*> (gameobj);
+
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
@@ -44,22 +46,22 @@ void StageGraphicsComponent::Render(GameObject& gameobj, float elapsedTime, ID3D
 #endif
 	// 変換用
 	DirectX::XMMATRIX C{ DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0])* DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(gameobj.map_scaling.x, gameobj.map_scaling.y, gameobj.map_scaling.z) };
-	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(gameobj.map_rotation.x, gameobj.map_rotation.y, gameobj.map_rotation.z) };
-	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(gameobj.map_translation.x, gameobj.map_translation.y, gameobj.map_translation.z) };
+	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(stage->scale.x, stage->scale.y, stage->scale.z) };
+	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(stage->rotation.x, stage->rotation.y, stage->rotation.z) };
+	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(stage->position.x, stage->position.y, stage->position.z) };
 	// ワールド変換行列を作成
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
 
 
-	if (stage->animation_clips.size() > 0)
+	if (stageModel->animation_clips.size() > 0)
 	{
 		// アニメーション用
 		int clip_index = 0;
 		int frame_index = 0;
 		static float animation_tick = 0;
 #if 1
-		animation& animation{ stage->animation_clips.at(clip_index) };
+		animation& animation{ stageModel->animation_clips.at(clip_index) };
 		frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
 		if (frame_index > animation.sequence.size() - 1)
 		{
@@ -81,16 +83,16 @@ void StageGraphicsComponent::Render(GameObject& gameobj, float elapsedTime, ID3D
 		skinned_meshes[0]->update_animation(keyframe);
 
 # endif
-		stage->render(immediate_context, world, gameobj.material_color, &keyframe, replaced_pixel_shader);
+		stageModel->render(immediate_context, world, stage->material_color, &keyframe, replaced_pixel_shader);
 	}
 	else
 	{
-		stage->render(immediate_context, world, gameobj.material_color, nullptr, replaced_pixel_shader);
+		stageModel->render(immediate_context, world, stage->material_color, nullptr, replaced_pixel_shader);
 	}
 }
 
 // 入力処理
-void StageInputComponent::Update(GameObject& gameobj, float elapsedTime)
+void StageInputComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	//GamePad& gamePad = Input::Instance().GetGamePad();
 	//float ax = gamePad.GetAxisRX();

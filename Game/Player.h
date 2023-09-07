@@ -6,24 +6,29 @@
 #include"../Lemur/Input/Input.h"
 
 
+class Player :public GameObject
+{
+public:
+    float HitPoint = 0.0f;
+};
 
 class PlayerInputComponent :public InputComponent
 {
-    void Initialize(GameObject& gameobj) override {}
-    void Update(GameObject& gameobj, float elapsedTime) override;
+    void Initialize(GameObject* gameobj) override {}
+    void Update(GameObject* gameobj, float elapsedTime) override;
 };
 
 class PlayerPhysicsComponent :public PhysicsComponent
 {
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj, float elapsedTime) override;
+    void Initialize(GameObject* gameobj) override;
+    void Update(GameObject* gameobj, float elapsedTime) override;
 };
 
 class PlayerGraphicsComponent :public GraphicsComponent
 {
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj) override;
-    void Render(GameObject& gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) override;
+    void Initialize(GameObject* gameobj) override;
+    void Update(GameObject* gameobj) override;
+    void Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) override;
 
 private:
     std::shared_ptr<skinned_mesh> PlayerModel;
