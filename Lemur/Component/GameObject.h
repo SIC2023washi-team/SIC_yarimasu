@@ -59,14 +59,6 @@ public:
     DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
     DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    DirectX::XMFLOAT3 player_translation{ 0, 0, 0 };
-    DirectX::XMFLOAT3 player_scaling{ 1, 1, 1 };
-    DirectX::XMFLOAT3 player_rotation{ 0, 0, 0 };
-    DirectX::XMFLOAT4 player_material_color{ 1, 1, 1, 1 };
-=======
-=======
     float HitPoint = 0.0f;
 
     /// <summary>
@@ -103,9 +95,7 @@ public:
 
     Mouse* mouse;
 
->>>>>>> d8f7efbbd44196f7b2e8607234d9fcb98c834910
     ID3D11PixelShader* pixelShader = nullptr;
->>>>>>> 3fc419464f32e32c77ebceb634ffa9eb188d8cc4
 
 private:
     InputComponent* input;

@@ -59,16 +59,11 @@ private:
     DirectX::XMFLOAT4X4 world;
 
     // デバッグ用
-<<<<<<< HEAD
-    DirectX::XMFLOAT3   target = { 0,0,0 };
-    DirectX::XMFLOAT3   angle = { DirectX::XMConvertToRadians(90),0,0 };
-=======
     DirectX::XMFLOAT3   target = { 0,7.0f,-5.0f };
     DirectX::XMFLOAT3   angle = { DirectX::XMConvertToRadians(60),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
->>>>>>> d8f7efbbd44196f7b2e8607234d9fcb98c834910
     float               rollSpeed = DirectX::XMConvertToRadians(180);
     float               range = 10.0f;
 
-    float               maxAngleX = DirectX::XMConvertToRadians(90);
-    float               minAngleX = DirectX::XMConvertToRadians(-90);
+    float               maxAngleX = DirectX::XMConvertToRadians(45);
+    float               minAngleX = DirectX::XMConvertToRadians(-45);
 };
