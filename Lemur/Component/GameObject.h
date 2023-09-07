@@ -12,6 +12,7 @@
 class GameObject
 {
 public:
+    GameObject() {};
     GameObject(InputComponent* input_,
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_)
@@ -57,9 +58,9 @@ public:
     Mouse* mouse;// マウス
 
     ID3D11PixelShader* pixelShader = nullptr; // シェーダー
-
-private:
+protected:
     InputComponent* input;
     PhysicsComponent* physics;
     GraphicsComponent* graphics;
+
 };

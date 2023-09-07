@@ -9,6 +9,10 @@
 
 class Stage :public GameObject
 {
+public:
+    Stage(InputComponent* input_,
+        PhysicsComponent* physics_,
+        GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
 
 };
 
