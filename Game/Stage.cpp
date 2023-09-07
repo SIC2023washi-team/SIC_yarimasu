@@ -4,6 +4,7 @@
 
 void StagePhysicsComponent::Initialize(GameObject* gameobj)
 {
+	gameobj->scale.x = gameobj->scale.y = gameobj->scale.z = 3.0f;
 
 }
 
@@ -26,6 +27,9 @@ void StageGraphicsComponent::Update(GameObject* gameobj)
 void StageGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
 	Stage* stage = dynamic_cast<Stage*> (gameobj);
+
+	//TODO 追加(エネミーも同様に)
+	stage->position = stage->player_->position;
 
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 

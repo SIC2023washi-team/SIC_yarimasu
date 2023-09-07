@@ -9,6 +9,7 @@
 #include <string>
 #include <fbxsdk.h>
 
+
 class GameObject
 {
 public:
@@ -47,6 +48,7 @@ public:
     }
 
 public:
+
     DirectX::XMFLOAT3 position{ 0, 0, 0 };  // 位置
     DirectX::XMFLOAT3 scale{ 3.0f, 3.0f, 3.0f }; // スケール
     DirectX::XMFLOAT3 rotation{ 0, 0, 0 }; //　回転
@@ -58,6 +60,8 @@ public:
     Mouse* mouse;// マウス
 
     ID3D11PixelShader* pixelShader = nullptr; // シェーダー
+
+    GameObject* player_;
 protected:
     InputComponent* input;
     PhysicsComponent* physics;
