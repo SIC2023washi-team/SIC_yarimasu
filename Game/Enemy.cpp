@@ -42,12 +42,18 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 	enemy->HitPoint = EnemyHitPoint;
+	enemy->scale.x = 16.f;
+	enemy->scale.y = 16.f;
+	enemy->scale.z = 16.f;
 }
 
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
-	//enemy->position.x = 100.0f;
+	//DirectX::XMFLOAT3 moveVec = GetMoveVec();
+
+	enemy->position.x += sin(enemy->rotation.y) *0.001f;
+	enemy->position.z += cos(enemy->rotation.y) * 0.001f;
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
