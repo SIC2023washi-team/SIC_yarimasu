@@ -20,7 +20,7 @@ namespace Lemur::Scene
         }
 
         // 更新処理
-        void Update(float elapsedTime);
+        void Update(HWND hwnd, float elapsedTime);
 
         // 描画処理
         void Render(float elapsedTime);
@@ -31,6 +31,7 @@ namespace Lemur::Scene
         // シーンの切り替え
         void ChangeScene(BaseScene* scene);
 
+        void Finalize();
     private:
         BaseScene* currentScene = nullptr;
         BaseScene* nextScene = nullptr;

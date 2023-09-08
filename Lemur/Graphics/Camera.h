@@ -38,6 +38,8 @@ private:
 public:
     DirectX::XMMATRIX GetViewMatrix() { return V; }         // view行列取得
     DirectX::XMMATRIX GetProjectionMatrix() { return P; }   // projection行列取得
+    DirectX::XMFLOAT4X4 GetWorld() { return world; }   // projection行列取得
+    DirectX::XMVECTOR GetEye() { return Eye; }   // projection行列取得
 
 private:
     // view行列
@@ -54,6 +56,7 @@ private:
     DirectX::XMFLOAT3 front{};
     DirectX::XMFLOAT3 right{};
 
+    DirectX::XMFLOAT4X4 world;
 
     // デバッグ用
     DirectX::XMFLOAT3   target = { 0,7.0f,-5.0f };
@@ -61,6 +64,6 @@ private:
     float               rollSpeed = DirectX::XMConvertToRadians(180);
     float               range = 10.0f;
 
-    float               maxAngleX = DirectX::XMConvertToRadians(90);
-    float               minAngleX = DirectX::XMConvertToRadians(-90);
+    float               maxAngleX = DirectX::XMConvertToRadians(45);
+    float               minAngleX = DirectX::XMConvertToRadians(-45);
 };

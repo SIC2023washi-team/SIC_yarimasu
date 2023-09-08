@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "Lemur/Input/Mouse.h"
+#include "./Lemur/Input/Mouse.h"
 #include <d3d11.h>
 #include <wrl.h>
 #include <directxmath.h>
@@ -37,10 +37,20 @@ public:
 
     void Render(float elapsedTime)
     {
-        graphics->Render(*this,elapsedTime);
+        graphics->Render(*this,elapsedTime, pixelShader);
+    }
+
+    void  ShadowRender(float elapsedTime)
+    {
+        graphics->ShadowRender(*this, elapsedTime);
     }
 
 public:
+    //DirectX::XMFLOAT3 translation{ 0, 0, 0 };
+    //DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
+    //DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
+    //DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
+
     /// <summary>
     /// 自機
     /// </summary>
@@ -54,7 +64,7 @@ public:
     /// <summary>
     /// 弾
     /// </summary>
-    
+
     //位置取得
     const DirectX::XMFLOAT3& GetPosition() const { return position; }
     //方向取得
@@ -73,20 +83,15 @@ public:
 
     float ProjectileLevel = 0.0f;
 
-    ///MAP
-    DirectX::XMFLOAT3 map_translation{ 0, 0, 0 };
-    DirectX::XMFLOAT3 map_scaling{ 30.0f, 30.0f, 30.0f };
-    DirectX::XMFLOAT3 map_rotation{ 0, 0, 0 };
-    DirectX::XMFLOAT4 map_material_color{ 1, 1, 1, 1 };
-    
-
-/// <summary>
-/// マウス
-/// </summary>
+    /// <summary>
+    /// マウス
+    /// </summary>
 
     Mouse* mouse;
 
+    ID3D11PixelShader* pixelShader = nullptr;
 
+    std::shared_ptr<skinned_mesh> stage;
 private:
     InputComponent* input;
     PhysicsComponent* physics;

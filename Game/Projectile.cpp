@@ -1,11 +1,10 @@
-#include "GameObject.h"
 #include "Projectile.h"
 #include "Mouse.h"
 #include "Lemur/Graphics/Camera.h"
 
 void ProjectilePhysicsComponent::Initialize(GameObject& gameobj)
 {
-	
+
 }
 
 void ProjectilePhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
@@ -39,7 +38,7 @@ void ProjectileGraphicsComponent::Update(GameObject& gameobj)
 
 }
 
-void ProjectileGraphicsComponent::Render(GameObject& gameobj, float elapsedTime)
+void ProjectileGraphicsComponent::Render(GameObject& gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
 
 }

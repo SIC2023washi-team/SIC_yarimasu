@@ -1,11 +1,32 @@
-#include "DemoScene.h"
-#include "../Graphics/Camera.h"
-#include "../Resource/ResourceManager.h"
+#include "SceneGame.h"
+#include "Lemur/Input/Mouse.h"
+#include"./Lemur/Graphics/Camera.h"
+#include"./Lemur/Resource/ResourceManager.h"
 
-// Effect
-#include "../Effekseer/EffekseerManager.h"
+#include"./Lemur/Effekseer/EffekseerManager.h"
 
-void DemoScene::Initialize()
+using namespace DirectX;
+XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
+{
+	using namespace DirectX;
+	XMFLOAT4 p;
+	XMStoreFloat4(&p,
+		XMVector3TransformCoord(
+			XMVector3TransformCoord(
+				XMVectorSet(static_cast<float>(x), static_cast<float>(y), z, 1),
+				XMMatrixInverse(NULL,
+					XMMatrixSet(
+						vp.Width * 0.5f, 0.0f, 0.0f, 0.0f,
+						0.0f, -vp.Height * 0.5f, 0.0f, 0.0f,
+						0.0f, 0.0f, vp.MaxDepth - vp.MinDepth, 0.0f,
+						vp.TopLeftX + vp.Width * 0.5f, vp.Height * 0.5f + vp.TopLeftY, vp.MinDepth, 1.0f))
+			), XMMatrixInverse(NULL, XMLoadFloat4x4(&view_projection))
+		)
+	);
+	return p;
+}
+
+void SceneGame::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	SetState();
@@ -34,97 +55,175 @@ void DemoScene::Initialize()
 	// Stage
 	stage = CreateStage();
 	stage->Initialize();
-
+	// Player
 	player = CreatePlayer();
 	player->Initialize();
-
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
 
-	// BLOOM
-	//bloomer = std::make_unique<bloom>(graphics.GetDevice(), 1280, 720);
-	//create_ps_from_cso(graphics.GetDevice(), "./Shader/final_pass_ps.cso", pixel_shaders[0].ReleaseAndGetAddressOf());
-	
-	// SKYMAP
-	//bit_block_transfer_sky = std::make_unique<fullscreen_quad>(graphics.GetDevice());
-	//create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[1].GetAddressOf());
-	//load_texture_from_file(graphics.GetDevice(), L".\\resources\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
-
+	// ZELDA
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/zelda_ps.cso", zelda_ps.GetAddressOf());
 
-	// シェーダーの決定
 	//player->pixelShader = zelda_ps.Get();
+	//stage->pixelShader = zelda_ps.Get();
 
 	// SHADOW
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
+
+
+
+#if 0
+	// BLOOM
+	bloomer = std::make_unique<bloom>(graphics.GetDevice(), 1280, 720);
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/final_pass_ps.cso", pixel_shaders[0].ReleaseAndGetAddressOf());
+
+	// SKYMAP
+	bit_block_transfer_sky = std::make_unique<fullscreen_quad>(graphics.GetDevice());
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[1].GetAddressOf());
+	load_texture_from_file(graphics.GetDevice(), L".\\resources\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
 	// MASK
 	dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\MASK\\chip_win.png");
 	load_texture_from_file(graphics.GetDevice(), L".\\resources\\MASK\\dissolve_animation.png",
 		mask_texture.GetAddressOf(), &mask_texture2dDesc);
 
-	// シェーダーの読み込み
+	// sprite用デフォルト描画シェーダー（ディゾルブ）
 	{
-		// sprite用デフォルト描画シェーダー（ディゾルブ）
+		D3D11_INPUT_ELEMENT_DESC input_element_desc[]
 		{
-			D3D11_INPUT_ELEMENT_DESC input_element_desc[]
-			{
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			};
-			create_vs_from_cso(graphics.GetDevice(),
-				"./Shader/sprite_dissolve_vs.cso",
-				sprite_vertex_shader.GetAddressOf(),
-				sprite_input_layout.GetAddressOf(),
-				input_element_desc,
-				ARRAYSIZE(input_element_desc));
-			create_ps_from_cso(graphics.GetDevice(),
-				"./Shader/sprite_dissolve_ps.cso",
-				sprite_pixel_shader.GetAddressOf());
-		}
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		create_vs_from_cso(graphics.GetDevice(), "./Shader/sprite_dissolve_vs.cso", sprite_vertex_shader.GetAddressOf(),
+			sprite_input_layout.GetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_dissolve_ps.cso", sprite_pixel_shader.GetAddressOf());
 	}
-
-
+#endif
 }
 
-void DemoScene::Finalize()
+void SceneGame::Finalize()
 {
 }
 
-void DemoScene::Update(HWND hwnd, float elapsedTime)
+void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+	Camera& camera = Camera::Instance();
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
-	Camera& camera = Camera::Instance();
-
 	camera.Update(elapsedTime);
-	player->Update(elapsedTime);
+
 	stage->Update(elapsedTime);
 
+	player->Update(elapsedTime);
+
+	/////////////////////////////////////////////
+	Mouse& mouse = Input::Instance().GetMouse();
+	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	{
+#if 0
+		scene_constants scene_data{};
+		POINT p;
+		GetCursorPos(&p);
+		ScreenToClient(hwnd, &p);
+
+		D3D11_VIEWPORT viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+		UINT viewport_count = { D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE };
+		immediate_context->RSGetViewports(&viewport_count, viewports);
+		XMFLOAT4X4 view_projection;
+		XMStoreFloat4x4(&view_projection, Camera::Instance().GetViewMatrix()* Camera::Instance().GetProjectionMatrix());
+		XMFLOAT4 position_on_near_plane = convert_screen_to_world(p.x, p.y, 0.0f, viewports[0], view_projection);
+		DirectX::XMVECTOR WorldPosition0 = XMLoadFloat4(&position_on_near_plane);
+#else
+		DirectX::XMFLOAT3 screenPosition;
+		screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
+		screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
+		screenPosition.z = 0.0f;
+
+		D3D11_VIEWPORT viewport;
+		UINT numViewports = 1;
+		immediate_context->RSGetViewports(&numViewports, &viewport);
+
+		DirectX::XMMATRIX View = Camera::Instance().GetViewMatrix();
+		DirectX::XMMATRIX Projection = Camera::Instance().GetProjectionMatrix();
+
+		DirectX::XMVECTOR WorldPosition0 = DirectX::XMVector3Unproject(
+			DirectX::XMLoadFloat3(&screenPosition),
+			viewport.TopLeftX, viewport.TopLeftY,
+			viewport.Width, viewport.Height,
+			viewport.MinDepth, viewport.MaxDepth,
+			Projection, View, DirectX::XMMatrixIdentity()
+		);
+#endif
+
+
+		XMVECTOR L0 = Camera::Instance().GetEye();
+		XMFLOAT4 l0;
+		XMStoreFloat4(&l0, L0);
+		XMFLOAT4 l;
+		XMStoreFloat4(&l, XMVector3Normalize(WorldPosition0 - L0));
+
+		std::string intersected_mesh;
+		std::string intersected_material;
+		XMFLOAT3 intersected_normal;
+		if (stage->stage->raycast(l0, l, stage->transform, intersection_point, intersected_normal, intersected_mesh, intersected_material))
+		{
+			OutputDebugStringA("Intersected : ");
+			OutputDebugStringA(intersected_mesh.c_str());
+			OutputDebugStringA(" : ");
+			OutputDebugStringA(intersected_material.c_str());
+			OutputDebugStringA("\n");
+
+			///自機の回転
+			//B-Aのベクトル
+			XMFLOAT3 rotationangle = { intersection_point.x - player->translation.x,intersection_point.y - player->translation.y,intersection_point.z - player->translation.z };
+			//正規化
+			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
+			XMFLOAT3 TANI;
+
+			//前方向取得
+			//float frontX = sinf(player->rotation.y);
+			//float frontZ = cosf(player->rotation.y);
+			//float dot = (frontX * player->translation.x) + (frontZ * player->translation.z);
+			//float rot = 1.0f - dot;
+			//player->rotation.y += rot;
+
+			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
+			
+			//前方向取得
+			/*DirectX::XMFLOAT3 front;
+			front.x = sinf(player->rotation.y);
+			front.y = 0;
+			front.z = cosf(player->rotation.y);
+			
+			XMStoreFloat3(&TANI,tani);
+			front.x = front.x * TANI.x;
+			front.y = front.y * TANI.y;
+			front.z = front.z * TANI.z;
+
+
+
+			player->rotation.y= front.y;*/
+		}
+		else
+		{
+			OutputDebugStringA("Unintersected...\n");
+		}
+	}
+
 	ImGui::Begin("ImGUI");
-	ImGui::SliderFloat("dissolve_value", &dissolve_value, 0.0f, +1.0f);
-
-	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
-
-	// SHADOW
-	//ImGui::SliderFloat3("light_view_focus", &light_view_focus.x, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
-	ImGui::SliderFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
-	ImGui::Image(reinterpret_cast<void*>(double_speed_z->shader_resource_view.Get()), ImVec2(shadowmap_width / 5.0f, shadowmap_height / 5.0f));
 
 	ImGui::End();
 }
 
-void DemoScene::Render(float elapsedTime)
+void SceneGame::Render(float elapsedTime)
 {
 	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -133,6 +232,7 @@ void DemoScene::Render(float elapsedTime)
 	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
 	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
 
+	// bloom用
 	ID3D11RenderTargetView* null_render_target_views[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT]{};
 	immediate_context->OMSetRenderTargets(_countof(null_render_target_views), null_render_target_views, 0);
 	ID3D11ShaderResourceView* null_shader_resource_views[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT]{};
@@ -184,7 +284,7 @@ void DemoScene::Render(float elapsedTime)
 	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
 	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
 
-	 //3D描画
+	//3D描画
 	{
 		framebuffers[0]->clear(immediate_context);
 		framebuffers[0]->activate(immediate_context);
@@ -211,8 +311,6 @@ void DemoScene::Render(float elapsedTime)
 	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
 	//bit_block_transfer_sky->blit(immediate_context, skymap.GetAddressOf(), 0, 1, pixel_shaders[1].Get());
 	//
-#endif
-
 
 	//// SHADOW : make shadow map
 	//{
@@ -238,14 +336,12 @@ void DemoScene::Render(float elapsedTime)
 	//	skinned_meshes[1]->render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, null_pixel_shader);
 	//	double_speed_z->deactivate(immediate_context);
 	//}
-
-	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix()* camera.GetProjectionMatrix());
-
+#endif
 	// Render scene
 	D3D11_VIEWPORT viewport;
 	UINT num_viewports{ 1 };
 	immediate_context->RSGetViewports(&num_viewports, &viewport);
-	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix()* camera.GetProjectionMatrix());
+	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix() * camera.GetProjectionMatrix());
 
 	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
 	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
@@ -256,9 +352,91 @@ void DemoScene::Render(float elapsedTime)
 	player->Render(elapsedTime);
 
 	stage->Render(elapsedTime);
-	skinned_meshes[1]->render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, nullptr);
 
 #if 0
+
+	D3D11_VIEWPORT viewport;
+	UINT num_viewports{ 1 };
+	immediate_context->RSGetViewports(&num_viewports, &viewport);
+
+	float aspect_ratio{ viewport.Width / viewport.Height };
+
+	// SKYMAP
+	DirectX::XMStoreFloat4x4(&data.inv_view_projection, DirectX::XMMatrixInverse(NULL, camera.GetViewMatrix() * camera.GetProjectionMatrix()));
+
+	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
+	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+
+	//3D描画
+	{
+		framebuffers[0]->clear(immediate_context);
+		framebuffers[0]->activate(immediate_context);
+		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+		player->Render(elapsedTime);
+		framebuffers[0]->deactivate(immediate_context);
+		// BLOOM
+		bloomer->make(immediate_context, framebuffers[0]->shader_resource_views[0].Get());
+
+		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+
+		ID3D11ShaderResourceView* shader_resource_views[] =
+		{
+			framebuffers[0]->shader_resource_views[0].Get(),
+			bloomer->shader_resource_view(),
+		};
+		bit_block_transfer->blit(immediate_context, shader_resource_views, 0, 2, pixel_shaders[0].Get());
+	}
+	// SKYMAP
+	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	//bit_block_transfer_sky->blit(immediate_context, skymap.GetAddressOf(), 0, 1, pixel_shaders[1].Get());
+	//
+
+	// SHADOW : make shadow map
+	{
+		using namespace DirectX;
+
+		const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
+		XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
+		XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
+		XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
+		XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
+		XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
+
+		DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
+		data.light_view_projection = data.view_projection;
+		immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
+		immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+
+		double_speed_z->clear(immediate_context, 1.0f);
+		double_speed_z->activate(immediate_context);
+
+		ID3D11PixelShader* null_pixel_shader{ NULL };
+		// ここにRender
+		double_speed_z->deactivate(immediate_context);
+	}
+
+	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix() * camera.GetProjectionMatrix());
+
+	// Render scene
+	D3D11_VIEWPORT viewport;
+	UINT num_viewports{ 1 };
+	immediate_context->RSGetViewports(&num_viewports, &viewport);
+	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix() * camera.GetProjectionMatrix());
+
+	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
+	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+
+	// SHADOW : bind shadow map at slot 8
+	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
+
+	// ここにRender
+
 	// sprite描画
 	{
 		if (dummy_sprite)
@@ -295,7 +473,8 @@ void DemoScene::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 
 		EffectManager::Instance().Render(view, projection);
-	}
+}
+
 
 
 }

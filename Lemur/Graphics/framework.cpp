@@ -4,6 +4,12 @@
 #include "Graphics.h"
 #include "..\Scene\SceneManager.h"
 
+// Effect
+#include "../Effekseer/EffekseerManager.h"
+
+// SceneGame
+#include "./Game/SceneGame.h"
+
 framework::framework(HWND hwnd) 
 	: hwnd(hwnd),
 	graphics(hwnd,FALSE),
@@ -13,8 +19,11 @@ framework::framework(HWND hwnd)
 
 bool framework::initialize()
 {
+	// エフェクトマネージャー初期化
+	EffectManager::Instance().Initialize();
+
 	// シーン初期化
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
 
 	return true;
 }
@@ -28,7 +37,7 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
 	input.Update();
 
 	// シーン更新処理
-	Lemur::Scene::SceneManager::Instance().Update(elapsed_time);
+	Lemur::Scene::SceneManager::Instance().Update(hwnd,elapsed_time);
 	// 時間経過更新
 	timer += elapsed_time;
 }
@@ -36,6 +45,9 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
 void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
 {
 	using namespace Lemur::Graphics;
+	// 別スレッド中にデバイスコンテキストが使われていた場合に
+	// 同時にアクセスしないように排他制御をする
+	std::lock_guard<std::mutex> lock(graphics.GetMutex());
 	// シーン描画処理
 	Lemur::Scene::SceneManager::Instance().Render(elapsed_time);
 
@@ -52,5 +64,8 @@ bool framework::uninitialize()
 
 framework::~framework()
 {
+	Lemur::Scene::SceneManager::Instance().Clear();
 
+	// エフェクトマネージャー終了化
+	EffectManager::Instance().Finalize();
 }

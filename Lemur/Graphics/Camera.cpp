@@ -11,7 +11,6 @@ void Camera::SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& fo
 
     // ビュー行列を逆行列化し、ワールド行列に戻す
     DirectX::XMMATRIX World = DirectX::XMMatrixInverse(nullptr, View);
-    DirectX::XMFLOAT4X4 world;
     DirectX::XMStoreFloat4x4(&world, World);
 
     // カメラ方向を取り出す
@@ -60,8 +59,8 @@ void Camera::Update(float elapsedTime)
     angle.x -= ay * speed;
     angle.y += ax * speed;
 
-    //target.x += lx * speed;
-    //target.y += ly * speed;
+    target.x  += lx * speed;
+    target.y  += ly * speed;
 
     // カメラの回転値を回転行列に変換
     DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
@@ -97,6 +96,7 @@ void Camera::Update(float elapsedTime)
     {
         angle.y -= DirectX::XM_2PI;
     }*/
+
 
     //カメラの視点と注視点を設定
     SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));

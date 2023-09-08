@@ -20,7 +20,7 @@ namespace Lemur::Scene
         // èIóπâª
         virtual void Finalize() = 0;
         // çXêVèàóù
-        virtual void Update(float elapsefTime) = 0;
+        virtual void Update(HWND hwnd, float elapsefTime) = 0;
         // ï`âÊèàóù
         virtual void Render(float elapsedTime) = 0;
 
@@ -30,8 +30,8 @@ namespace Lemur::Scene
         void SetReady() { ready = true; }
 
     protected:
-        enum class SAMPLER_STATE { POINT, LINEAR, ANISOTROPIC, LINEAR_BORDER_BLACK/*UNIT.32*/, LINEAR_BORDER_WHITE/*UNIT.32*/ };
-        Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_states[5];
+        enum class SAMPLER_STATE { POINT, LINEAR, ANISOTROPIC, LINEAR_BORDER_BLACK, LINEAR_BORDER_WHITE, COMPARISON_LINEAR_BORDER_WHITE};
+        Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_states[6];
 
         enum  DEPTH_STATE { ZT_ON_ZW_ON, ZT_ON_ZW_OFF, ZT_OFF_ZW_ON, ZT_OFF_ZW_OFF };
         Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depth_stencil_states[4];

@@ -269,7 +269,7 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
         hr = device->CreateBuffer(&buffer_desc, &subresource_data,
             mesh.index_buffer.ReleaseAndGetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-#if 1
+#if 0 // (ToT)
         mesh.vertices.clear();
         mesh.indices.clear();
 #endif
@@ -304,8 +304,10 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
         { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT },
         { "BONES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT },
     };
+
     create_vs_from_cso(device, "Shader/skinned_mesh_vs.cso", vertex_shader.ReleaseAndGetAddressOf(), input_layout.ReleaseAndGetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
     create_ps_from_cso(device, "Shader/skinned_mesh_ps.cso", pixel_shader.ReleaseAndGetAddressOf());
+
     D3D11_BUFFER_DESC buffer_desc{};
     buffer_desc.ByteWidth = sizeof(constants);
     buffer_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -314,7 +316,7 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 }
 
-void skinned_mesh::render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color, const animation::keyframe* keyframe)
+void skinned_mesh::render(ID3D11DeviceContext* immediate_context, const XMFLOAT4X4& world, const XMFLOAT4& material_color, const animation::keyframe* keyframe/*UNIT.25*/, ID3D11PixelShader* replaced_pixel_shader)
 {
     for (const mesh& mesh : meshes)
     {
@@ -326,7 +328,14 @@ void skinned_mesh::render(ID3D11DeviceContext* immediate_context, const DirectX:
         immediate_context->IASetInputLayout(input_layout.Get());
 
         immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
-        immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+        if (replaced_pixel_shader)
+        {
+            immediate_context->PSSetShader(replaced_pixel_shader, nullptr, 0);
+        }
+        else
+        {
+            immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+        }
 
         constants data;
 
@@ -742,4 +751,59 @@ void skinned_mesh::blend_animations(const animation::keyframe* keyframes[2], flo
         XMStoreFloat3(&keyframe.nodes.at(node_index).translation, XMVectorLerp(T[0], T[1], factor));
     }
 }
+
+// RAYCAST
+#include "Game/RayCast.h"
+// The coordinate system of all function arguments is world space.
+bool skinned_mesh::raycast(const XMFLOAT4& position, const XMFLOAT4& direction, const XMFLOAT4X4& world_transform, XMFLOAT4& closest_point, DirectX::XMFLOAT3& intersected_normal,
+    std::string& intersected_mesh, std::string& intersected_material)
+{
+    float closest_distance{ FLT_MAX };
+
+    for (const mesh& mesh : meshes)
+    {
+        XMFLOAT4 ray_position = position;
+        XMFLOAT4 ray_direction = direction;
+        ray_direction.w = 0;
+
+        // Convert to model space.
+        XMMATRIX concatenated_matrix{
+            XMLoadFloat4x4(&mesh.default_global_transform) *
+            XMLoadFloat4x4(&world_transform) };
+        XMMATRIX inverse_concatenated_matrix{ XMMatrixInverse(nullptr, concatenated_matrix) };
+        XMStoreFloat4(&ray_position, XMVector3TransformCoord(XMLoadFloat4(&ray_position), inverse_concatenated_matrix));
+        XMStoreFloat4(&ray_direction, XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat4(&ray_direction), inverse_concatenated_matrix)));
+
+#if 0
+        const float* min{ reinterpret_cast<const float*>(&mesh.bounding_box[0]) };
+        const float* max{ reinterpret_cast<const float*>(&mesh.bounding_box[1]) };
+        if (!intersect_ray_aabb(reinterpret_cast<const float*>(&ray_position), reinterpret_cast<const float*>(&ray_direction), min, max))
+        {
+            continue;
+        }
+#endif
+
+        float distance{ 1.0e+7f };
+        XMFLOAT4 intersection{};
+        const float* vertex_positions{ reinterpret_cast<const float*>(mesh.vertices.data()) };
+        const uint32_t* indices{ mesh.indices.data() };
+        const size_t index_count{ mesh.indices.size() };
+
+        const int intersected_triangle_index{ intersect_ray_triangles(vertex_positions, 0L, sizeof(vertex), indices, index_count, ray_position, ray_direction, intersection, distance) };
+        if (intersected_triangle_index >= 0)
+        {
+            if (closest_distance > distance)
+            {
+                closest_distance = distance;
+                // Convert model space to original space.
+                XMStoreFloat4(&closest_point, XMVector3TransformCoord(XMLoadFloat4(&intersection), concatenated_matrix));
+                intersected_mesh = mesh.name;
+                intersected_material = mesh.find_subset(intersected_triangle_index * 3)->material_name;
+                intersected_normal = mesh.vertices.at(indices[intersected_triangle_index + 0]).normal;
+            }
+        }
+    }
+    return closest_distance < FLT_MAX;
+}
+
 

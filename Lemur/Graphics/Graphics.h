@@ -17,10 +17,13 @@
 // BLOOM
 #include "bloom.h"
 
+// SHADOW
+#include "shadow_map.h"
+
 #include <d3d11.h>
 #include <directxmath.h>
 #include <wrl.h>
-
+#include <mutex>
 
 CONST LONG SCREEN_WIDTH{ 1280 };
 CONST LONG SCREEN_HEIGHT{ 720 };
@@ -46,7 +49,8 @@ namespace Lemur::Graphics
         ID3D11DepthStencilView* GetDepthStencilView() const { return depth_stencil_view.Get(); }
         D3D11_TEXTURE2D_DESC* GetTexture2D() { return &texture2d_desc; }
 
-    public:
+        // ミューテックス取得
+        std::mutex& GetMutex() { return mutex; }
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Device> device;// DirectX11で利用する様々なリソースを作成するやつ
@@ -98,5 +102,7 @@ namespace Lemur::Graphics
         std::unique_ptr<geometric_primitive> geometric_primitives[8];
     private:
         static Graphics* instance;
+
+        std::mutex mutex;
     };
 }
