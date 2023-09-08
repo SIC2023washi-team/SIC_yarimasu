@@ -63,7 +63,16 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	enemy->position.x += floatX * enemy->Speed;
 	//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
 	enemy->position.z += floatZ * enemy->Speed;
-
+	
+	float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
+	if (cross < 0)
+	{
+		enemy->rotation.y += 0.01f;
+	}
+	else
+	{
+		enemy->rotation.y -= 0.01f;
+	}
 	
 }
 
