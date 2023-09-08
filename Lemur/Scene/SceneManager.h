@@ -20,7 +20,7 @@ namespace Lemur::Scene
         }
 
         // XVˆ—
-        void Update(HWND hwnd, float elapsedTime);
+        void Update(float elapsedTime);
 
         // •`‰æˆ—
         void Render(float elapsedTime);

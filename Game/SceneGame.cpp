@@ -197,7 +197,8 @@ void SceneGame::Update(float elapsedTime)
 		std::string intersected_mesh;
 		std::string intersected_material;
 		XMFLOAT3 intersected_normal;
-		if (stage->stage->raycast(l0, l, stage->transform, intersection_point, intersected_normal, intersected_mesh, intersected_material))
+		
+		if (stage->stage_mesh->raycast(l0, l, stage->transform, intersection_point, intersected_normal, intersected_mesh, intersected_material))
 		{
 			OutputDebugStringA("Intersected : ");
 			OutputDebugStringA(intersected_mesh.c_str());

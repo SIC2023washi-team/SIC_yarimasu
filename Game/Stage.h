@@ -15,6 +15,7 @@ public:
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
 
+
 };
 
 class StageInputComponent :public InputComponent

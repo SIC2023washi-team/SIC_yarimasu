@@ -60,7 +60,7 @@ public:
     Mouse* mouse;// マウス
 
     ID3D11PixelShader* pixelShader = nullptr; // シェーダー
-
+    std::shared_ptr<skinned_mesh> stage_mesh;
     GameObject* player_;
 protected:
     InputComponent* input;
