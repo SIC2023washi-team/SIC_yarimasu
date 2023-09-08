@@ -36,8 +36,10 @@ void SceneGame::Initialize()
 	// Player
 	player = CreatePlayer();
 	player->Initialize();
-
-	enemy = CreateEnemy();
+	for (int i = 0; i < 3; i++)
+	{
+		enemy = CreateEnemy();
+	}
 	enemy->Initialize();
 
 	//TODO 追加(エネミーも同様に)

@@ -11,10 +11,18 @@ public:
     Enemy(InputComponent* input_,
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
-    float HitPoint = 0.0f;
+
+    int EnemyState = 0;
+    int EnemyType = 0;
+    float HitPoint;
     float Speed = 0.001f;
+    float Atk;
+
     static void DrawDebugGUI(GameObject* gameobj);
+
+
 };
+
 
 class EnemyInputComponent :public InputComponent
 {

@@ -45,21 +45,27 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->scale.x = 16.f;
 	enemy->scale.y = 16.f;
 	enemy->scale.z = 16.f;
+	enemy->position.x = rand() % 5 -2;
+	enemy->position.z = rand() % 5 -2;
 	enemy->position.y = 1.5f;
 }
 
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
-	
+	//‚»‚Ì•ûŒü‚ÉŒü‚©‚¤ŒvŽZ
 	float px = (enemy->player_->position.x -enemy->position.x);
 	float pz = (enemy->player_->position.z - enemy->position.z);
+	//Vector‰»
 	DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
 	DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
+	//³‹K‰»
 	vec_x  = DirectX::XMVector3Normalize(vec_x);
 	vec_z  = DirectX::XMVector3Normalize(vec_z);
+	//float‚É–ß‚·ˆ—
 	float floatX = DirectX::XMVectorGetX(vec_x);
 	float floatZ = DirectX::XMVectorGetX(vec_z);
+	//ŽÀÛ‚ÉˆÚ“®‚³‚¹‚éˆ—
 	enemy->position.x += floatX * enemy->Speed;
 	//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
 	enemy->position.z += floatZ * enemy->Speed;
@@ -67,19 +73,37 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
 	if (cross < 0)
 	{
-		enemy->rotation.y += 0.01f;
+		
 	}
 	else
 	{
-		enemy->rotation.y -= 0.01f;
+		
 	}
 	
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 {
+	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+	srand((unsigned int)time(NULL));
+	enemy->EnemyType = rand() % 3;
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-	EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_mid_v001.fbx");
+	switch (enemy->EnemyType)
+	{
+	default:
+		break;
+	case 0:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_v001.fbx");
+		break;
+	case 1:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_mid_v001.fbx");
+		break;
+	case 2:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_High_v001.fbx");
+		break;
+	}
+
+
 }
 
 void EnemyGraphicsComponent::Update(GameObject* gameobj)

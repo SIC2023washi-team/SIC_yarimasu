@@ -10,7 +10,7 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 	player->HitPoint = PlayerHitPoint;
 
 	//TODO ’Ç‰Á
-	player->position = { 2,1,0 };
+	player->position = { 0,0,0 };
 }
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
