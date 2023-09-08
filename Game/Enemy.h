@@ -14,6 +14,7 @@ public:
     float HitPoint = 0.0f;
     float Speed = 0.001f;
     float Atk;
+    float AnimSpeed = 1.0f;
     int EnemyType;
     static void DrawDebugGUI(GameObject* gameobj);
 };

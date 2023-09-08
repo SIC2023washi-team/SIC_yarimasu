@@ -41,11 +41,38 @@ void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
 void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+
 	enemy->HitPoint = EnemyHitPoint;
 	enemy->scale.x = 16.f;
 	enemy->scale.y = 16.f;
 	enemy->scale.z = 16.f;
-	enemy->position.y = 1.5f;
+	enemy->position.y = 0.0f;
+
+
+	enemy->EnemyType = rand() % 4;
+	switch (enemy->EnemyType)
+	{
+	default:
+		break;
+	case 0://¬‚³‚¢‚Ì
+		enemy->Speed = 0.001f;
+		enemy->AnimSpeed = 3.0f;
+		break;
+	case 1://’†‚­‚ç‚¢‚Ì
+		enemy->Speed = 0.0008f;
+		enemy->AnimSpeed = 1.5f;
+		break;
+	case 2://‘å‚«‚¢‚Ì
+		enemy->Speed = 0.0005f;
+		break;
+	case 3://¬‚³‚¢‚µ‚­‚»‘
+		enemy->Speed = 0.003f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 10.0f;
+		break;
+	}
+
+
 
 	srand((unsigned int)time(NULL));
 
@@ -53,12 +80,12 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	{
 	case 0://ã‰º‚©‚ç‚­‚é
 
-		enemy->position.x = rand() % 20 - 10;
-		enemy->position.z = 10 *(- 1 + (rand() % 2) * 2);
+		enemy->position.x = rand() % 16 - 8;
+		enemy->position.z = 8 *(- 1 + (rand() % 2) * 2);
 		break;
 	case 1://¶‰E‚©‚ç‚­‚é
-		enemy->position.x = 10 * (-1 + (rand() % 2) * 2);
-		enemy->position.z = rand() % 10 - 10;
+		enemy->position.x = 8 * (-1 + (rand() % 2) * 2);
+		enemy->position.z = rand() % 16 - 8;
 		break;
 	}
 
@@ -115,7 +142,7 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	srand((unsigned int)time(NULL));
-	enemy->EnemyType = rand() % 3;
+
 
 
 	switch (enemy->EnemyType)
@@ -129,7 +156,10 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_mid_v001.fbx");
 		break;
 	case 2:
-		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_high_v001.fbx");
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_high_v002.fbx");
+		break;
+	case 3:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_v001.fbx");
 		break;
 	}
 
@@ -187,7 +217,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		}
 		else
 		{
-			animation_tick += elapsedTime;
+			animation_tick += elapsedTime*enemy->AnimSpeed;
 		}
 		animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
 #else
