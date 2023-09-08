@@ -1,19 +1,12 @@
 #include "SceneGame.h"
-<<<<<<< HEAD
-=======
+
 #include "Lemur/Input/Mouse.h"
->>>>>>> washinao
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
-
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
-<<<<<<< HEAD
-void SceneGame::Initialize()
-{
-    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    SetState();
-=======
+
+
 using namespace DirectX;
 XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
 {
@@ -39,7 +32,6 @@ void SceneGame::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	SetState();
->>>>>>> washinao
 
 	HRESULT hr{ S_OK };
 	// シーン定数バッファオブジェクトを生成
@@ -68,7 +60,7 @@ void SceneGame::Initialize()
 	// Player
 	player = CreatePlayer();
 	player->Initialize();
-<<<<<<< HEAD
+
 	for (int i = 0; i < 3; i++)
 	{
 		enemy = CreateEnemy();
@@ -77,10 +69,6 @@ void SceneGame::Initialize()
 
 	//TODO 追加(エネミーも同様に)
 	stage->player_ = player;
-	
-
-=======
->>>>>>> washinao
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
@@ -95,11 +83,7 @@ void SceneGame::Initialize()
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
-<<<<<<< HEAD
 	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
-=======
-
->>>>>>> washinao
 
 #if 0
 	// BLOOM
@@ -135,7 +119,6 @@ void SceneGame::Finalize()
 {
 }
 
-<<<<<<< HEAD
 void SceneGame::Update(float elapsedTime)
 {
 	enemy->player_ = player;
@@ -149,16 +132,12 @@ void SceneGame::Update(float elapsedTime)
 	// エフェクト更新処理
 	ImGui::Begin("ImGUI");
 
-=======
-void SceneGame::Update(HWND hwnd, float elapsedTime)
-{
-	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
 	// エフェクト更新処理
->>>>>>> washinao
+
 	EffectManager::Instance().Update(elapsedTime);
 
 	camera.Update(elapsedTime);
@@ -166,14 +145,9 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	stage->Update(elapsedTime);
 
 	player->Update(elapsedTime);
-
-<<<<<<< HEAD
-
-
 	
-
 	enemy->Update(elapsedTime);
-=======
+
 	/////////////////////////////////////////////
 	Mouse& mouse = Input::Instance().GetMouse();
 	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
@@ -268,9 +242,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 
-	ImGui::Begin("ImGUI");
 
->>>>>>> washinao
 	ImGui::End();
 }
 
@@ -404,106 +376,13 @@ void SceneGame::Render(float elapsedTime)
 
 	stage->Render(elapsedTime);
 
-<<<<<<< HEAD
+
 	enemy->Render(elapsedTime);
 
-=======
->>>>>>> washinao
-#if 0
 
-	D3D11_VIEWPORT viewport;
-	UINT num_viewports{ 1 };
-	immediate_context->RSGetViewports(&num_viewports, &viewport);
-
-	float aspect_ratio{ viewport.Width / viewport.Height };
-
-	// SKYMAP
-	DirectX::XMStoreFloat4x4(&data.inv_view_projection, DirectX::XMMatrixInverse(NULL, camera.GetViewMatrix() * camera.GetProjectionMatrix()));
-
-	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
-	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-
-	//3D描画
-	{
-		framebuffers[0]->clear(immediate_context);
-		framebuffers[0]->activate(immediate_context);
-		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
-		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
-		player->Render(elapsedTime);
-		framebuffers[0]->deactivate(immediate_context);
-		// BLOOM
-		bloomer->make(immediate_context, framebuffers[0]->shader_resource_views[0].Get());
-
-		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
-
-		ID3D11ShaderResourceView* shader_resource_views[] =
-		{
-			framebuffers[0]->shader_resource_views[0].Get(),
-			bloomer->shader_resource_view(),
-		};
-		bit_block_transfer->blit(immediate_context, shader_resource_views, 0, 2, pixel_shaders[0].Get());
-	}
-	// SKYMAP
-	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-	//bit_block_transfer_sky->blit(immediate_context, skymap.GetAddressOf(), 0, 1, pixel_shaders[1].Get());
-	//
-
-	// SHADOW : make shadow map
-	{
-		using namespace DirectX;
-
-		const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
-		XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
-		XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
-		XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
-		XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
-		XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
-
-		DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
-		data.light_view_projection = data.view_projection;
-		immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
-		immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-
-		double_speed_z->clear(immediate_context, 1.0f);
-		double_speed_z->activate(immediate_context);
-
-		ID3D11PixelShader* null_pixel_shader{ NULL };
-		// ここにRender
-		double_speed_z->deactivate(immediate_context);
-	}
-
-	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix() * camera.GetProjectionMatrix());
-
-	// Render scene
-	D3D11_VIEWPORT viewport;
-	UINT num_viewports{ 1 };
-	immediate_context->RSGetViewports(&num_viewports, &viewport);
-	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix() * camera.GetProjectionMatrix());
-
-	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
-	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-
-	// SHADOW : bind shadow map at slot 8
-	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
-
-	// ここにRender
-<<<<<<< HEAD
-	
-#endif
 	// sprite描画
 	{
 		if (pause)
-=======
-
-	// sprite描画
-	{
-		if (dummy_sprite)
->>>>>>> washinao
 		{
 			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
@@ -523,16 +402,13 @@ void SceneGame::Render(float elapsedTime)
 				immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 			}
-<<<<<<< HEAD
+
 			pause->render(immediate_context, pausePosition.x, pausePosition.y, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 	}
-=======
-			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		}
-	}
-#endif
->>>>>>> washinao
+
+
+
 
 	// 3Dエフェクト描画
 	{
@@ -543,12 +419,6 @@ void SceneGame::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 
 		EffectManager::Instance().Render(view, projection);
-<<<<<<< HEAD
 	}
-=======
-}
->>>>>>> washinao
-
-
 
 }

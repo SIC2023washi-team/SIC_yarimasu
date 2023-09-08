@@ -49,30 +49,22 @@ public:
     //}
 
     // ÉvÉåÉCÉÑÅ[ê∂ê¨
-<<<<<<< HEAD
+
     Player* CreatePlayer()
     {
         return new Player(
-=======
-    GameObject* CreatePlayer()
-    {
-        return new GameObject(
->>>>>>> washinao
+
             new PlayerInputComponent(),
             new PlayerPhysicsComponent(),
             new PlayerGraphicsComponent()
         );
     }
 
-<<<<<<< HEAD
+
     Stage* CreateStage()
     {
         return new Stage(
-=======
-    GameObject* CreateStage()
-    {
-        return new GameObject(
->>>>>>> washinao
+
             new StageInputComponent(),
             new StagePhysicsComponent(),
             new StageGraphicsComponent()

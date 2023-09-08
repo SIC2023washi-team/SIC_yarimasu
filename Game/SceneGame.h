@@ -33,47 +33,34 @@ public:
     void Finalize()override;
 
     // 更新処理
-<<<<<<< HEAD
+
     void Update(float elapsedTime)override;
-=======
-    void Update(HWND hwnd,float elapsedTime)override;
->>>>>>> washinao
+
 
     // 描画処理
     void Render(float elapsedTime)override;
 
     // プレイヤー生成
-<<<<<<< HEAD
+
     Player* CreatePlayer()
     {
         return new Player(
-=======
-    GameObject* CreatePlayer()
-    {
-        return new GameObject(
->>>>>>> washinao
             new PlayerInputComponent(),
             new PlayerPhysicsComponent(),
             new PlayerGraphicsComponent()
         );
     }
 
-<<<<<<< HEAD
+
     Stage* CreateStage()
     {
         return new Stage(
-=======
-    GameObject* CreateStage()
-    {
-        return new GameObject(
->>>>>>> washinao
             new StageInputComponent(),
             new StagePhysicsComponent(),
             new StageGraphicsComponent()
         );
     }
 
-<<<<<<< HEAD
 
     Enemy* CreateEnemy()
     {
@@ -84,19 +71,17 @@ public:
         );
     }
 private:
-=======
-private:
+
 
     
 
->>>>>>> washinao
+
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, -10.0f, 1.0f };
     DirectX::XMFLOAT4 light_direction{ -0.113f, -0.556f, 1.0f, 0.0f };
 
-<<<<<<< HEAD
-=======
+
     DirectX::XMFLOAT3 translation{ 0, 0, 0 };
     DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
     DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
@@ -106,7 +91,7 @@ private:
     //DirectX::XMFLOAT4X4 island_transform{ -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 };
     //scene_constants scene_data{};
 
->>>>>>> washinao
+
     // Stage
     GameObject* stage;
 
@@ -114,7 +99,7 @@ private:
     GameObject* player;
 
 
-<<<<<<< HEAD
+
     //Enemy
     GameObject* enemy;
 
@@ -123,7 +108,6 @@ private:
     std::shared_ptr<sprite> pause;
     DirectX::XMFLOAT2 pausePosition = { 1920,0 };
 
-=======
 >>>>>>> washinao
 //----------------------------------------------------------------------------------------------------
 //  ↓シェーダー関連

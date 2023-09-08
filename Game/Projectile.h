@@ -17,8 +17,7 @@ class Projectile :public GameObject
     float ProjectileLevel = 0.0f;
 };
 
-=======
->>>>>>> washinao
+
 //’e
 //class DemoProjectileComponent :public InputComponent
 //{
@@ -28,26 +27,19 @@ class Projectile :public GameObject
 
 class ProjectilePhysicsComponent :public PhysicsComponent
 {
-<<<<<<< HEAD
+
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj, float elapsedTime) override;
-=======
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj, float elapsedTime) override;
->>>>>>> washinao
+
 };
 
 class ProjectileGraphicsComponent :public GraphicsComponent
 {
-<<<<<<< HEAD
+
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj) override;
     void Render(GameObject* gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
-=======
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj) override;
-    void Render(GameObject& gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
->>>>>>> washinao
+
 
 private:
     std::shared_ptr<skinned_mesh> DemoPlayerModel; ///ƒ‚ƒfƒ‹‘Ò‚¿
