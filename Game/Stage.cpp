@@ -2,6 +2,7 @@
 #include "Lemur/Input/Mouse.h"
 #include "Lemur/Graphics/Camera.h"
 
+<<<<<<< HEAD
 void StagePhysicsComponent::Initialize(GameObject* gameobj)
 {
 	gameobj->scale.x = gameobj->scale.y = gameobj->scale.z = 3.0f;
@@ -9,10 +10,14 @@ void StagePhysicsComponent::Initialize(GameObject* gameobj)
 }
 
 void StagePhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
+=======
+void StagePhysicsComponent::Initialize(GameObject& gameobj)
+>>>>>>> washinao
 {
 
 }
 
+<<<<<<< HEAD
 void StageGraphicsComponent::Initialize(GameObject* gameobj)
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -20,10 +25,25 @@ void StageGraphicsComponent::Initialize(GameObject* gameobj)
 }
 
 void StageGraphicsComponent::Update(GameObject* gameobj)
+=======
+void StagePhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
 {
 
 }
 
+void StageGraphicsComponent::Initialize(GameObject& gameobj)
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+	gameobj.stage = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\ExampleStage\\ExampleStage.fbx");
+}
+
+void StageGraphicsComponent::Update(GameObject& gameobj)
+>>>>>>> washinao
+{
+
+}
+
+<<<<<<< HEAD
 void StageGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
 	Stage* stage = dynamic_cast<Stage*> (gameobj);
@@ -31,6 +51,10 @@ void StageGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	//TODO 追加(エネミーも同様に)
 	stage->position = stage->player_->position;
 
+=======
+void StageGraphicsComponent::Render(GameObject& gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
+{
+>>>>>>> washinao
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
@@ -50,22 +74,38 @@ void StageGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 #endif
 	// 変換用
 	DirectX::XMMATRIX C{ DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0])* DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
+<<<<<<< HEAD
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(stage->scale.x, stage->scale.y, stage->scale.z) };
 	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(stage->rotation.x, stage->rotation.y, stage->rotation.z) };
 	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(stage->position.x, stage->position.y, stage->position.z) };
+=======
+	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(gameobj.scaling.x*10, gameobj.scaling.y*10, gameobj.scaling.z*10) };
+	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(gameobj.rotation.x, gameobj.rotation.y, gameobj.rotation.z) };
+	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(gameobj.translation.x, gameobj.translation.y, gameobj.translation.z) };
+>>>>>>> washinao
 	// ワールド変換行列を作成
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
 
+<<<<<<< HEAD
 
 	if (stageModel->animation_clips.size() > 0)
+=======
+	gameobj.transform = world;
+
+	if (gameobj.stage->animation_clips.size() > 0)
+>>>>>>> washinao
 	{
 		// アニメーション用
 		int clip_index = 0;
 		int frame_index = 0;
 		static float animation_tick = 0;
 #if 1
+<<<<<<< HEAD
 		animation& animation{ stageModel->animation_clips.at(clip_index) };
+=======
+		animation& animation{ gameobj.stage->animation_clips.at(clip_index) };
+>>>>>>> washinao
 		frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
 		if (frame_index > animation.sequence.size() - 1)
 		{
@@ -87,16 +127,28 @@ void StageGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		skinned_meshes[0]->update_animation(keyframe);
 
 # endif
+<<<<<<< HEAD
 		stageModel->render(immediate_context, world, stage->material_color, &keyframe, replaced_pixel_shader);
 	}
 	else
 	{
 		stageModel->render(immediate_context, world, stage->material_color, nullptr, replaced_pixel_shader);
+=======
+		gameobj.stage->render(immediate_context, world, gameobj.material_color, &keyframe, replaced_pixel_shader);
+	}
+	else
+	{
+		gameobj.stage->render(immediate_context, world, gameobj.material_color, nullptr, replaced_pixel_shader);
+>>>>>>> washinao
 	}
 }
 
 // 入力処理
+<<<<<<< HEAD
 void StageInputComponent::Update(GameObject* gameobj, float elapsedTime)
+=======
+void StageInputComponent::Update(GameObject& gameobj, float elapsedTime)
+>>>>>>> washinao
 {
 	//GamePad& gamePad = Input::Instance().GetGamePad();
 	//float ax = gamePad.GetAxisRX();

@@ -34,7 +34,7 @@ public:
     void Finalize()override;
 
     // 更新処理
-    void Update(float elapsedTime)override;
+    void Update(HWND hwnd, float elapsedTime)override;
 
     // 描画処理
     void Render(float elapsedTime)override;
@@ -49,18 +49,30 @@ public:
     //}
 
     // プレイヤー生成
+<<<<<<< HEAD
     Player* CreatePlayer()
     {
         return new Player(
+=======
+    GameObject* CreatePlayer()
+    {
+        return new GameObject(
+>>>>>>> washinao
             new PlayerInputComponent(),
             new PlayerPhysicsComponent(),
             new PlayerGraphicsComponent()
         );
     }
 
+<<<<<<< HEAD
     Stage* CreateStage()
     {
         return new Stage(
+=======
+    GameObject* CreateStage()
+    {
+        return new GameObject(
+>>>>>>> washinao
             new StageInputComponent(),
             new StagePhysicsComponent(),
             new StageGraphicsComponent()

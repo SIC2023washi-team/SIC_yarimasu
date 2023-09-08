@@ -1,0 +1,9 @@
+diff a/Game/SceneGame.h b/Game/SceneGame.h	(rejected hunks)
+@@ -33,6 +33,7 @@
+     void Finalize()override;
+ 
+     // �X�V����
++<<<<<<< HEAD
+     void Update(float elapsedTime)override;
+ =======
+     void Update(HWND hwnd,float elapsedTime)override;

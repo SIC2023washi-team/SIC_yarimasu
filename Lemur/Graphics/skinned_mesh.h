@@ -238,6 +238,20 @@ public:
             }
         };
         std::vector<subset> subsets;
+
+        const subset* find_subset(uint32_t index) const
+        {
+            for (const subset& subset : subsets)
+            {
+                if (subset.start_index_location <= index && subset.start_index_location + subset.index_count > index)
+                {
+                    return &subset;
+                }
+            }
+            return nullptr;
+        }
+
+
         DirectX::XMFLOAT4X4 default_global_transform
             = { 1, 0, 0, 0,
                 0, 1, 0, 0,
@@ -281,7 +295,37 @@ public:
             archive(unique_id, name, Ka, Kd, Ks, texture_filenames);
         }
     };
+    
+    //struct subset
+    //{
+    //    uint64_t material_unique_id{ 0 };
+    //    std::string material_name;
+
+    //    uint32_t start_index_location{ 0 }; // The location of the first index read by the GPU from the index buffer.
+    //    uint32_t index_count{ 0 }; // Number of indices to draw.
+
+    //    // UNIT.30
+    //    template<class T>
+    //    void serialize(T& archive)
+    //    {
+    //        archive(material_unique_id, material_name, start_index_location, index_count);
+    //    }
+    //};
+    //std::vector<subset> subsets;
+    //// RAYCAST
+    //const subset* find_subset(uint32_t index) const
+    //{
+    //    for (const subset& subset : subsets)
+    //    {
+    //        if (subset.start_index_location <= index && subset.start_index_location + subset.index_count > index)
+    //        {
+    //            return &subset;
+    //        }
+    //    }
+    //    return nullptr;
+    //}
     std::unordered_map<uint64_t, material> materials;
+
 
     std::vector<animation> animation_clips;
 
@@ -302,6 +346,11 @@ public:
 
     bool append_animations(const char* animation_filename, float sampling_rate /*0:use default value*/);
     void blend_animations(const animation::keyframe* keyframes[2], float factor, animation::keyframe& keyframe);
+
+    // RAYCAST
+    // The coordinate system of all function arguments is world space.
+    bool raycast(const DirectX::XMFLOAT4& position/*ray position*/, const DirectX::XMFLOAT4& direction/*ray direction*/, const DirectX::XMFLOAT4X4& world_transform, DirectX::XMFLOAT4& closest_point, DirectX::XMFLOAT3& intersected_normal,
+        std::string& intersected_mesh, std::string& intersected_material);
 
 protected:
     scene scene_view;

@@ -1,13 +1,45 @@
 #include "SceneGame.h"
+<<<<<<< HEAD
+=======
+#include "Lemur/Input/Mouse.h"
+>>>>>>> washinao
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
+<<<<<<< HEAD
 void SceneGame::Initialize()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     SetState();
+=======
+using namespace DirectX;
+XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
+{
+	using namespace DirectX;
+	XMFLOAT4 p;
+	XMStoreFloat4(&p,
+		XMVector3TransformCoord(
+			XMVector3TransformCoord(
+				XMVectorSet(static_cast<float>(x), static_cast<float>(y), z, 1),
+				XMMatrixInverse(NULL,
+					XMMatrixSet(
+						vp.Width * 0.5f, 0.0f, 0.0f, 0.0f,
+						0.0f, -vp.Height * 0.5f, 0.0f, 0.0f,
+						0.0f, 0.0f, vp.MaxDepth - vp.MinDepth, 0.0f,
+						vp.TopLeftX + vp.Width * 0.5f, vp.Height * 0.5f + vp.TopLeftY, vp.MinDepth, 1.0f))
+			), XMMatrixInverse(NULL, XMLoadFloat4x4(&view_projection))
+		)
+	);
+	return p;
+}
+
+void SceneGame::Initialize()
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+	SetState();
+>>>>>>> washinao
 
 	HRESULT hr{ S_OK };
 	// シーン定数バッファオブジェクトを生成
@@ -36,6 +68,7 @@ void SceneGame::Initialize()
 	// Player
 	player = CreatePlayer();
 	player->Initialize();
+<<<<<<< HEAD
 	for (int i = 0; i < 3; i++)
 	{
 		enemy = CreateEnemy();
@@ -46,6 +79,8 @@ void SceneGame::Initialize()
 	stage->player_ = player;
 	
 
+=======
+>>>>>>> washinao
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
@@ -60,7 +95,11 @@ void SceneGame::Initialize()
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
+<<<<<<< HEAD
 	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
+=======
+
+>>>>>>> washinao
 
 #if 0
 	// BLOOM
@@ -96,6 +135,7 @@ void SceneGame::Finalize()
 {
 }
 
+<<<<<<< HEAD
 void SceneGame::Update(float elapsedTime)
 {
 	enemy->player_ = player;
@@ -109,6 +149,16 @@ void SceneGame::Update(float elapsedTime)
 	// エフェクト更新処理
 	ImGui::Begin("ImGUI");
 
+=======
+void SceneGame::Update(HWND hwnd, float elapsedTime)
+{
+	Camera& camera = Camera::Instance();
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+
+	// エフェクト更新処理
+>>>>>>> washinao
 	EffectManager::Instance().Update(elapsedTime);
 
 	camera.Update(elapsedTime);
@@ -117,11 +167,110 @@ void SceneGame::Update(float elapsedTime)
 
 	player->Update(elapsedTime);
 
+<<<<<<< HEAD
 
 
 	
 
 	enemy->Update(elapsedTime);
+=======
+	/////////////////////////////////////////////
+	Mouse& mouse = Input::Instance().GetMouse();
+	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	{
+#if 0
+		scene_constants scene_data{};
+		POINT p;
+		GetCursorPos(&p);
+		ScreenToClient(hwnd, &p);
+
+		D3D11_VIEWPORT viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+		UINT viewport_count = { D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE };
+		immediate_context->RSGetViewports(&viewport_count, viewports);
+		XMFLOAT4X4 view_projection;
+		XMStoreFloat4x4(&view_projection, Camera::Instance().GetViewMatrix()* Camera::Instance().GetProjectionMatrix());
+		XMFLOAT4 position_on_near_plane = convert_screen_to_world(p.x, p.y, 0.0f, viewports[0], view_projection);
+		DirectX::XMVECTOR WorldPosition0 = XMLoadFloat4(&position_on_near_plane);
+#else
+		DirectX::XMFLOAT3 screenPosition;
+		screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
+		screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
+		screenPosition.z = 0.0f;
+
+		D3D11_VIEWPORT viewport;
+		UINT numViewports = 1;
+		immediate_context->RSGetViewports(&numViewports, &viewport);
+
+		DirectX::XMMATRIX View = Camera::Instance().GetViewMatrix();
+		DirectX::XMMATRIX Projection = Camera::Instance().GetProjectionMatrix();
+
+		DirectX::XMVECTOR WorldPosition0 = DirectX::XMVector3Unproject(
+			DirectX::XMLoadFloat3(&screenPosition),
+			viewport.TopLeftX, viewport.TopLeftY,
+			viewport.Width, viewport.Height,
+			viewport.MinDepth, viewport.MaxDepth,
+			Projection, View, DirectX::XMMatrixIdentity()
+		);
+#endif
+
+
+		XMVECTOR L0 = Camera::Instance().GetEye();
+		XMFLOAT4 l0;
+		XMStoreFloat4(&l0, L0);
+		XMFLOAT4 l;
+		XMStoreFloat4(&l, XMVector3Normalize(WorldPosition0 - L0));
+
+		std::string intersected_mesh;
+		std::string intersected_material;
+		XMFLOAT3 intersected_normal;
+		if (stage->stage->raycast(l0, l, stage->transform, intersection_point, intersected_normal, intersected_mesh, intersected_material))
+		{
+			OutputDebugStringA("Intersected : ");
+			OutputDebugStringA(intersected_mesh.c_str());
+			OutputDebugStringA(" : ");
+			OutputDebugStringA(intersected_material.c_str());
+			OutputDebugStringA("\n");
+
+			///自機の回転
+			//B-Aのベクトル
+			XMFLOAT3 rotationangle = { intersection_point.x - player->translation.x,intersection_point.y - player->translation.y,intersection_point.z - player->translation.z };
+			//正規化
+			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
+			XMFLOAT3 TANI;
+
+			//前方向取得
+			//float frontX = sinf(player->rotation.y);
+			//float frontZ = cosf(player->rotation.y);
+			//float dot = (frontX * player->translation.x) + (frontZ * player->translation.z);
+			//float rot = 1.0f - dot;
+			//player->rotation.y += rot;
+
+			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
+			
+			//前方向取得
+			/*DirectX::XMFLOAT3 front;
+			front.x = sinf(player->rotation.y);
+			front.y = 0;
+			front.z = cosf(player->rotation.y);
+			
+			XMStoreFloat3(&TANI,tani);
+			front.x = front.x * TANI.x;
+			front.y = front.y * TANI.y;
+			front.z = front.z * TANI.z;
+
+
+
+			player->rotation.y= front.y;*/
+		}
+		else
+		{
+			OutputDebugStringA("Unintersected...\n");
+		}
+	}
+
+	ImGui::Begin("ImGUI");
+
+>>>>>>> washinao
 	ImGui::End();
 }
 
@@ -255,8 +404,11 @@ void SceneGame::Render(float elapsedTime)
 
 	stage->Render(elapsedTime);
 
+<<<<<<< HEAD
 	enemy->Render(elapsedTime);
 
+=======
+>>>>>>> washinao
 #if 0
 
 	D3D11_VIEWPORT viewport;
@@ -340,11 +492,18 @@ void SceneGame::Render(float elapsedTime)
 	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
 
 	// ここにRender
+<<<<<<< HEAD
 	
 #endif
 	// sprite描画
 	{
 		if (pause)
+=======
+
+	// sprite描画
+	{
+		if (dummy_sprite)
+>>>>>>> washinao
 		{
 			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
@@ -364,9 +523,16 @@ void SceneGame::Render(float elapsedTime)
 				immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 			}
+<<<<<<< HEAD
 			pause->render(immediate_context, pausePosition.x, pausePosition.y, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 	}
+=======
+			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		}
+	}
+#endif
+>>>>>>> washinao
 
 	// 3Dエフェクト描画
 	{
@@ -377,7 +543,11 @@ void SceneGame::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 
 		EffectManager::Instance().Render(view, projection);
+<<<<<<< HEAD
 	}
+=======
+}
+>>>>>>> washinao
 
 
 

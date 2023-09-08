@@ -94,7 +94,7 @@ void DemoScene::Finalize()
 {
 }
 
-void DemoScene::Update(float elapsedTime)
+void DemoScene::Update(HWND hwnd, float elapsedTime)
 {
 
 	// エフェクト更新処理

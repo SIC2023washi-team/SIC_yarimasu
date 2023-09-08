@@ -39,11 +39,16 @@ public:
 
     virtual void Render(float elapsedTime)
     {
+<<<<<<< HEAD
         graphics->Render(this,elapsedTime, pixelShader);
+=======
+        graphics->Render(*this,elapsedTime, pixelShader);
+>>>>>>> washinao
     }
 
     void  ShadowRender(float elapsedTime)
     {
+<<<<<<< HEAD
         graphics->ShadowRender(this, elapsedTime);
     }
 
@@ -63,6 +68,59 @@ public:
 
     GameObject* player_;
 protected:
+=======
+        graphics->ShadowRender(*this, elapsedTime);
+    }
+
+public:
+    //DirectX::XMFLOAT3 translation{ 0, 0, 0 };
+    //DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
+    //DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
+    //DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
+
+    /// <summary>
+    /// 自機
+    /// </summary>
+    DirectX::XMFLOAT3 translation{ 0, 0, 0 };
+    DirectX::XMFLOAT3 scaling{ 3.0f, 3.0f, 3.0f };
+    DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
+    DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
+
+    float HitPoint = 0.0f;
+
+    /// <summary>
+    /// 弾
+    /// </summary>
+
+    //位置取得
+    const DirectX::XMFLOAT3& GetPosition() const { return position; }
+    //方向取得
+    const DirectX::XMFLOAT3& GetDirection() const { return direction; }
+    //スケール取得
+    const DirectX::XMFLOAT3& GetScale() const { return scale; }
+
+    DirectX::XMFLOAT3 position = { 0,0,0 };
+    DirectX::XMFLOAT3 direction = { 0,0,1 };
+    DirectX::XMFLOAT3 scale = { 1,1,1 };
+    DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
+
+    float ProjectileSpeed = 0.0f;
+    float ProjectileDamage = 0.0f;
+    float ProjectileDamageSpeed = 0.0f;
+
+    float ProjectileLevel = 0.0f;
+
+    /// <summary>
+    /// マウス
+    /// </summary>
+
+    Mouse* mouse;
+
+    ID3D11PixelShader* pixelShader = nullptr;
+
+    std::shared_ptr<skinned_mesh> stage;
+private:
+>>>>>>> washinao
     InputComponent* input;
     PhysicsComponent* physics;
     GraphicsComponent* graphics;

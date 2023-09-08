@@ -1,12 +1,20 @@
 #include "Collision.h"
 
 
+<<<<<<< HEAD
 void CollisionPhysicsComponent::Initialize(GameObject* gameobj)
+=======
+void CollisionPhysicsComponent::Initialize(GameObject& gameobj)
+>>>>>>> washinao
 {
 
 }
 
+<<<<<<< HEAD
 void CollisionPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
+=======
+void CollisionPhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
+>>>>>>> washinao
 {
 
 }

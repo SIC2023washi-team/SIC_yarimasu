@@ -7,10 +7,14 @@
 #include <filesystem>
 #include <sstream>
 #include <functional>
+<<<<<<< HEAD
 
 #include <fstream>
 
+=======
+>>>>>>> washinao
 
+#include <fstream>
 class GameObject;
 
 class Compornent
@@ -31,10 +35,17 @@ class GraphicsComponent :public Compornent
 {
 public:
     virtual ~GraphicsComponent() {}
+<<<<<<< HEAD
     virtual void Initialize(GameObject* gameobj) = 0;
     virtual void Update(GameObject* gameobj) = 0;
     virtual void Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) = 0;
     virtual void ShadowRender(GameObject* gameobj, float elapsedTime) {};
+=======
+    virtual void Initialize(GameObject& gameobj) = 0;
+    virtual void Update(GameObject& gameobj) = 0;
+    virtual void Render(GameObject& gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) = 0;
+    virtual void ShadowRender(GameObject& gameobj, float elapsedTime) {};
+>>>>>>> washinao
 };
 
 // •¨——pŠî’êƒNƒ‰ƒX

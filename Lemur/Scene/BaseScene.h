@@ -20,7 +20,7 @@ namespace Lemur::Scene
         // I—¹‰»
         virtual void Finalize() = 0;
         // XVˆ—
-        virtual void Update(float elapsefTime) = 0;
+        virtual void Update(HWND hwnd, float elapsefTime) = 0;
         // •`‰æˆ—
         virtual void Render(float elapsedTime) = 0;
 
