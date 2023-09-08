@@ -302,7 +302,10 @@ public:
 
     bool append_animations(const char* animation_filename, float sampling_rate /*0:use default value*/);
     void blend_animations(const animation::keyframe* keyframes[2], float factor, animation::keyframe& keyframe);
-
+    // RAYCAST
+  // The coordinate system of all function arguments is world space.
+    bool raycast(const DirectX::XMFLOAT4& position/*ray position*/, const DirectX::XMFLOAT4& direction/*ray direction*/, const DirectX::XMFLOAT4X4& world_transform, DirectX::XMFLOAT4& closest_point, DirectX::XMFLOAT3& intersected_normal,
+        std::string& intersected_mesh, std::string& intersected_material);
 protected:
     scene scene_view;
     void fetch_meshes(FbxScene* fbx_scene, std::vector<mesh>& meshes);
