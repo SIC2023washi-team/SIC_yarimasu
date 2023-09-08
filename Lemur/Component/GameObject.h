@@ -48,6 +48,7 @@ public:
     }
 
 public:
+    int Number;
 
     DirectX::XMFLOAT3 position{ 0, 0, 0 };  // 位置
     DirectX::XMFLOAT3 scale{ 3.0f, 3.0f, 3.0f }; // スケール

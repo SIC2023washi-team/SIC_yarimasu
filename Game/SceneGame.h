@@ -78,7 +78,6 @@ private:
     // Player
     GameObject* player;
 
-
     //Enemy
     GameObject* enemy;
 
@@ -89,7 +88,6 @@ private:
 
     DirectX::XMFLOAT2 pausePosition = { 1920,0 };
 
-<<<<<<< HEAD
     enum ShopNumber {
         SpeedUp_A=0,
         SpeedUp_P,
@@ -98,8 +96,6 @@ private:
         PowerUp ,
     };
 
-=======
->>>>>>> origin/oka
 //----------------------------------------------------------------------------------------------------
 //  ↓シェーダー関連
 //----------------------------------------------------------------------------------------------------

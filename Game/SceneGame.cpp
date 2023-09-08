@@ -97,6 +97,7 @@ void SceneGame::Initialize()
 
 void SceneGame::Finalize()
 {
+
 }
 
 void SceneGame::Update(float elapsedTime)
