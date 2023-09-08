@@ -3,7 +3,7 @@
 namespace Lemur::Scene
 {
     // XVˆ—
-    void SceneManager::Update(HWND hwnd, float elapsedTime)
+    void SceneManager::Update(float elapsedTime)
     {
         if (nextScene != nullptr)
         {
@@ -23,7 +23,7 @@ namespace Lemur::Scene
 
         if (currentScene != nullptr)
         {
-            currentScene->Update(hwnd, elapsedTime);
+            currentScene->Update(elapsedTime);
         }
     }
 
