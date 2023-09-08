@@ -4,7 +4,7 @@
 
 #define PlayerHitPoint 3.0f
 
-<<<<<<< HEAD
+
 void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
@@ -15,41 +15,28 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 }
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
-=======
-void PlayerPhysicsComponent::Initialize(GameObject& gameobj)
-{
-	gameobj.HitPoint = PlayerHitPoint;
-}
-
-void PlayerPhysicsComponent::Update(GameObject& gameobj, float elapsedTime)
->>>>>>> washinao
 {
 	/////敵に接触したとき/////
 	//if (gameobj.HitPoint != 0 && /*ダメージを食らう*/)
 	//{
 	//	gameobj.HitPoint--;
 	//}
-<<<<<<< HEAD
-=======
 
->>>>>>> washinao
+
 	/////マウスのクリック/////
 	//if (/*左クリックしたとき*/)
 	//{
 	//	/////弾の発射/////
 	//	///方向の取得///
 	//	sqrtf(((gameobj.rotation.x - 0.0f) * (gameobj.rotation.x - 0.0f)) + ((gameobj.rotation.y - 0.0f) * (gameobj.rotation.y - 0.0f)) + ((gameobj.rotation.z - 0.0f) * (gameobj.rotation.z - 0.0f)));
-<<<<<<< HEAD
-=======
 
->>>>>>> washinao
 	//}
 
 
 
 }
 
-<<<<<<< HEAD
+
 void PlayerGraphicsComponent::Initialize(GameObject* gameobj)
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -57,28 +44,15 @@ void PlayerGraphicsComponent::Initialize(GameObject* gameobj)
 }
 
 void PlayerGraphicsComponent::Update(GameObject* gameobj)
-=======
-void PlayerGraphicsComponent::Initialize(GameObject& gameobj)
-{
-	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-	PlayerModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\Model\\bot\\botcanon_player_v001.fbx");
-}
-
-void PlayerGraphicsComponent::Update(GameObject& gameobj)
->>>>>>> washinao
 {
 
 }
 
-<<<<<<< HEAD
+
 void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
 
-=======
-void PlayerGraphicsComponent::Render(GameObject& gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader)
-{
->>>>>>> washinao
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
@@ -98,15 +72,10 @@ void PlayerGraphicsComponent::Render(GameObject& gameobj, float elapsedTime,ID3D
 #endif
 	// 変換用
 	DirectX::XMMATRIX C{ DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0])* DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-<<<<<<< HEAD
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(player->scale.x, player->scale.y, player->scale.z) };
 	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(player->rotation.x, player->rotation.y, player->rotation.z) };
 	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(player->position.x, player->position.y, player->position.z) };
-=======
-	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(gameobj.scaling.x, gameobj.scaling.y, gameobj.scaling.z) };
-	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(gameobj.rotation.x, gameobj.rotation.y, gameobj.rotation.z) };
-	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(gameobj.translation.x, gameobj.translation.y, gameobj.translation.z) };
->>>>>>> washinao
+
 	// ワールド変換行列を作成
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
@@ -141,32 +110,22 @@ void PlayerGraphicsComponent::Render(GameObject& gameobj, float elapsedTime,ID3D
 		skinned_meshes[0]->update_animation(keyframe);
 
 # endif
-<<<<<<< HEAD
+
 		PlayerModel->render(immediate_context, world, player->material_color, &keyframe, replaced_pixel_shader);
 	}
 	else
 	{
 		PlayerModel->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
-=======
-		PlayerModel->render(immediate_context, world, gameobj.material_color, &keyframe, replaced_pixel_shader);
-	}
-	else
-	{
-		PlayerModel->render(immediate_context, world, gameobj.material_color, nullptr, replaced_pixel_shader);
->>>>>>> washinao
+
 	}
 }
 
 // 入力処理
-<<<<<<< HEAD
+
 void PlayerInputComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
 
-=======
-void PlayerInputComponent::Update(GameObject& gameobj, float elapsedTime)
-{
->>>>>>> washinao
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	float ax = gamePad.GetAxisRX();
 	float ay = gamePad.GetAxisRY();
@@ -176,7 +135,6 @@ void PlayerInputComponent::Update(GameObject& gameobj, float elapsedTime)
 
 	/*gameobj.rotation.y += lx * elapsedTime;
 	gameobj.rotation.y += ly * elapsedTime;*/
-<<<<<<< HEAD
 
 
 
@@ -194,22 +152,8 @@ void PlayerInputComponent::Update(GameObject& gameobj, float elapsedTime)
 	DirectX::XMMATRIX View = Camera::Instance().GetViewMatrix();
 	DirectX::XMMATRIX Projection = Camera::Instance().GetProjectionMatrix();
 	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
-=======
-	Mouse& mouse = Input::Instance().GetMouse();
 
-	//gameobj.rotation.y = mouse.GetPositionX() + SCREEN_WIDTH / 2;
-	//gameobj.rotation.y = mouse.GetPositionY() + SCREEN_HEIGHT / 2;
 
-	////ビューポート
-	//D3D11_VIEWPORT viewport;
-	//UINT numViewports = 1;
-	////dc->RSGetViewports(&numViewports, &viewport);
-
-	////変換行列
-	//DirectX::XMMATRIX View = Camera::Instance().GetViewMatrix();
-	//DirectX::XMMATRIX Projection = Camera::Instance().GetProjectionMatrix();
-	//DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
->>>>>>> washinao
 
 
 	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
@@ -249,9 +193,5 @@ void PlayerInputComponent::Update(GameObject& gameobj, float elapsedTime)
 	//{
 
 	//}
-<<<<<<< HEAD
-=======
 
-	
->>>>>>> washinao
 }

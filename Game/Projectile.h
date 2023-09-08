@@ -7,7 +7,7 @@
 #include "../Lemur/Resource/ResourceManager.h"
 #include"../Lemur/Input/Input.h"
 
-<<<<<<< HEAD
+
 class Projectile :public GameObject
 {
     float ProjectileSpeed = 0.0f;

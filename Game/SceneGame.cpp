@@ -207,7 +207,7 @@ void SceneGame::Update(float elapsedTime)
 
 			///自機の回転
 			//B-Aのベクトル
-			XMFLOAT3 rotationangle = { intersection_point.x - player->translation.x,intersection_point.y - player->translation.y,intersection_point.z - player->translation.z };
+			XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
 			//正規化
 			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
 			XMFLOAT3 TANI;

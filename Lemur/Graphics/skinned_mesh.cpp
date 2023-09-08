@@ -269,7 +269,7 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
         hr = device->CreateBuffer(&buffer_desc, &subresource_data,
             mesh.index_buffer.ReleaseAndGetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-#if 0 // (ToT)
+#if 1
         mesh.vertices.clear();
         mesh.indices.clear();
 #endif
@@ -751,59 +751,4 @@ void skinned_mesh::blend_animations(const animation::keyframe* keyframes[2], flo
         XMStoreFloat3(&keyframe.nodes.at(node_index).translation, XMVectorLerp(T[0], T[1], factor));
     }
 }
-
-// RAYCAST
-#include "Game/RayCast.h"
-// The coordinate system of all function arguments is world space.
-bool skinned_mesh::raycast(const XMFLOAT4& position, const XMFLOAT4& direction, const XMFLOAT4X4& world_transform, XMFLOAT4& closest_point, DirectX::XMFLOAT3& intersected_normal,
-    std::string& intersected_mesh, std::string& intersected_material)
-{
-    float closest_distance{ FLT_MAX };
-
-    for (const mesh& mesh : meshes)
-    {
-        XMFLOAT4 ray_position = position;
-        XMFLOAT4 ray_direction = direction;
-        ray_direction.w = 0;
-
-        // Convert to model space.
-        XMMATRIX concatenated_matrix{
-            XMLoadFloat4x4(&mesh.default_global_transform) *
-            XMLoadFloat4x4(&world_transform) };
-        XMMATRIX inverse_concatenated_matrix{ XMMatrixInverse(nullptr, concatenated_matrix) };
-        XMStoreFloat4(&ray_position, XMVector3TransformCoord(XMLoadFloat4(&ray_position), inverse_concatenated_matrix));
-        XMStoreFloat4(&ray_direction, XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat4(&ray_direction), inverse_concatenated_matrix)));
-
-#if 0
-        const float* min{ reinterpret_cast<const float*>(&mesh.bounding_box[0]) };
-        const float* max{ reinterpret_cast<const float*>(&mesh.bounding_box[1]) };
-        if (!intersect_ray_aabb(reinterpret_cast<const float*>(&ray_position), reinterpret_cast<const float*>(&ray_direction), min, max))
-        {
-            continue;
-        }
-#endif
-
-        float distance{ 1.0e+7f };
-        XMFLOAT4 intersection{};
-        const float* vertex_positions{ reinterpret_cast<const float*>(mesh.vertices.data()) };
-        const uint32_t* indices{ mesh.indices.data() };
-        const size_t index_count{ mesh.indices.size() };
-
-        const int intersected_triangle_index{ intersect_ray_triangles(vertex_positions, 0L, sizeof(vertex), indices, index_count, ray_position, ray_direction, intersection, distance) };
-        if (intersected_triangle_index >= 0)
-        {
-            if (closest_distance > distance)
-            {
-                closest_distance = distance;
-                // Convert model space to original space.
-                XMStoreFloat4(&closest_point, XMVector3TransformCoord(XMLoadFloat4(&intersection), concatenated_matrix));
-                intersected_mesh = mesh.name;
-                intersected_material = mesh.find_subset(intersected_triangle_index * 3)->material_name;
-                intersected_normal = mesh.vertices.at(indices[intersected_triangle_index + 0]).normal;
-            }
-        }
-    }
-    return closest_distance < FLT_MAX;
-}
-
 

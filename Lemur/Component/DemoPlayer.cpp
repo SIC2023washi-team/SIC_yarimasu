@@ -1,10 +1,6 @@
 #include "DemoPlayer.h"
 
-<<<<<<< HEAD
 void DemoPlayerGraphicsComponent::Initialize(GameObject* gameobj)
-=======
-void DemoPlayerGraphicsComponent::Initialize(GameObject& gameobj)
->>>>>>> washinao
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     DemoPlayerModel= ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\nico.fbx");
@@ -15,11 +11,7 @@ void DemoPlayerGraphicsComponent::Update(GameObject* gameobj)
 
 }
 
-<<<<<<< HEAD
 void DemoPlayerGraphicsComponent::Render(GameObject* gameobj,float elapsedTime,ID3D11PixelShader* replaced_pixel_shader)
-=======
-void DemoPlayerGraphicsComponent::Render(GameObject& gameobj,float elapsedTime,ID3D11PixelShader* replaced_pixel_shader)
->>>>>>> washinao
 {
 	DemoPlayer* demoPlayer = dynamic_cast<DemoPlayer*> (gameobj);
 
@@ -79,7 +71,6 @@ void DemoPlayerGraphicsComponent::Render(GameObject& gameobj,float elapsedTime,I
 		skinned_meshes[0]->update_animation(keyframe);
 
 # endif
-<<<<<<< HEAD
 		DemoPlayerModel->render(immediate_context, world, demoPlayer->material_color, &keyframe, replaced_pixel_shader);
 	}
 	else
@@ -92,18 +83,6 @@ void DemoPlayerGraphicsComponent::ShadowRender(GameObject* gameobj, float elapse
 {
 	DemoPlayer* demoPlayer = dynamic_cast<DemoPlayer*> (gameobj);
 
-=======
-		DemoPlayerModel->render(immediate_context, world, gameobj.material_color, &keyframe, replaced_pixel_shader);
-	}
-	else
-	{
-		DemoPlayerModel->render(immediate_context, world, gameobj.material_color, nullptr, replaced_pixel_shader);
-	}
-}
-
-void DemoPlayerGraphicsComponent::ShadowRender(GameObject& gameobj, float elapsedTime)
-{
->>>>>>> washinao
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
@@ -123,15 +102,9 @@ void DemoPlayerGraphicsComponent::ShadowRender(GameObject& gameobj, float elapse
 #endif
 	// 変換用
 	DirectX::XMMATRIX C{ DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0])* DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-<<<<<<< HEAD
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(demoPlayer->scale.x, demoPlayer->scale.y, demoPlayer->scale.z) };
 	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(demoPlayer->rotation.x, demoPlayer->rotation.y, demoPlayer->rotation.z) };
 	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(demoPlayer->position.x, demoPlayer->position.y, demoPlayer->position.z) };
-=======
-	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(gameobj.scaling.x, gameobj.scaling.y, gameobj.scaling.z) };
-	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(gameobj.rotation.x, gameobj.rotation.y, gameobj.rotation.z) };
-	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(gameobj.translation.x, gameobj.translation.y, gameobj.translation.z) };
->>>>>>> washinao
 	// ワールド変換行列を作成
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
@@ -169,19 +142,11 @@ void DemoPlayerGraphicsComponent::ShadowRender(GameObject& gameobj, float elapse
 
 # endif
 
-<<<<<<< HEAD
 		DemoPlayerModel->render(immediate_context, world, demoPlayer->material_color, &keyframe, null_pixel_shader);
 	}
 	else
 	{
 		DemoPlayerModel->render(immediate_context, world, demoPlayer->material_color, nullptr, null_pixel_shader);
-=======
-		DemoPlayerModel->render(immediate_context, world, gameobj.material_color, &keyframe, null_pixel_shader);
-	}
-	else
-	{
-		DemoPlayerModel->render(immediate_context, world, gameobj.material_color, nullptr, null_pixel_shader);
->>>>>>> washinao
 	}
 }
 

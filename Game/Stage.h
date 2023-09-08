@@ -7,7 +7,7 @@
 #include"../Lemur/Input/Input.h"
 #include "../Lemur/Collision/Collision.h"
 
-<<<<<<< HEAD
+
 class Stage :public GameObject
 {
 public:
@@ -21,43 +21,23 @@ class StageInputComponent :public InputComponent
 {
     void Initialize(GameObject* gameobj) override {}
     void Update(GameObject* gameobj, float elapsedTime) override;
-=======
-
-
-class StageInputComponent :public InputComponent
-{
-    void Initialize(GameObject& gameobj) override {}
-    void Update(GameObject& gameobj, float elapsedTime) override;
->>>>>>> washinao
 };
 
 class StagePhysicsComponent :public PhysicsComponent
 {
-<<<<<<< HEAD
+
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj, float elapsedTime) override;
-=======
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj, float elapsedTime) override;
->>>>>>> washinao
+
 
 };
 
 class StageGraphicsComponent :public GraphicsComponent
 {
-<<<<<<< HEAD
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj) override;
     void Render(GameObject* gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
 
 private:
     std::shared_ptr<skinned_mesh> stageModel;
-=======
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj) override;
-    void Render(GameObject& gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
-
-private:
->>>>>>> washinao
-
 };

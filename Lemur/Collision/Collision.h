@@ -14,13 +14,8 @@ struct HitResult
 
 class CollisionPhysicsComponent :public PhysicsComponent
 {
-<<<<<<< HEAD
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj, float elapsedTime) override;
-=======
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj, float elapsedTime) override;
->>>>>>> washinao
 
 };
 
