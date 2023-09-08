@@ -192,7 +192,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
 			//³‹K‰»
 			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
-			XMFLOAT3 TANI;
+		
 
 			//‘O•ûŒüŽæ“¾
 			//float frontX = sinf(player->rotation.y);

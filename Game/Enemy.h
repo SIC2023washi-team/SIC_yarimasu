@@ -13,6 +13,8 @@ public:
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
     float HitPoint = 0.0f;
     float Speed = 0.001f;
+    float Atk;
+    int EnemyType;
     static void DrawDebugGUI(GameObject* gameobj);
 };
 
