@@ -14,17 +14,26 @@
 //    void Update(GameObject& gameobj, float elapsedTime) override;
 //};
 
+class Projectile :public GameObject
+{
+    float ProjectileSpeed = 0.0f;
+    float ProjectileDamage = 0.0f;
+    float ProjectileDamageSpeed = 0.0f;
+
+    float ProjectileLevel = 0.0f;
+};
+
 class ProjectilePhysicsComponent :public PhysicsComponent
 {
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj, float elapsedTime) override;
+    void Initialize(GameObject* gameobj) override;
+    void Update(GameObject* gameobj, float elapsedTime) override;
 };
 
 class ProjectileGraphicsComponent :public GraphicsComponent
 {
-    void Initialize(GameObject& gameobj) override;
-    void Update(GameObject& gameobj) override;
-    void Render(GameObject& gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
+    void Initialize(GameObject* gameobj) override;
+    void Update(GameObject* gameobj) override;
+    void Render(GameObject* gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader) override;
 
 private:
     std::shared_ptr<skinned_mesh> DemoPlayerModel; ///ƒ‚ƒfƒ‹‘Ò‚¿

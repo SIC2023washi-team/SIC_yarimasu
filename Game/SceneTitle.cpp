@@ -1,32 +1,10 @@
-#include "SceneGame.h"
-#include "Lemur/Input/Mouse.h"
+#include "SceneTitle.h"
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
-using namespace DirectX;
-XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
-{
-	using namespace DirectX;
-	XMFLOAT4 p;
-	XMStoreFloat4(&p,
-		XMVector3TransformCoord(
-			XMVector3TransformCoord(
-				XMVectorSet(static_cast<float>(x), static_cast<float>(y), z, 1),
-				XMMatrixInverse(NULL,
-					XMMatrixSet(
-						vp.Width * 0.5f, 0.0f, 0.0f, 0.0f,
-						0.0f, -vp.Height * 0.5f, 0.0f, 0.0f,
-						0.0f, 0.0f, vp.MaxDepth - vp.MinDepth, 0.0f,
-						vp.TopLeftX + vp.Width * 0.5f, vp.Height * 0.5f + vp.TopLeftY, vp.MinDepth, 1.0f))
-			), XMMatrixInverse(NULL, XMLoadFloat4x4(&view_projection))
-		)
-	);
-	return p;
-}
-
-void SceneGame::Initialize()
+void SceneTitle::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	SetState();
@@ -52,184 +30,38 @@ void SceneGame::Initialize()
 		}
 	}
 
-	// Stage
-	stage = CreateStage();
-	stage->Initialize();
-	// Player
-	player = CreatePlayer();
-	player->Initialize();
-
-	enemy = CreateEnemy();
-	enemy->Initialize();
-
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
 
 	// ZELDA
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/zelda_ps.cso", zelda_ps.GetAddressOf());
 
-	//player->pixelShader = zelda_ps.Get();
-	//stage->pixelShader = zelda_ps.Get();
-
 	// SHADOW
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
 
-
-#if 0
-	// BLOOM
-	bloomer = std::make_unique<bloom>(graphics.GetDevice(), 1280, 720);
-	create_ps_from_cso(graphics.GetDevice(), "./Shader/final_pass_ps.cso", pixel_shaders[0].ReleaseAndGetAddressOf());
-
-	// SKYMAP
-	bit_block_transfer_sky = std::make_unique<fullscreen_quad>(graphics.GetDevice());
-	create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[1].GetAddressOf());
-	load_texture_from_file(graphics.GetDevice(), L".\\resources\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
-
-	// MASK
-	dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\MASK\\chip_win.png");
-	load_texture_from_file(graphics.GetDevice(), L".\\resources\\MASK\\dissolve_animation.png",
-		mask_texture.GetAddressOf(), &mask_texture2dDesc);
-
-	// sprite用デフォルト描画シェーダー（ディゾルブ）
-	{
-		D3D11_INPUT_ELEMENT_DESC input_element_desc[]
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
-		create_vs_from_cso(graphics.GetDevice(), "./Shader/sprite_dissolve_vs.cso", sprite_vertex_shader.GetAddressOf(),
-			sprite_input_layout.GetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_dissolve_ps.cso", sprite_pixel_shader.GetAddressOf());
-	}
-#endif
 }
 
-void SceneGame::Finalize()
+void SceneTitle::Finalize()
 {
 }
 
-void SceneGame::Update(HWND hwnd, float elapsedTime)
+void SceneTitle::Update(HWND hwnd,float elapsedTime)
 {
-	enemy->player_ = player;
 	Camera& camera = Camera::Instance();
-	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-
-	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
 	camera.Update(elapsedTime);
 
-	stage->Update(elapsedTime);
-
-	player->Update(elapsedTime);
-
-	enemy->Update(elapsedTime);
-
-	/////////////////////////////////////////////
-	Mouse& mouse = Input::Instance().GetMouse();
-	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
-	{
-#if 0
-		scene_constants scene_data{};
-		POINT p;
-		GetCursorPos(&p);
-		ScreenToClient(hwnd, &p);
-
-		D3D11_VIEWPORT viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
-		UINT viewport_count = { D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE };
-		immediate_context->RSGetViewports(&viewport_count, viewports);
-		XMFLOAT4X4 view_projection;
-		XMStoreFloat4x4(&view_projection, Camera::Instance().GetViewMatrix()* Camera::Instance().GetProjectionMatrix());
-		XMFLOAT4 position_on_near_plane = convert_screen_to_world(p.x, p.y, 0.0f, viewports[0], view_projection);
-		DirectX::XMVECTOR WorldPosition0 = XMLoadFloat4(&position_on_near_plane);
-#else
-		DirectX::XMFLOAT3 screenPosition;
-		screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
-		screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
-		screenPosition.z = 0.0f;
-
-		D3D11_VIEWPORT viewport;
-		UINT numViewports = 1;
-		immediate_context->RSGetViewports(&numViewports, &viewport);
-
-		DirectX::XMMATRIX View = Camera::Instance().GetViewMatrix();
-		DirectX::XMMATRIX Projection = Camera::Instance().GetProjectionMatrix();
-
-		DirectX::XMVECTOR WorldPosition0 = DirectX::XMVector3Unproject(
-			DirectX::XMLoadFloat3(&screenPosition),
-			viewport.TopLeftX, viewport.TopLeftY,
-			viewport.Width, viewport.Height,
-			viewport.MinDepth, viewport.MaxDepth,
-			Projection, View, DirectX::XMMatrixIdentity()
-		);
-#endif
-
-
-		XMVECTOR L0 = Camera::Instance().GetEye();
-		XMFLOAT4 l0;
-		XMStoreFloat4(&l0, L0);
-		XMFLOAT4 l;
-		XMStoreFloat4(&l, XMVector3Normalize(WorldPosition0 - L0));
-
-		std::string intersected_mesh;
-		std::string intersected_material;
-		XMFLOAT3 intersected_normal;
-		if (stage->stageModel->raycast(l0, l, stage->transform, intersection_point, intersected_normal, intersected_mesh, intersected_material))
-		{
-			OutputDebugStringA("Intersected : ");
-			OutputDebugStringA(intersected_mesh.c_str());
-			OutputDebugStringA(" : ");
-			OutputDebugStringA(intersected_material.c_str());
-			OutputDebugStringA("\n");
-
-			///自機の回転
-			//B-Aのベクトル
-			XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
-			//正規化
-			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
-			XMFLOAT3 TANI;
-
-			//前方向取得
-			//float frontX = sinf(player->rotation.y);
-			//float frontZ = cosf(player->rotation.y);
-			//float dot = (frontX * player->translation.x) + (frontZ * player->translation.z);
-			//float rot = 1.0f - dot;
-			//player->rotation.y += rot;
-
-			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
-			
-			//前方向取得
-			/*DirectX::XMFLOAT3 front;
-			front.x = sinf(player->rotation.y);
-			front.y = 0;
-			front.z = cosf(player->rotation.y);
-			
-			XMStoreFloat3(&TANI,tani);
-			front.x = front.x * TANI.x;
-			front.y = front.y * TANI.y;
-			front.z = front.z * TANI.z;
-
-
-
-			player->rotation.y= front.y;*/
-		}
-		else
-		{
-			OutputDebugStringA("Unintersected...\n");
-		}
-	}
-
 	ImGui::Begin("ImGUI");
 
 	ImGui::End();
 }
 
-void SceneGame::Render(float elapsedTime)
+void SceneTitle::Render(float elapsedTime)
 {
 	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -355,11 +187,7 @@ void SceneGame::Render(float elapsedTime)
 
 	// SHADOW : bind shadow map at slot 8
 	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
-	player->Render(elapsedTime);
 
-	stage->Render(elapsedTime);
-
-	enemy->Render(elapsedTime);
 
 #if 0
 
@@ -481,8 +309,6 @@ void SceneGame::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 
 		EffectManager::Instance().Render(view, projection);
-}
-
-
+	}
 
 }

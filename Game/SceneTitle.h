@@ -4,15 +4,6 @@
 #include"./Lemur/Graphics/texture.h"
 #include"./Lemur/Graphics/framework.h"
 
-// Player
-#include "Player.h"
-
-// Stage
-#include "Stage.h"
-
-//Enemy
-#include "Enemy.h"
-
 // Audio
 #include <wrl.h>
 #include"./Lemur/Audio/audio.h"
@@ -20,11 +11,11 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
-class SceneGame :public Lemur::Scene::BaseScene
+class SceneTitle :public Lemur::Scene::BaseScene
 {
 public:
-    SceneGame() {}
-    ~SceneGame() override {}
+    SceneTitle() {}
+    ~SceneTitle() override {}
 
     // 初期化
     void Initialize()override;
@@ -33,71 +24,21 @@ public:
     void Finalize()override;
 
     // 更新処理
-    void Update(HWND hwnd,float elapsedTime)override;
+    void Update(HWND hwnd, float elapsedTime)override;
 
     // 描画処理
     void Render(float elapsedTime)override;
 
-
-    // プレイヤー生成
-    Player* CreatePlayer()
-    {
-        return new Player(
-            new PlayerInputComponent(),
-            new PlayerPhysicsComponent(),
-            new PlayerGraphicsComponent()
-        );
-    }
-
-    Stage* CreateStage()
-    {
-        return new Stage(
-            new StageInputComponent(),
-            new StagePhysicsComponent(),
-            new StageGraphicsComponent()
-        );
-    }
-
-    Enemy* CreateEnemy()
-    {
-        return new Enemy(
-            new EnemyInputComponent(),
-            new EnemyPhysicsComponent(),
-            new EnemyGraphicsComponent()
-        );
-    }
-
 private:
-
-    
-
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, -10.0f, 1.0f };
     DirectX::XMFLOAT4 light_direction{ -0.113f, -0.556f, 1.0f, 0.0f };
 
-    DirectX::XMFLOAT3 translation{ 0, 0, 0 };
-    DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
-    DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
-    DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
 
-    DirectX::XMFLOAT4 intersection_point{};
-    //DirectX::XMFLOAT4X4 island_transform{ -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 };
-    //scene_constants scene_data{};
-
-    // Stage
-    GameObject* stage;
-
-    // Player
-    GameObject* player;
-
-    //Enemy
-    GameObject* enemy;
-
-
-//----------------------------------------------------------------------------------------------------
-//  ↓シェーダー関連
-//----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //  ↓シェーダー関連
+    //----------------------------------------------------------------------------------------------------
     std::unique_ptr<framebuffer> framebuffers[8];
 
     struct scene_constants
