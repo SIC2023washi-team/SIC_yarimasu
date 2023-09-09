@@ -89,8 +89,6 @@ void SceneGame::Initialize()
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
-
-
 	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
 	option[ShopNumber::SpeedUp_A] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\AttackSpeedUp.png");
 	option[ShopNumber::SpeedUp_P] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SpeedUp.png");
@@ -488,12 +486,12 @@ void SceneGame::Render(float elapsedTime)
 
 	stage->Render(elapsedTime);
 
+
 	//enemy->Render(elapsedTime);
 	for (auto& it:enemyList)
 	{
 		it->Render(elapsedTime);
 	}
-
 #if 0
 
 	D3D11_VIEWPORT viewport;
@@ -623,5 +621,4 @@ void SceneGame::addEnemy()
 	e = CreateEnemy();
 	e->Initialize();
 	enemyList.push_back(e);
-
 }

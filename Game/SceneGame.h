@@ -99,6 +99,8 @@ private:
     std::shared_ptr<sprite> pause;
     std::shared_ptr<sprite> option[5];
 
+    int n[5] = {};
+
     DirectX::XMFLOAT2 pausePosition = { 1920,0 };
 
     enum ShopNumber {
