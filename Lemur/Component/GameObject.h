@@ -73,6 +73,10 @@ public:
 
     GameObject* player_;
     GameObject* enemy_;
+
+    std::vector<GameObject*> enemys_;
+
+    bool Death = false;
 private:
     InputComponent* input;
     PhysicsComponent* physics;

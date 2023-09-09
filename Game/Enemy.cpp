@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include <imgui.h>
+#include "./Lemur/Collision/Collision.h"
 
 #define EnemyHitPoint 3.0f
 
@@ -155,6 +156,18 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 		enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
 	}
+
+	// “–‚½‚è”»’è
+
+	DirectX::XMFLOAT3 p_p = enemy->position;
+	float p_r = enemy->radius;
+	DirectX::XMFLOAT3 e_p = enemy->player_->position;
+	float e_r = enemy->player_->radius;
+
+	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+	{
+		enemy->Death = true;
+	}
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
@@ -163,8 +176,6 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	srand((unsigned int)time(NULL));
-
-
 
 	switch (enemy->EnemyType)
 	{

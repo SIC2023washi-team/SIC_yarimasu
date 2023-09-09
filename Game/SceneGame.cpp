@@ -52,6 +52,7 @@ void SceneGame::Initialize()
 		}
 	}
 
+
 	// Stage
 	stage = CreateStage();
 	stage->Initialize();
@@ -59,8 +60,18 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-	enemy = CreateEnemy();
-	enemy->Initialize();
+	for (int i = 0; i < 5; i++)
+	{
+		addEnemy();
+	}
+
+	for (auto& it : enemyList)
+	{
+		it->Initialize();
+	}
+
+	//enemy = CreateEnemy();
+	//enemy->Initialize();
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
@@ -74,6 +85,7 @@ void SceneGame::Initialize()
 	// SHADOW
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
+
 
 
 	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
@@ -124,10 +136,16 @@ void SceneGame::Finalize()
 {
 	player->Delete();
 	stage->Delete();
-	enemy->Delete();
+	//enemy->Delete();
+	for (auto& it : enemyList)
+	{
+		it->Delete();
+	}
+	enemyList.clear();
+
 	delete player;
 	delete stage;
-	delete enemy;
+	//delete enemy;
 }
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
@@ -135,7 +153,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	if (isPaused)return;
 
-	enemy->player_ = player;
+	for (auto& it : enemyList)
+	{
+		it->player_ = player;
+	}
+	//enemy->player_ = player;
 	player->enemy_ = enemy;
 
 	Camera& camera = Camera::Instance();
@@ -143,7 +165,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
-	ImGui::Begin("ImGUI");
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
@@ -153,7 +174,46 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	player->Update(elapsedTime);
 
-	enemy->Update(elapsedTime);
+	//enemy->Update(elapsedTime);
+
+	for (auto& it : enemyList)
+	{
+		it->Update(elapsedTime);
+	}
+	// 空ノードの削除
+	auto it = enemyList.begin();
+	while (it != enemyList.end())
+	{
+		if ((*it)->Death)
+		{
+			(*it)->Delete();
+			it = enemyList.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+	//auto it = enemyList.begin();
+	//while (it != enemyList.end())
+	//{
+	//	if(it->Death)
+	//	{
+	//		it = enemyList.erase(it);
+	//	}
+	//	else
+	//	{
+	//		it++;
+	//	}
+	//}
+	//for (int i = 0; i < enemyList.size(); i++)
+	//{
+	//	if (enemyList[i]->Death)
+	//	{
+	//		enemyList.erase(i);
+	//	}
+	//}
+	ImGui::Begin("ImGUI");
 
 	ImGui::End();
 
@@ -388,7 +448,11 @@ void SceneGame::Render(float elapsedTime)
 
 	stage->Render(elapsedTime);
 
-	enemy->Render(elapsedTime);
+	//enemy->Render(elapsedTime);
+	for (auto& it:enemyList)
+	{
+		it->Render(elapsedTime);
+	}
 
 #if 0
 
@@ -517,4 +581,11 @@ void SceneGame::Render(float elapsedTime)
 		graphics.GetDebugRenderer()->Render(graphics.GetDeviceContext(), view, projection);
 
 	}
+}
+
+void SceneGame::addEnemy()
+{
+	GameObject* e;
+	e = CreateEnemy();
+	enemyList.push_back(e);
 }
