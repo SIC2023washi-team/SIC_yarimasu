@@ -1,5 +1,8 @@
 #include "Enemy.h"
 #include <imgui.h>
+#include "./Lemur/Collision/Collision.h"
+#include"./Lemur/Effekseer/EffekseerManager.h"
+#include"./Lemur/Effekseer/Effect.h"
 
 #define EnemyHitPoint 3.0f
 
@@ -51,7 +54,11 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->radius = 1.0f;
 
 
-	enemy->EnemyType = rand() % 4;
+
+
+
+
+	enemy->EnemyType = enemy->NumDelivery[0];
 	switch (enemy->EnemyType)
 	{
 	default:
@@ -75,10 +82,10 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	}
 
 
-	switch (rand() % 2)
+
+	switch (enemy->NumDelivery[1])
 	{
 	case 0://上下からくる
-
 		enemy->position.x = rand() % 16 - 8;
 		enemy->position.z = 8 *(- 1 + (rand() % 2) * 2);
 		break;
@@ -92,6 +99,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
+
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
 	float px = (enemy->player_->position.x -enemy->position.x);
@@ -118,6 +126,8 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	{
 		enemy->clip_index = 1;
 		enemy->AnimSpeed = 1.0f;
+		// これで再生できる
+		
 	}
 	else
 	{
@@ -152,6 +162,18 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 		enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
 	}
+
+	// 当たり判定
+	DirectX::XMFLOAT3 p_p = enemy->position;
+	float p_r = enemy->radius;
+	DirectX::XMFLOAT3 e_p = enemy->player_->position;
+	float e_r = enemy->player_->radius;
+
+	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+	{
+		enemy->Death = true;
+	}
+
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
@@ -160,8 +182,6 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	srand((unsigned int)time(NULL));
-
-
 
 	switch (enemy->EnemyType)
 	{
@@ -180,6 +200,8 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_v001.fbx");
 		break;
 	}
+
+	explosionEffect = new Effect("/resources/Effects/explosion.efk");
 
 }
 
@@ -249,7 +271,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 
 # endif
 		EnemyModel->render(immediate_context, world, enemy->material_color, &keyframe, replaced_pixel_shader);
-}
+	}
 	else
 	{
 		EnemyModel->render(immediate_context, world, enemy->material_color, nullptr, replaced_pixel_shader);
@@ -260,5 +282,10 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	//衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 	
+	if (enemy->clip_index == 1)
+	{
+		
+	}
+
 }
 

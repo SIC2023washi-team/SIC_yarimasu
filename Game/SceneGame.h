@@ -23,6 +23,10 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
+#include<vector>
+#include<algorithm>
+#include <iostream>
+
 class SceneGame :public Lemur::Scene::BaseScene
 {
 public:
@@ -41,6 +45,8 @@ public:
     // 描画処理
     void Render(float elapsedTime)override;
 
+    // 敵の追加
+    void addEnemy();
 
     // プレイヤー生成
     Player* CreatePlayer()
@@ -98,8 +104,11 @@ private:
     //Enemy
     GameObject* enemy;
 
+
     //Ui
     GameObject* ui;
+    std::vector<GameObject*> enemyList;
+
 
     // ポーズ（ショップ）
     bool isPaused = false;

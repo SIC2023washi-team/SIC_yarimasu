@@ -49,4 +49,5 @@ class UiGraphicsComponent :public GraphicsComponent
 private:
     std::shared_ptr<sprite> pause;
     std::shared_ptr<sprite> option[5];
+    std::shared_ptr<sprite> UiBase[5];
 };

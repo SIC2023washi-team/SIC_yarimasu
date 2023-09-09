@@ -9,7 +9,7 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
 	player->HP = PlayerHitPoint;
-	
+	player->scale.x = player->scale.y = player->scale.z = 3.0f;
 }
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -30,15 +30,15 @@ void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	//}
 
-	DirectX::XMFLOAT3 e_p = player->enemy_->position;
-	float e_r = player->enemy_->radius;
-	DirectX::XMFLOAT3 p_p = player->position;
-	float p_r = player->radius;
+	//DirectX::XMFLOAT3 e_p = player->enemy_->position;
+	//float e_r = player->enemy_->radius;
+	//DirectX::XMFLOAT3 p_p = player->position;
+	//float p_r = player->radius;
 
-	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
-	{
-		//player->enemy_->Delete();
-	}
+	//if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+	//{
+	//	//player->enemy_->Delete();
+	//}
 
 }
 

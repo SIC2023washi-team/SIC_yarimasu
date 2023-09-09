@@ -17,7 +17,8 @@ public:
     float AnimSpeed = 1.0f;
     int EnemyType;
     int clip_index = 0.0f;
-
+    std::shared_ptr<Effect> explosionEffect;
+    Effect explosionEffect2;
 };
 
 class EnemyInputComponent :public InputComponent
@@ -40,5 +41,5 @@ class EnemyGraphicsComponent :public GraphicsComponent
 
 private:
     std::shared_ptr<skinned_mesh> EnemyModel;
-
+    
 };

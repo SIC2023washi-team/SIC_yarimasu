@@ -10,6 +10,7 @@
 // SceneGame
 #include "./Game/SceneGame.h"
 
+
 framework::framework(HWND hwnd) 
 	: hwnd(hwnd),
 	graphics(hwnd,FALSE),
@@ -19,6 +20,8 @@ framework::framework(HWND hwnd)
 
 bool framework::initialize()
 {
+	srand((unsigned int)time(NULL));
+
 	// エフェクトマネージャー初期化
 	EffectManager::Instance().Initialize();
 

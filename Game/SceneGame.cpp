@@ -52,6 +52,7 @@ void SceneGame::Initialize()
 		}
 	}
 
+
 	// Stage
 	stage = CreateStage();
 	stage->Initialize();
@@ -59,8 +60,22 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-	enemy = CreateEnemy();
-	enemy->Initialize();
+	for (int i = 0; i < 5; i++)
+	{
+		addEnemy();
+	}
+
+	for (auto& it : enemyList)
+	{
+		
+		it->NumDelivery[0] = rand() % 4;
+		it->NumDelivery[1] = rand() % 2;
+		it->Initialize();
+	
+	}
+
+	//enemy = CreateEnemy();
+	//enemy->Initialize();
 
 	ui = CreateUi();
 	ui->Initialize();
@@ -72,12 +87,16 @@ void SceneGame::Initialize()
 	// ZELDA
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/zelda_ps.cso", zelda_ps.GetAddressOf());
 
-	//player->pixelShader = zelda_ps.Get();
-	//stage->pixelShader = zelda_ps.Get();
-
+	player->pixelShader = zelda_ps.Get();
+	stage->pixelShader = zelda_ps.Get();
+	for (auto& it : enemyList)
+	{
+		it->pixelShader= zelda_ps.Get();
+	}
 	// SHADOW
-	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
+	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
+
 
 
 
@@ -122,11 +141,20 @@ void SceneGame::Finalize()
 {
 	player->Delete();
 	stage->Delete();
-	enemy->Delete();
+
 	ui->Delete();
+
+	//enemy->Delete();
+	for (auto& it : enemyList)
+	{
+		it->Delete();
+	}
+	enemyList.clear();
+
+
 	delete player;
 	delete stage;
-	delete enemy;
+	//delete enemy;
 }
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
@@ -134,7 +162,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	if (isPaused)return;
 
-	enemy->player_ = player;
+	for (auto& it : enemyList)
+	{
+		it->player_ = player;
+	}
+	//enemy->player_ = player;
 	player->enemy_ = enemy;
 
 	Camera& camera = Camera::Instance();
@@ -142,7 +174,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
-	ImGui::Begin("ImGUI");
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
@@ -152,12 +183,83 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	player->Update(elapsedTime);
 
-	enemy->Update(elapsedTime);
+	//enemy->Update(elapsedTime);
+
 
 	ui->Update(elapsedTime);
 
-	ImGui::End();
 
+
+	for (auto& it : enemyList)
+	{
+		it->Update(elapsedTime);
+		it->NumDelivery[0] = rand() % 4;
+		it->NumDelivery[1] = rand() % 2;
+	}
+
+
+	// 空ノードの削除
+	auto it = enemyList.begin();
+	while (it != enemyList.end())
+	{
+		if ((*it)->Death)
+		{
+			(*it)->Delete();
+			it = enemyList.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+	//auto it = enemyList.begin();
+	//while (it != enemyList.end())
+	//{
+	//	if(it->Death)
+	//	{
+	//		it = enemyList.erase(it);
+	//	}
+	//	else
+	//	{
+	//		it++;
+	//	}
+	//}
+	//for (int i = 0; i < enemyList.size(); i++)
+	//{
+	//	if (enemyList[i]->Death)
+	//	{
+	//		enemyList.erase(i);
+	//	}
+	//}
+
+
+
+	// エネミー同士の当たり判定
+	{
+		// 全ての敵と総当たりで衝突判定
+		int enemyCount = enemyList.size();
+		for (int i = 0; i < enemyCount; ++i)
+		{
+			GameObject* enemyA = enemyList.at(i);
+			for (int j = i + 1; j < enemyCount; ++j)
+			{
+				GameObject* enemyB = enemyList.at(j);
+				// 衝突判定
+				DirectX::XMFLOAT3 outPosition;
+				if (Collision::IntersectSphereVsSphereOut
+				(enemyA->position,
+					enemyA->radius,
+					enemyB->position,
+					enemyB->radius,
+					outPosition)
+					)
+				{
+					//TODO 要修正
+					enemyList.at(j)->position.x+=1;
+				}
+			}
+		}
+	}
 	/////////////////////////////////////////////
 	Mouse& mouse = Input::Instance().GetMouse();
 	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
@@ -253,6 +355,16 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	}
 
 
+	ImGui::Begin("ImGUI");
+	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
+	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
+	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
+
+	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
+	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
+	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
+	ImGui::SliderFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
+	ImGui::End();
 
 }
 
@@ -348,31 +460,34 @@ void SceneGame::Render(float elapsedTime)
 	//bit_block_transfer_sky->blit(immediate_context, skymap.GetAddressOf(), 0, 1, pixel_shaders[1].Get());
 	//
 
-	//// SHADOW : make shadow map
-	//{
-	//	using namespace DirectX;
-
-	//	const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
-	//	XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
-	//	XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
-	//	XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
-	//	XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
-	//	XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
-
-	//	DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
-	//	data.light_view_projection = data.view_projection;
-	//	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
-	//	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-
-	//	double_speed_z->clear(immediate_context, 1.0f);
-	//	double_speed_z->activate(immediate_context);
-
-	//	ID3D11PixelShader* null_pixel_shader{ NULL };
-	//	player->ShadowRender(elapsedTime);
-	//	skinned_meshes[1]->render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, null_pixel_shader);
-	//	double_speed_z->deactivate(immediate_context);
-	//}
 #endif
+	// SHADOW : make shadow map
+	{
+		using namespace DirectX;
+
+		const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
+		XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
+		XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
+		XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
+		XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
+		XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
+
+		DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
+		data.light_view_projection = data.view_projection;
+		immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
+		immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+
+		double_speed_z->clear(immediate_context, 1.0f);
+		double_speed_z->activate(immediate_context);
+
+		ID3D11PixelShader* null_pixel_shader{ NULL };
+		player->Render(elapsedTime);
+		for (auto& it : enemyList)
+		{
+			it->Render(elapsedTime);
+		}
+		double_speed_z->deactivate(immediate_context);
+	}
 	// Render scene
 	D3D11_VIEWPORT viewport;
 	UINT num_viewports{ 1 };
@@ -389,7 +504,11 @@ void SceneGame::Render(float elapsedTime)
 
 	stage->Render(elapsedTime);
 
-	enemy->Render(elapsedTime);
+	//enemy->Render(elapsedTime);
+	for (auto& it:enemyList)
+	{
+		it->Render(elapsedTime);
+	}
 
 #if  0
 
@@ -500,6 +619,29 @@ void SceneGame::Render(float elapsedTime)
 
 			ui->Render(elapsedTime);
 
+	{
+		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+
+		immediate_context->IASetInputLayout(sprite_input_layout.Get());
+		immediate_context->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
+		immediate_context->PSSetShader(sprite_pixel_shader.Get(), nullptr, 0);
+		immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
+		immediate_context->PSSetShaderResources(1, 1, mask_texture.GetAddressOf());
+
+		// 定数バッファの更新（ディゾルブ）
+		{
+			dissolve_constants dissolve{};
+			dissolve.parameters.x = dissolve_value;
+			immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
+			immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+			immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+		}
+	}
+
+
+
 	// 3Dエフェクト描画
 	{
 		DirectX::XMFLOAT4X4 view{};
@@ -510,10 +652,15 @@ void SceneGame::Render(float elapsedTime)
 
 		EffectManager::Instance().Render(view, projection);
 
-
-
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(graphics.GetDeviceContext(), view, projection);
 
 	}
+}
+
+void SceneGame::addEnemy()
+{
+	GameObject* e;
+	e = CreateEnemy();
+	enemyList.push_back(e);
 }

@@ -15,6 +15,65 @@ void CollisionPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 //TODO 押し出し処理が要らない場合少し変える
 
 //　球と球交差判定
+bool Collision::IntersectSphereVsSphereOut(
+    const DirectX::XMFLOAT3& positionA,
+    float radiusA,
+    const DirectX::XMFLOAT3& positionB,
+    float radiusB,
+    DirectX::XMFLOAT3& outPositionB
+)
+{
+    //// A→Bの単位ベクトルを算出
+    //DirectX::XMVECTOR PositionA = { positionA.x,positionA.y,positionA.z };
+    //DirectX::XMVECTOR PositionB = { positionA.x,positionA.y,positionA.z };
+    //DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(PositionB, PositionA);
+    //DirectX::XMVECTOR LengthSq = DirectX::XMVector3Length(Vec);
+    //float lengthSq;
+    //DirectX::XMStoreFloat(&lengthSq, LengthSq);
+    //
+    //// 距離判定
+    //float range = radiusA + radiusB;
+    //if (range < lengthSq)
+    //{
+    //    return false;
+    //}
+    //
+    //// AがBを押し出す処理
+    //DirectX::XMVECTOR OutVec = DirectX::XMVector3Normalize(Vec);
+    //DirectX::XMVECTOR OutVecLeng = DirectX::XMVectorScale(OutVec,(range - lengthSq));
+    //DirectX::XMVECTOR newPositionB = DirectX::XMVectorAdd(PositionB, OutVec);
+    //DirectX::XMVECTOR NewPositionB = DirectX::XMVectorMultiplyAdd(OutVecLeng, OutVec, PositionB);
+    //
+    //// 結果を出力
+    //DirectX::XMStoreFloat3(&outPositionB, newPositionB);
+    //
+    //return true;
+
+    // A→Bの単位ベクトルを算出
+    DirectX::XMVECTOR PositionA = DirectX::XMLoadFloat3(&positionA);
+    DirectX::XMVECTOR PositionB = DirectX::XMLoadFloat3(&positionB);
+    DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(PositionB, PositionA);
+    DirectX::XMVECTOR LengthSq = DirectX::XMVector3LengthSq(Vec);//ルート取ってない（Cの二乗の状態）
+    float lengthSq;
+    DirectX::XMStoreFloat(&lengthSq, LengthSq);
+
+    // 距離判定
+    float range = radiusA + radiusB;
+    if (lengthSq > range * range)
+    {
+        return false;
+    }
+
+    // AがBを押し出す
+    Vec = DirectX::XMVector3Normalize(Vec);// 単位ベクトル
+    Vec = DirectX::XMVectorScale(Vec, range);// 長さを半径の足し合わせた分にｎ
+    PositionB = DirectX::XMVectorAdd(PositionA, Vec);//Ａの座標にベクトルを足す
+    DirectX::XMStoreFloat3(&outPositionB, PositionB);//ポジションＢを求める
+
+    return true;
+}
+
+//　球と球交差判定
 bool Collision::IntersectSphereVsSphere(
     const DirectX::XMFLOAT3& positionA,
     float radiusA,

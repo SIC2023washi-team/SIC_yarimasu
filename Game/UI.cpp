@@ -26,6 +26,11 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 	option[ui->ShopNumber::Canon] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\Canon.png");
 	option[ui->ShopNumber::Mine] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\mine.png");
 	option[ui->ShopNumber::PowerUp] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\powerUp.png");
+	for (int i = 0; i < 5; i++)
+	{
+		UiBase[i] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\UiBase.png");
+	}
+
 }
 
 void UiGraphicsComponent::Update(GameObject* gameobj)
@@ -43,4 +48,9 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 	option[ui->ShopNumber::Canon]->render(immediate_context, 50.0f, 50.0f, 50.0f, 50.0f);
 	option[ui->ShopNumber::Mine]->render(immediate_context, 50.0f, 50.0f, 50.0f, 50.0f);
 	option[ui->ShopNumber::PowerUp]->render(immediate_context, 50.0f, 50.0f, 50.0f, 50.0f);
+
+	for (int i = 0; i < 5; i++)
+	{
+		UiBase[i]->render(immediate_context, 50.0f + 250* i, 50.0f, 200.0f, 200.0f,1.5f,1.5f,1.5f,1.0f,(0));
+	}
 }
