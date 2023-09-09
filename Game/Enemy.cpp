@@ -47,6 +47,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->scale.y = 16.f;
 	enemy->scale.z = 16.f;
 	enemy->position.y = 0.0f;
+	enemy->radius = 1.0f;
 
 
 	enemy->EnemyType = rand() % 4;
@@ -219,6 +220,10 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		EnemyModel->render(immediate_context, world, enemy->material_color, nullptr, replaced_pixel_shader);
 	}
 
+	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+
+	//衝突判定用のデバッグ円柱を描画
+	debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 	
 }
 

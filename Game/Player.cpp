@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../Lemur/Graphics/Camera.h"
 #include "./Lemur/Graphics/DebugRenderer.h"
+#include "./Lemur/Collision/Collision.h"
 
 #define PlayerHitPoint 3.0f
 
@@ -12,6 +13,7 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
+	Player* player = dynamic_cast<Player*> (gameobj);
 	/////“G‚ÉÚG‚µ‚½‚Æ‚«/////
 	//if (gameobj.HitPoint != 0 && /*ƒ_ƒ[ƒW‚ðH‚ç‚¤*/)
 	//{
@@ -27,7 +29,15 @@ void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	//}
 
+	DirectX::XMFLOAT3 e_p = player->enemy_->position;
+	float e_r = player->enemy_->radius;
+	DirectX::XMFLOAT3 p_p = player->position;
+	float p_r = player->radius;
 
+	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+	{
+		//player->enemy_->Delete();
+	}
 
 }
 

@@ -46,6 +46,12 @@ public:
         graphics->ShadowRender(this, elapsedTime);
     }
 
+    void Delete()
+    {
+        delete input;
+        delete physics;
+        delete graphics;
+    }
 public:
     DirectX::XMFLOAT4X4 World;
 
@@ -66,6 +72,7 @@ public:
     std::shared_ptr<skinned_mesh> stageModel;
 
     GameObject* player_;
+    GameObject* enemy_;
 private:
     InputComponent* input;
     PhysicsComponent* physics;

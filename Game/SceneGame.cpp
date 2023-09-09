@@ -109,11 +109,19 @@ void SceneGame::Initialize()
 
 void SceneGame::Finalize()
 {
+	player->Delete();
+	stage->Delete();
+	enemy->Delete();
+	delete player;
+	delete stage;
+	delete enemy;
 }
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
 	enemy->player_ = player;
+	player->enemy_ = enemy;
+
 	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
