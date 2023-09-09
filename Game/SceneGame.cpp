@@ -62,6 +62,10 @@ void SceneGame::Initialize()
 	enemy = CreateEnemy();
 	enemy->Initialize();
 
+	ui = CreateUi();
+	ui->Initialize();
+
+
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
 
@@ -76,12 +80,6 @@ void SceneGame::Initialize()
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
 
-	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
-	option[ShopNumber::SpeedUp_A] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\AttackSpeedUp.png");
-	option[ShopNumber::SpeedUp_P] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SpeedUp.png");
-	option[ShopNumber::Canon] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\Canon.png");
-	option[ShopNumber::Mine] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\mine.png");
-	option[ShopNumber::PowerUp] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\powerUp.png");
 
 	// ヒットエフェクトにエフェクトのパスを入れる
 	//hitEffect = new Effect("Data/Effect/Hit.efk");
@@ -125,6 +123,7 @@ void SceneGame::Finalize()
 	player->Delete();
 	stage->Delete();
 	enemy->Delete();
+	ui->Delete();
 	delete player;
 	delete stage;
 	delete enemy;
@@ -154,6 +153,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	player->Update(elapsedTime);
 
 	enemy->Update(elapsedTime);
+
+	ui->Update(elapsedTime);
 
 	ImGui::End();
 
@@ -390,7 +391,7 @@ void SceneGame::Render(float elapsedTime)
 
 	enemy->Render(elapsedTime);
 
-#if 0
+#if  0
 
 	D3D11_VIEWPORT viewport;
 	UINT num_viewports{ 1 };
@@ -473,11 +474,10 @@ void SceneGame::Render(float elapsedTime)
 	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
 
 	// ここにRender
+#endif
 
 	// sprite描画
-	{
-		if (dummy_sprite)
-		{
+
 			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
 			immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
@@ -497,9 +497,8 @@ void SceneGame::Render(float elapsedTime)
 				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 			}
 			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		}
-	}
-#endif
+
+			ui->Render(elapsedTime);
 
 	// 3Dエフェクト描画
 	{

@@ -75,9 +75,6 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	}
 
 
-
-	srand((unsigned int)time(NULL));
-
 	switch (rand() % 2)
 	{
 	case 0://è„â∫Ç©ÇÁÇ≠ÇÈ

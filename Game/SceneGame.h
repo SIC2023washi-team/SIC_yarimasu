@@ -13,6 +13,9 @@
 //Enemy
 #include "Enemy.h"
 
+//Ui
+#include "Ui.h"
+
 // Audio
 #include <wrl.h>
 #include"./Lemur/Audio/audio.h"
@@ -67,6 +70,15 @@ public:
         );
     }
 
+    Ui* CreateUi()
+    {
+        return new Ui(
+            new UiInputComponent(),
+            new UiPhysicsComponent(),
+            new UiGraphicsComponent()
+        );
+    }
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -86,20 +98,11 @@ private:
     //Enemy
     GameObject* enemy;
 
+    //Ui
+    GameObject* ui;
+
     // ポーズ（ショップ）
     bool isPaused = false;
-    std::shared_ptr<sprite> pause;
-    std::shared_ptr<sprite> option[5];
-
-    DirectX::XMFLOAT2 pausePosition = { 1920,0 };
-
-    enum ShopNumber {
-        SpeedUp_A = 0,
-        SpeedUp_P,
-        Mine,
-        Canon,
-        PowerUp,
-    };
 
     // エフェクト
     Effect* hitEffect = nullptr;
