@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "../Lemur/Graphics/Camera.h"
-
+#include "./Lemur/Graphics/DebugRenderer.h"
 
 #define PlayerHitPoint 3.0f
 
@@ -33,8 +33,11 @@ void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 void PlayerGraphicsComponent::Initialize(GameObject* gameobj)
 {
+	Player* player = dynamic_cast<Player*> (gameobj);
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	PlayerModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botcanon_player_v001.fbx");
+
+	player->radius = 1.0f;
 }
 
 void PlayerGraphicsComponent::Update(GameObject* gameobj)
@@ -108,6 +111,11 @@ void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D
 	{
 		PlayerModel->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
 	}
+
+	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+
+	//衝突判定用のデバッグ円柱を描画
+	debugRenderer->DrawSphere(player->position, player->radius,DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
 // 入力処理

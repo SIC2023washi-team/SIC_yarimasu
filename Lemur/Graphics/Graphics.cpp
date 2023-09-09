@@ -168,6 +168,7 @@ namespace Lemur::Graphics
 #if 0
 		bit_block_transfer->blit(immediate_context.Get(), framebuffers[0]->shader_resource_views[0].GetAddressOf(), 0, 1);
 #endif
+
 		UINT sync_interval{ 0 };
 		swap_chain->Present(sync_interval, 0);// FrontバッファとBackバッファを入れ替える
 		// ↓この下にspriteしても何も出ない

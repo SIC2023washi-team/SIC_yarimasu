@@ -20,6 +20,9 @@
 // SHADOW
 #include "shadow_map.h"
 
+// Debug
+#include "DebugRenderer.h"
+
 #include <d3d11.h>
 #include <directxmath.h>
 #include <wrl.h>
@@ -49,9 +52,13 @@ namespace Lemur::Graphics
         ID3D11DepthStencilView* GetDepthStencilView() const { return depth_stencil_view.Get(); }
         D3D11_TEXTURE2D_DESC* GetTexture2D() { return &texture2d_desc; }
 
+        // デバッグレンダラ取得
+        DebugRenderer* GetDebugRenderer() const { return debugRenderer.get(); }
+
         // ミューテックス取得
         std::mutex& GetMutex() { return mutex; }
 
+        std::unique_ptr<DebugRenderer>					debugRenderer;
     private:
         Microsoft::WRL::ComPtr<ID3D11Device> device;// DirectX11で利用する様々なリソースを作成するやつ
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> immediate_context;// 様々な描画命令をGPUに伝えるやつ
@@ -100,6 +107,8 @@ namespace Lemur::Graphics
         float factors[4]{ 0.0f, 121.438332f };
 
         std::unique_ptr<geometric_primitive> geometric_primitives[8];
+
+
     private:
         static Graphics* instance;
 

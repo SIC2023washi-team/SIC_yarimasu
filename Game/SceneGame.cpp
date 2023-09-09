@@ -234,6 +234,9 @@ void SceneGame::Render(float elapsedTime)
 	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
+	//Debug
+	graphics.debugRenderer = std::make_unique<DebugRenderer>(graphics.GetDevice());
+
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
 	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
@@ -481,8 +484,11 @@ void SceneGame::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 
 		EffectManager::Instance().Render(view, projection);
-}
 
 
 
+		// デバッグレンダラ描画実行
+		graphics.GetDebugRenderer()->Render(graphics.GetDeviceContext(), view, projection);
+
+	}
 }

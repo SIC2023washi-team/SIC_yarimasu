@@ -107,29 +107,11 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
 	enemy->position.z += floatZ * enemy->Speed;
 	
-	float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
-	if (cross < 0)
-	{
-		enemy->rotation.y += 0.01f;
-	}
-	else
-	{
-		enemy->rotation.y -= 0.01f;
-	}
-	
 	///自機の回転
-//B-Aのベクトル
+	//B-Aのベクトル
 	DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
 	//正規化
 	DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
-
-
-	//前方向取得
-	//float frontX = sinf(player->rotation.y);
-	//float frontZ = cosf(player->rotation.y);
-	//float dot = (frontX * player->translation.x) + (frontZ * player->translation.z);
-	//float rot = 1.0f - dot;
-	//player->rotation.y += rot;
 
 	enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
 

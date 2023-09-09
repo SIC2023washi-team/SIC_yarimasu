@@ -19,8 +19,7 @@ bool Collision::IntersectSphereVsSphere(
     const DirectX::XMFLOAT3& positionA,
     float radiusA,
     const DirectX::XMFLOAT3& positionB,
-    float radiusB,
-    DirectX::XMFLOAT3& outPositionB
+    float radiusB
 )
 {
     // A→Bの単位ベクトルを算出
@@ -37,12 +36,6 @@ bool Collision::IntersectSphereVsSphere(
     {
         return false;
     }
-
-    // AがBを押し出す
-    Vec = DirectX::XMVector3Normalize(Vec);// 単位ベクトル
-    Vec = DirectX::XMVectorScale(Vec, range);// 長さを半径の足し合わせた分にｎ
-    PositionB = DirectX::XMVectorAdd(PositionA, Vec);//Ａの座標にベクトルを足す
-    DirectX::XMStoreFloat3(&outPositionB, PositionB);//ポジションＢを求める
 
     return true;
 }
