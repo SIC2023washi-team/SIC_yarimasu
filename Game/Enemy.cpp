@@ -77,12 +77,10 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 
 
-	srand((unsigned int)time(NULL));
 
 	switch (rand() % 2)
 	{
 	case 0://ã‰º‚©‚ç‚­‚é
-
 		enemy->position.x = rand() % 16 - 8;
 		enemy->position.z = 8 *(- 1 + (rand() % 2) * 2);
 		break;
@@ -158,7 +156,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	}
 
 	// “–‚½‚è”»’è
-
 	DirectX::XMFLOAT3 p_p = enemy->position;
 	float p_r = enemy->radius;
 	DirectX::XMFLOAT3 e_p = enemy->player_->position;
@@ -168,6 +165,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	{
 		enemy->Death = true;
 	}
+
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)

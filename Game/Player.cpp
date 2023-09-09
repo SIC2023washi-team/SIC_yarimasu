@@ -9,7 +9,7 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
 	player->HP = PlayerHitPoint;
-	
+	player->scale.x = player->scale.y = player->scale.z = 3.0f;
 }
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)

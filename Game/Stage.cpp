@@ -5,7 +5,7 @@
 void StagePhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Stage* stage = dynamic_cast<Stage*> (gameobj);
-	stage->scale.x = stage->scale.y = stage->scale.z = 100.0f;
+	stage->scale.x = stage->scale.y = stage->scale.z = 10.0f;
 	stage->position.y = -0.75f;
 }
 
@@ -18,7 +18,7 @@ void StageGraphicsComponent::Initialize(GameObject* gameobj)
 {
 	Stage* stage = dynamic_cast<Stage*> (gameobj);
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-	stage->stageModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\ExampleStage\\ExampleStage.fbx");
+	stage->stageModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\stage\\foor_v003.fbx");
 }
 
 void StageGraphicsComponent::Update(GameObject* gameobj)
