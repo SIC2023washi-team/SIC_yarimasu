@@ -48,9 +48,11 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 	option[ui->ShopNumber::Canon]->render(immediate_context, 50.0f, 50.0f, 50.0f, 50.0f);
 	option[ui->ShopNumber::Mine]->render(immediate_context, 50.0f, 50.0f, 50.0f, 50.0f);
 	option[ui->ShopNumber::PowerUp]->render(immediate_context, 50.0f, 50.0f, 50.0f, 50.0f);
-
-	for (int i = 0; i < 5; i++)
+	if (ui->ShopFlag == true)
 	{
-		UiBase[i]->render(immediate_context, 50.0f + 250* i, 50.0f, 200.0f, 200.0f,1.5f,1.5f,1.5f,1.0f,(0));
+		for (int i = 0; i < 5; i++)
+		{
+			UiBase[i]->render(immediate_context, 50.0f + 250 * i, 50.0f, 200.0f, 200.0f, 1.5f, 1.5f, 1.5f, 1.0f, (0));
+		}
 	}
 }

@@ -134,8 +134,9 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	{
 		enemy->clip_index = 1;
 		enemy->AnimSpeed = 1.0f;
+
 		// これで再生できる
-		
+		enemy->explosionEffect->Play(enemy->position,10.f);
 	}
 	else
 	{
@@ -209,7 +210,7 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	}
 
-	explosionEffect = new Effect("/resources/Effects/explosion.efk");
+	enemy->explosionEffect = new Effect("/resources/Effects/explosion.efk");
 
 }
 
@@ -289,10 +290,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	//衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 	
-	if (enemy->clip_index == 1)
-	{
-		
-	}
+
 
 }
 

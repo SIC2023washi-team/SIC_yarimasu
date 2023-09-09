@@ -4,6 +4,8 @@
 #include "../Lemur/Graphics/skinned_mesh.h"
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
+#include"./Lemur/Effekseer/EffekseerManager.h"
+#include"./Lemur/Effekseer/Effect.h"
 
 class Enemy :public GameObject
 {
@@ -17,7 +19,7 @@ public:
     float AnimSpeed = 1.0f;
     int EnemyType;
     int clip_index = 0.0f;
-    std::shared_ptr<Effect> explosionEffect;
+    Effect* explosionEffect;
 
 };
 
@@ -41,5 +43,5 @@ class EnemyGraphicsComponent :public GraphicsComponent
 
 private:
     std::shared_ptr<skinned_mesh> EnemyModel;
-    
+
 };
