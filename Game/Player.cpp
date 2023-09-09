@@ -7,7 +7,8 @@
 void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
-	player->HitPoint = PlayerHitPoint;
+	player->HP = PlayerHitPoint;
+	
 }
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)

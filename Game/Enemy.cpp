@@ -10,7 +10,7 @@
 
 void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
 {
-	//Enemy::DrawDebugGUI(gameobj);
+
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
 	if (ImGui::TreeNode("TreeNode"))
@@ -18,6 +18,7 @@ void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
 		ImGui::DragFloat3("pos", &enemy->position.x);
 		ImGui::DragFloat3("rotate", &enemy->rotation.x);
 		ImGui::DragFloat3("scale", &enemy->scale.x);
+		ImGui::DragFloat("HP", &enemy->HP);
 		ImGui::TreePop();
 	}
 
@@ -42,7 +43,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
-	enemy->HitPoint = EnemyHitPoint;
+	enemy->HP = EnemyHitPoint;
 	enemy->scale.x = 16.f;
 	enemy->scale.y = 16.f;
 	enemy->scale.z = 16.f;
@@ -94,45 +95,44 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
-	
-	float px = (enemy->player_->position.x -enemy->position.x);
-	float pz = (enemy->player_->position.z - enemy->position.z);
-	DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
-	DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
-	vec_x  = DirectX::XMVector3Normalize(vec_x);
-	vec_z  = DirectX::XMVector3Normalize(vec_z);
-	float floatX = DirectX::XMVectorGetX(vec_x);
-	float floatZ = DirectX::XMVectorGetX(vec_z);
-	enemy->position.x += floatX * enemy->Speed;
-	//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
-	enemy->position.z += floatZ * enemy->Speed;
-	
-	float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
-	if (cross < 0)
+	if (enemy->HP <= 0)
 	{
-		enemy->rotation.y += 0.01f;
+		enemy->clip_index = 1;
+		enemy->AnimSpeed = 1.0f;
 	}
 	else
 	{
-		enemy->rotation.y -= 0.01f;
+		enemy->clip_index = 0;
+		float px = (enemy->player_->position.x - enemy->position.x);
+		float pz = (enemy->player_->position.z - enemy->position.z);
+		DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
+		DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
+		vec_x = DirectX::XMVector3Normalize(vec_x);
+		vec_z = DirectX::XMVector3Normalize(vec_z);
+		float floatX = DirectX::XMVectorGetX(vec_x);
+		float floatZ = DirectX::XMVectorGetX(vec_z);
+		enemy->position.x += floatX * enemy->Speed;
+		//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
+		enemy->position.z += floatZ * enemy->Speed;
+
+		float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
+		if (cross < 0)
+		{
+			enemy->rotation.y += 0.01f;
+		}
+		else
+		{
+			enemy->rotation.y -= 0.01f;
+		}
+
+		///自機の回転
+		//B-Aのベクトル
+		DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
+		//正規化
+		DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
+
+		enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
 	}
-	
-	///自機の回転
-//B-Aのベクトル
-	DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
-	//正規化
-	DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
-
-
-	//前方向取得
-	//float frontX = sinf(player->rotation.y);
-	//float frontZ = cosf(player->rotation.y);
-	//float dot = (frontX * player->translation.x) + (frontZ * player->translation.z);
-	//float rot = 1.0f - dot;
-	//player->rotation.y += rot;
-
-	enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
-
 
 }
 
@@ -204,7 +204,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	if (EnemyModel->animation_clips.size() > 0)
 	{
 		// アニメーション用
-		int clip_index = 0;
+		int clip_index = enemy->clip_index;
 		int frame_index = 0;
 		static float animation_tick = 0;
 #if 1
@@ -240,19 +240,3 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	
 }
 
-void Enemy::DrawDebugGUI(GameObject* gameobj)
-{
-	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
-
-	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Enemy", nullptr, ImGuiWindowFlags_None))
-	{
-		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			ImGui::InputFloat3("Positon", &enemy->position.x);
-		}
-
-	}
-
-}
