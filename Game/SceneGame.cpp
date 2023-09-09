@@ -143,6 +143,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
+	ImGui::Begin("ImGUI");
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
@@ -153,6 +154,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	player->Update(elapsedTime);
 
 	enemy->Update(elapsedTime);
+
+	ImGui::End();
 
 	/////////////////////////////////////////////
 	Mouse& mouse = Input::Instance().GetMouse();
@@ -248,9 +251,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 
-	ImGui::Begin("ImGUI");
 
-	ImGui::End();
+
 }
 
 void SceneGame::Render(float elapsedTime)

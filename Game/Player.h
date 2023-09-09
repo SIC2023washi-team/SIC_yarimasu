@@ -12,7 +12,14 @@ public:
     Player(InputComponent* input_,
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
-    float HitPoint = 0.0f;
+    float HP = 20.0f;
+    float ProjectileAtk = 1.0f;
+    float AtkSpeed = 1.0f;
+    float ProjectileSpeed = 1.0f;
+    float ProjectilePerforate = 1.0f;
+    float ProjectileSize = 1.0f;
+
+    
 };
 
 class PlayerInputComponent :public InputComponent
