@@ -18,7 +18,7 @@ public:
     int EnemyType;
     int clip_index = 0.0f;
     std::shared_ptr<Effect> explosionEffect;
-    Effect explosionEffect2;
+
 };
 
 class EnemyInputComponent :public InputComponent

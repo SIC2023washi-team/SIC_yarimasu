@@ -113,6 +113,7 @@ private:
     // ポーズ（ショップ）
     bool isPaused = false;
 
+
     // エフェクト
     Effect* hitEffect = nullptr;
 

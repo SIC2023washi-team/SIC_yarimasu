@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include <imgui.h>
+#include <random>
 #include "./Lemur/Collision/Collision.h"
 #include"./Lemur/Effekseer/EffekseerManager.h"
 #include"./Lemur/Effekseer/Effect.h"
@@ -57,8 +58,14 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 
 
+	std::mt19937 mt{ std::random_device{}() };
+	std::uniform_int_distribution<int> Type(0, 3);
+	std::uniform_int_distribution<int> Pos(0, 1);
+	std::uniform_int_distribution<int> ePos_1(80, 160);
+	std::uniform_int_distribution<int> ePos_2(80, 160);
 
-	enemy->EnemyType = enemy->NumDelivery[0];
+	enemy->EnemyType = int(Type(mt));
+
 	switch (enemy->EnemyType)
 	{
 	default:
@@ -83,15 +90,16 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 
 
-	switch (enemy->NumDelivery[1])
+	switch (int(Pos(mt)))
+
 	{
 	case 0://ã‰º‚©‚ç‚­‚é
-		enemy->position.x = rand() % 16 - 8;
+		enemy->position.x = int(ePos_1(mt)) * 0.1f;
 		enemy->position.z = 8 *(- 1 + (rand() % 2) * 2);
 		break;
 	case 1://¶‰E‚©‚ç‚­‚é
 		enemy->position.x = 8 * (-1 + (rand() % 2) * 2);
-		enemy->position.z = rand() % 16 - 8;
+		enemy->position.z = int(ePos_2(mt)) * 0.1f;
 		break;
 	}
 
@@ -257,7 +265,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		}
 		else
 		{
-			animation_tick += elapsedTime*enemy->AnimSpeed;
+ 			animation_tick += elapsedTime;
 		}
 		animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
 #else
@@ -265,10 +273,9 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		const animation::keyframe* keyframes[2]{
 			&skinned_meshes[0]->animation_clips.at(0).sequence.at(40),
 			&skinned_meshes[0]->animation_clips.at(0).sequence.at(80)
-	};
+		};
 		skinned_meshes[0]->blend_animations(keyframes, factors[2], keyframe);
 		skinned_meshes[0]->update_animation(keyframe);
-
 # endif
 		EnemyModel->render(immediate_context, world, enemy->material_color, &keyframe, replaced_pixel_shader);
 	}

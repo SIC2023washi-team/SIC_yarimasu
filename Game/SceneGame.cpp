@@ -65,14 +65,12 @@ void SceneGame::Initialize()
 		addEnemy();
 	}
 
-	for (auto& it : enemyList)
-	{
-		
-		it->NumDelivery[0] = rand() % 4;
-		it->NumDelivery[1] = rand() % 2;
-		it->Initialize();
-	
-	}
+
+	//for (auto& it : enemyList)
+	//{
+	//	it->Initialize();
+	//}
+
 
 	//enemy = CreateEnemy();
 	//enemy->Initialize();
@@ -96,8 +94,6 @@ void SceneGame::Initialize()
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
-
-
 
 
 	// ヒットエフェクトにエフェクトのパスを入れる
@@ -504,6 +500,7 @@ void SceneGame::Render(float elapsedTime)
 
 	stage->Render(elapsedTime);
 
+
 	//enemy->Render(elapsedTime);
 	for (auto& it:enemyList)
 	{
@@ -511,6 +508,7 @@ void SceneGame::Render(float elapsedTime)
 	}
 
 #if  0
+
 
 	D3D11_VIEWPORT viewport;
 	UINT num_viewports{ 1 };
@@ -662,5 +660,6 @@ void SceneGame::addEnemy()
 {
 	GameObject* e;
 	e = CreateEnemy();
+	e->Initialize();
 	enemyList.push_back(e);
 }
