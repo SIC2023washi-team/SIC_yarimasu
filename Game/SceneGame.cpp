@@ -76,6 +76,19 @@ void SceneGame::Initialize()
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
 
+	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
+	option[ShopNumber::SpeedUp_A] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\AttackSpeedUp.png");
+	option[ShopNumber::SpeedUp_P] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SpeedUp.png");
+	option[ShopNumber::Canon] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\Canon.png");
+	option[ShopNumber::Mine] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\mine.png");
+	option[ShopNumber::PowerUp] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\powerUp.png");
+
+	// ヒットエフェクトにエフェクトのパスを入れる
+	//hitEffect = new Effect("Data/Effect/Hit.efk");
+
+	// これで再生できる
+	//hitEffect->Play(player->position);
+
 
 #if 0
 	// BLOOM
@@ -119,6 +132,9 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+
+	if (isPaused)return;
+
 	enemy->player_ = player;
 	player->enemy_ = enemy;
 
