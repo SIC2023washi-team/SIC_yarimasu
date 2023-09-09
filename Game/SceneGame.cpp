@@ -65,10 +65,10 @@ void SceneGame::Initialize()
 		addEnemy();
 	}
 
-	for (auto& it : enemyList)
-	{
-		it->Initialize();
-	}
+	//for (auto& it : enemyList)
+	//{
+	//	it->Initialize();
+	//}
 
 	//enemy = CreateEnemy();
 	//enemy->Initialize();
@@ -621,5 +621,7 @@ void SceneGame::addEnemy()
 {
 	GameObject* e;
 	e = CreateEnemy();
+	e->Initialize();
 	enemyList.push_back(e);
+
 }
