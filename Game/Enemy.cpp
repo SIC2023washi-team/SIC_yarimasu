@@ -66,11 +66,11 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 		break;
 	case 0://¬‚³‚¢‚Ì
 		enemy->Speed = 0.001f;
-		enemy->AnimSpeed = 3.0f;
+		enemy->AnimSpeed = 1.5f;
 		break;
 	case 1://’†‚­‚ç‚¢‚Ì
 		enemy->Speed = 0.0008f;
-		enemy->AnimSpeed = 1.5f;
+		enemy->AnimSpeed = 1.0f;
 		break;
 	case 2://‘å‚«‚¢‚Ì
 		enemy->Speed = 0.0005f;
@@ -78,7 +78,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	case 3://¬‚³‚¢‚µ‚­‚»‘
 		enemy->Speed = 0.003f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
-		enemy->AnimSpeed = 10.0f;
+		enemy->AnimSpeed = 2.0f;
 		break;
 	}
 
@@ -244,7 +244,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		static float animation_tick = 0;
 #if 1
 		animation& animation{ EnemyModel->animation_clips.at(clip_index) };
-		frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
+		frame_index = static_cast<int>(animation_tick * animation.sampling_rate) * enemy->AnimSpeed;
 		if (frame_index > animation.sequence.size() - 1)
 		{
 			frame_index = 0;
