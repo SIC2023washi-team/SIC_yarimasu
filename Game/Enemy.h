@@ -20,6 +20,7 @@ public:
     int EnemyType;
     int clip_index = 0.0f;
     Effect* explosionEffect;
+    Effect* firesmokeEffect;
 
 };
 

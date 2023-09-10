@@ -47,6 +47,8 @@ public:
 
     // 敵の追加
     void addEnemy();
+    //Uiの追加
+    void addUi(int Uitype);
 
     // プレイヤー生成
     Player* CreatePlayer()
@@ -108,11 +110,13 @@ private:
     //Ui
     GameObject* ui;
     std::vector<GameObject*> enemyList;
+    std::vector<GameObject*> UiList;
 
 
     // ポーズ（ショップ）
     bool isPaused = false;
-
+    int ShopItemsNum[10] = {};
+    int SaveShopUi = {};
 
     // エフェクト
     Effect* hitEffect = nullptr;

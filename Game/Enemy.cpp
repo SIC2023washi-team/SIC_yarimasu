@@ -110,6 +110,8 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
+
+
 	float px = (enemy->player_->position.x -enemy->position.x);
 	float pz = (enemy->player_->position.z - enemy->position.z);
 	DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
@@ -136,7 +138,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		enemy->AnimSpeed = 1.0f;
 
 		// これで再生できる
-		enemy->explosionEffect->Play(enemy->position,10.f);
+
 	}
 	else
 	{
@@ -176,11 +178,18 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	DirectX::XMFLOAT3 p_p = enemy->position;
 	float p_r = enemy->radius;
 	DirectX::XMFLOAT3 e_p = enemy->player_->position;
-	float e_r = enemy->player_->radius;
+	float e_r = enemy->player_->radius;         
 
 	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
 	{
 		enemy->Death = true;
+	}
+
+
+	//種類によっての演出
+	if (enemy->EnemyType == 3)
+	{
+		enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y+0.5f, enemy->position.z), 0.4f);
 	}
 
 }
@@ -210,7 +219,8 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	}
 
-	enemy->explosionEffect = new Effect("/resources/Effects/explosion.efk");
+	enemy->explosionEffect = new Effect("resources/Effects/explosion.efk");
+	enemy->firesmokeEffect = new Effect("resources/Effects/firesmoke.efk");
 
 }
 
@@ -279,6 +289,11 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		skinned_meshes[0]->update_animation(keyframe);
 # endif
 		EnemyModel->render(immediate_context, world, enemy->material_color, &keyframe, replaced_pixel_shader);
+		if (enemy->clip_index == 1 && frame_index > animation.sequence.size() - 2)
+		{
+			enemy->explosionEffect->Play(enemy->position, 0.4f);
+			enemy->Death = true;
+		}
 	}
 	else
 	{
@@ -288,9 +303,8 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
 
 	//衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 	
-
 
 }
 

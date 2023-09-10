@@ -19,7 +19,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 {
 	Ui* ui = dynamic_cast<Ui*> (gameobj);
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-
+	
 	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
 	option[ui->ShopNumber::SpeedUp_A] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\AttackSpeedUp.png");
 	option[ui->ShopNumber::SpeedUp_P] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SpeedUp.png");

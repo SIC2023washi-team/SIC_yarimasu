@@ -17,6 +17,8 @@ public:
     DirectX::XMFLOAT2 pausePosition = { 1920,0 };
 
     bool ShopFlag;
+    int shopUiTypes;
+    int shopUiNum;
     enum ShopNumber {
         SpeedUp_A = 0,
         SpeedUp_P,

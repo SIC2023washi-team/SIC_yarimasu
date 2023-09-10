@@ -138,14 +138,19 @@ void SceneGame::Finalize()
 	player->Delete();
 	stage->Delete();
 
-	ui->Delete();
+	//ui->Delete();
 
 	//enemy->Delete();
 	for (auto& it : enemyList)
 	{
 		it->Delete();
 	}
+	for (auto& it : UiList)
+	{
+		it->Delete();
+	}
 	enemyList.clear();
+	UiList.clear();
 
 
 	delete player;
@@ -159,6 +164,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	if (isPaused)return;
 
 	for (auto& it : enemyList)
+	{
+		it->player_ = player;
+	}
+	for (auto& it : UiList)
 	{
 		it->player_ = player;
 	}
@@ -189,12 +198,17 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	for (auto& it : enemyList)
 	{
 		it->Update(elapsedTime);
-		it->NumDelivery[0] = rand() % 4;
-		it->NumDelivery[1] = rand() % 2;
+	
+	}
+		for (auto& it : UiList)
+	{
+		it->Update(elapsedTime);
+	
 	}
 
 
 	// ‹óƒm[ƒh‚Ìíœ
+
 	auto it = enemyList.begin();
 	while (it != enemyList.end())
 	{
@@ -206,6 +220,19 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		else
 		{
 			it++;
+		}
+	}
+	auto Uiit = UiList.begin();
+	while (Uiit != UiList.end())
+	{
+		if ((*Uiit)->Death)
+		{
+			(*Uiit)->Delete();
+			Uiit = UiList.erase(it);
+		}
+		else
+		{
+			Uiit++;
 		}
 	}
 	//auto it = enemyList.begin();
@@ -478,10 +505,7 @@ void SceneGame::Render(float elapsedTime)
 
 		ID3D11PixelShader* null_pixel_shader{ NULL };
 		player->Render(elapsedTime);
-		for (auto& it : enemyList)
-		{
-			it->Render(elapsedTime);
-		}
+
 		double_speed_z->deactivate(immediate_context);
 	}
 	// Render scene
@@ -507,6 +531,10 @@ void SceneGame::Render(float elapsedTime)
 		it->Render(elapsedTime);
 	}
 
+	for (auto& it : UiList)
+	{
+		it->Render(elapsedTime);
+	}
 #if  0
 
 
@@ -662,4 +690,13 @@ void SceneGame::addEnemy()
 	e = CreateEnemy();
 	e->Initialize();
 	enemyList.push_back(e);
+}
+
+void SceneGame::addUi(int Uitype)
+{
+	GameObject* Ui;
+	Ui = CreateUi();
+	Ui->Initialize();
+	Ui->NumDelivery[0] = Uitype;
+	UiList.push_back(Ui);
 }
