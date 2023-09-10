@@ -4,6 +4,9 @@
 #include "../Lemur/Graphics/sprite.h"
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
+
+
+#include "Lemur/Input/Mouse.h"
 #include <sstream>
 
 class Ui :public GameObject
@@ -17,7 +20,7 @@ public:
     DirectX::XMFLOAT2 pausePosition = { 1920,0 };
 
     bool ShopFlag;
-    int shopUiTypes;
+    int UiTypes;
     int shopUiNum;
     enum ShopNumber {
         SpeedUp_A = 0,

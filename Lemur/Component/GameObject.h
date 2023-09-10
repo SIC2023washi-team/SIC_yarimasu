@@ -53,10 +53,7 @@ public:
         delete graphics;
     }
 
-    void  Launch()
-    {
-       
-    }
+
 public:
     DirectX::XMFLOAT4X4 World;
 
@@ -80,8 +77,8 @@ public:
     GameObject* enemy_;
 
     //エネミーがautoで一括生成されてしまうのと一括生成の都合上_randがうまく機能しないので用意したやつ
-    int NumDelivery[3];
-
+    int NumDelivery[5];
+    
     std::vector<GameObject*> enemys_;
 
     bool Death = false;

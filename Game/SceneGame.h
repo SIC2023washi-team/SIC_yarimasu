@@ -89,6 +89,12 @@ public:
         );
     }
 
+
+    int ShopItemsNum[10] = {};
+    int SaveShopUi = {};
+    int shop_int;
+    bool isPaused = false;
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -115,10 +121,9 @@ private:
     std::vector<GameObject*> UiList;
 
 
+
     // ポーズ（ショップ）
-    bool isPaused = false;
-    int ShopItemsNum[10] = {};
-    int SaveShopUi = {};
+
 
     // エフェクト
     Effect* hitEffect = nullptr;
@@ -183,3 +188,5 @@ private:
     float light_view_near_z{ 2.0f };
     float light_view_far_z{ 18.0f };
 };
+
+

@@ -1,4 +1,5 @@
 #include "SceneGame.h"
+#include <random>
 #include "Lemur/Input/Mouse.h"
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
@@ -64,8 +65,13 @@ void SceneGame::Initialize()
 	{
 		addEnemy();
 	}
-
-
+	//HP
+	addUi(1);
+	//shop
+	addUi(2);
+	addUi(2);
+	addUi(2);
+	
 	//for (auto& it : enemyList)
 	//{
 	//	it->Initialize();
@@ -75,8 +81,8 @@ void SceneGame::Initialize()
 	//enemy = CreateEnemy();
 	//enemy->Initialize();
 
-	ui = CreateUi();
-	ui->Initialize();
+	//ui = CreateUi();
+	//ui->Initialize();
 
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
@@ -161,16 +167,46 @@ void SceneGame::Finalize()
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
 
+
+	Mouse& mouse = Input::Instance().GetMouse();
+
+	for (auto& it : UiList)
+	{
+		it->Update(elapsedTime);
+
+	}
+	for (auto& it : UiList)
+	{
+		it->player_ = player;
+		it->NumDelivery[5] = shop_int;
+		
+	}
+
+	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	{
+		if (!isPaused)
+		{
+			shop_int = 1;
+			isPaused = true;
+		}
+		else
+		{
+			shop_int = 0;
+			isPaused = false;
+
+
+		}
+	}
+
+
+
 	if (isPaused)return;
 
 	for (auto& it : enemyList)
 	{
 		it->player_ = player;
 	}
-	for (auto& it : UiList)
-	{
-		it->player_ = player;
-	}
+
 	//enemy->player_ = player;
 	player->enemy_ = enemy;
 
@@ -191,7 +227,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//enemy->Update(elapsedTime);
 
 
-	ui->Update(elapsedTime);
+	//ui->Update(elapsedTime);
 
 
 
@@ -200,11 +236,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		it->Update(elapsedTime);
 	
 	}
-		for (auto& it : UiList)
-	{
-		it->Update(elapsedTime);
-	
-	}
+
 
 
 	// 空ノードの削除
@@ -257,6 +289,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 
 
+
+
 	// エネミー同士の当たり判定
 	{
 		// 全ての敵と総当たりで衝突判定
@@ -284,7 +318,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 	/////////////////////////////////////////////
-	Mouse& mouse = Input::Instance().GetMouse();
+
 	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 	{
 #if 0
@@ -532,10 +566,7 @@ void SceneGame::Render(float elapsedTime)
 		it->Render(elapsedTime);
 	}
 
-	for (auto& it : UiList)
-	{
-		it->Render(elapsedTime);
-	}
+
 #if  0
 
 
@@ -644,7 +675,11 @@ void SceneGame::Render(float elapsedTime)
 			}
 			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-			ui->Render(elapsedTime);
+			//ui->Render(elapsedTime);
+			for (auto& it : UiList)
+			{
+				it->Render(elapsedTime);
+			}
 
 	{
 		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
@@ -695,9 +730,42 @@ void SceneGame::addEnemy()
 
 void SceneGame::addUi(int Uitype)
 {
+	bool judge = false;
 	GameObject* Ui;
 	Ui = CreateUi();
-	Ui->Initialize();
 	Ui->NumDelivery[0] = Uitype;
+	if (Uitype == 2)
+	{
+		std::mt19937 mt{ std::random_device{}() };
+		for (int i = 0; i < 1;)
+		{
+			std::uniform_int_distribution<int> Type(0, 3);
+			ShopItemsNum[SaveShopUi] = int(Type(mt));
+			judge = false;
+			for (int j = 0; j < SaveShopUi; j++)
+			{
+
+				if (ShopItemsNum[SaveShopUi] == ShopItemsNum[j])
+				{
+					judge = true;
+					break;
+				}
+
+			}
+			if (!judge)
+			{
+				break;
+			}
+			continue;
+		}
+	}
+	if (Uitype == 2)Ui->NumDelivery[2] = ShopItemsNum[SaveShopUi];
+	if (Uitype == 2)Ui->NumDelivery[1] = SaveShopUi;
+
+	Ui->Initialize();
+	
 	UiList.push_back(Ui);
+
+	if (Uitype == 2)SaveShopUi++;
+	
 }
