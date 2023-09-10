@@ -17,11 +17,11 @@ void GamePro_ProjectileManager::Update(float elapsedTime)
     }
 }
 
-void GamePro_ProjectileManager::Render(ID3D11DeviceContext* dc)
+void GamePro_ProjectileManager::Render(ID3D11DeviceContext* dc, ID3D11PixelShader* replaced_pixel_shader)
 {
     for (GamePro_Projectile* gamepro_projectile : gamepro_projectiles)
     {
-        gamepro_projectile->Render(dc);
+        gamepro_projectile->Render(dc,replaced_pixel_shader);
     }
 }
 

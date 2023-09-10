@@ -188,6 +188,7 @@ class skinned_mesh
 {
 public:
     static const int MAX_BONE_INFLUENCES{ 4 };
+    
     struct vertex
     {
         DirectX::XMFLOAT3 position;
@@ -351,6 +352,12 @@ public:
     // The coordinate system of all function arguments is world space.
     bool raycast(const DirectX::XMFLOAT4& position/*ray position*/, const DirectX::XMFLOAT4& direction/*ray direction*/, const DirectX::XMFLOAT4X4& world_transform, DirectX::XMFLOAT4& closest_point, DirectX::XMFLOAT3& intersected_normal,
         std::string& intersected_mesh, std::string& intersected_material);
+
+
+/// <summary>
+/// ’Ç‰Á
+/// </summary>
+    
 
 protected:
     scene scene_view;

@@ -3,6 +3,7 @@
 #include "../Lemur/Graphics/Camera.h"
 #include "./Lemur/Graphics/DebugRenderer.h"
 #include "./Lemur/Collision/Collision.h"
+#include "GamePro_ProjectileManager.h"
 
 #define PlayerHitPoint 3.0f
 
@@ -19,23 +20,10 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
-	/////敵に接触したとき/////
-	//if (gameobj.HitPoint != 0 && /*ダメージを食らう*/)
-	//{
-	//	gameobj.HitPoint--;
-	//}
-
-	/////マウスのクリック/////
-	//if (/*左クリックしたとき*/)
-	//{
-	//	/////弾の発射/////
-	//	///方向の取得///
-	//	sqrtf(((gameobj.rotation.x - 0.0f) * (gameobj.rotation.x - 0.0f)) + ((gameobj.rotation.y - 0.0f) * (gameobj.rotation.y - 0.0f)) + ((gameobj.rotation.z - 0.0f) * (gameobj.rotation.z - 0.0f)));
-
-	//}
+	
 	Mouse& mouse = Input::Instance().GetMouse();
 
-	int NO = -1;
+	//int NO = -1;
 	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 	//{
 	//	//弾の作成
@@ -69,6 +57,7 @@ void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	//	}
 	//}
 
+	gamepro_projectilemanager.Update(elapsedTime);
 
 	DirectX::XMFLOAT3 e_p = player->enemy_->position;
 	float e_r = player->enemy_->radius;
@@ -100,10 +89,14 @@ void PlayerGraphicsComponent::Update(GameObject* gameobj)
 void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
+	
+	//gamepro_projectilemanager.Render();
 
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+
+	gamepro_projectilemanager.Render(immediate_context,replaced_pixel_shader);
 
 	// 左手系・Y 軸アップへ変換
 	const DirectX::XMFLOAT4X4 coordinate_system_transforms[]{

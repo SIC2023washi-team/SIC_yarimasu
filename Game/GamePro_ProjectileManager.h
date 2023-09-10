@@ -11,7 +11,7 @@ public:
     //更新処理
     void Update(float elapsedTime);
     //描画処理
-    void Render(ID3D11DeviceContext* dc);
+    void Render(ID3D11DeviceContext* dc, ID3D11PixelShader* replaced_pixel_shader);
     //デバッグプリミティブ描画
     //void Register();
     //弾丸登録
