@@ -23,9 +23,11 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
+
 #include<vector>
 #include<algorithm>
 #include <iostream>
+
 
 class SceneGame :public Lemur::Scene::BaseScene
 {

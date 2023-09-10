@@ -52,6 +52,11 @@ public:
         delete physics;
         delete graphics;
     }
+
+    void  Launch()
+    {
+       
+    }
 public:
     DirectX::XMFLOAT4X4 World;
 

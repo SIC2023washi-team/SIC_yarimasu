@@ -4,7 +4,13 @@
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
 #include"../Lemur/Input/Input.h"
+#include "GamePro_ProjectileManager.h"
 
+//struct Bullet {
+//    bool life; //生存確認
+//    DirectX::XMFLOAT3 position; //座標
+//    float angle; //角度
+//}bullet[100];
 
 class Player :public GameObject
 {
@@ -19,6 +25,7 @@ public:
     float ProjectilePerforate = 1.0f;
     float ProjectileSize = 1.0f;
 
+    GamePro_ProjectileManager gamepro_projectilemanager;
     
 };
 
@@ -26,12 +33,16 @@ class PlayerInputComponent :public InputComponent
 {
     void Initialize(GameObject* gameobj) override {}
     void Update(GameObject* gameobj, float elapsedTime) override;
+public:
+    GamePro_ProjectileManager gamepro_projectilemanager;
 };
 
 class PlayerPhysicsComponent :public PhysicsComponent
 {
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj, float elapsedTime) override;
+public:
+    GamePro_ProjectileManager gamepro_projectilemanager;
 };
 
 class PlayerGraphicsComponent :public GraphicsComponent
@@ -42,5 +53,7 @@ class PlayerGraphicsComponent :public GraphicsComponent
 
 private:
     std::shared_ptr<skinned_mesh> PlayerModel;
-
+    std::shared_ptr<skinned_mesh> BulletModel;
+public:
+    GamePro_ProjectileManager gamepro_projectilemanager;
 };

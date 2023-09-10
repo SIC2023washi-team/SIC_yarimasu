@@ -1,7 +1,9 @@
 #include "Player.h"
+#include "SceneGame.h"
 #include "../Lemur/Graphics/Camera.h"
 #include "./Lemur/Graphics/DebugRenderer.h"
 #include "./Lemur/Collision/Collision.h"
+#include "GamePro_ProjectileManager.h"
 
 #define PlayerHitPoint 3.0f
 
@@ -9,26 +11,57 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
 	player->HP = PlayerHitPoint;
+
 	player->scale.x = player->scale.y = player->scale.z = 3.0f;
+
+	/*for (int i = 0; i < 100; i++)
+	{
+		bullet[i].life = false;
+	}*/
+
 }
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
-	/////敵に接触したとき/////
-	//if (gameobj.HitPoint != 0 && /*ダメージを食らう*/)
+	
+	Mouse& mouse = Input::Instance().GetMouse();
+
+	//int NO = -1;
+	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 	//{
-	//	gameobj.HitPoint--;
+	//	//弾の作成
+	//	for (int i = 0; i < 100; i++)
+	//	{
+	//		if (!bullet[i].life)
+	//		{
+	//			NO = i;
+	//			break;
+	//		}
+	//	}
+	//	if (NO != -1)
+	//	{
+	//		bullet[NO].position.x = player->position.x;
+	//		bullet[NO].position.y = player->position.y;
+	//		bullet[NO].position.z = player->position.z;
+	//		bullet[NO].angle = GiftAngle;
+	//		bullet[NO].life = true;
+	//	}
+
+	//	//弾の移動
+	//	for (int i = 0; i < 100; i++)
+	//	{
+	//		if (bullet[i].life)
+	//		{
+	//			bullet[i].position.x += bullet[i].angle * player->ProjectileSpeed;
+	//			bullet[i].position.z += bullet[i].angle * player->ProjectileSpeed;
+	//		}
+	//		//弾の削除
+	//		//if(bullet[i].life && )
+	//	}
 	//}
 
-	/////マウスのクリック/////
-	//if (/*左クリックしたとき*/)
-	//{
-	//	/////弾の発射/////
-	//	///方向の取得///
-	//	sqrtf(((gameobj.rotation.x - 0.0f) * (gameobj.rotation.x - 0.0f)) + ((gameobj.rotation.y - 0.0f) * (gameobj.rotation.y - 0.0f)) + ((gameobj.rotation.z - 0.0f) * (gameobj.rotation.z - 0.0f)));
-
-	//}
+	gamepro_projectilemanager.Update(elapsedTime);
 
 	//DirectX::XMFLOAT3 e_p = player->enemy_->position;
 	//float e_r = player->enemy_->radius;
@@ -47,6 +80,7 @@ void PlayerGraphicsComponent::Initialize(GameObject* gameobj)
 	Player* player = dynamic_cast<Player*> (gameobj);
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	PlayerModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botcanon_player_v001.fbx");
+	//BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botcanon_player_v001.fbx");
 
 	player->radius = 1.0f;
 }
@@ -59,10 +93,14 @@ void PlayerGraphicsComponent::Update(GameObject* gameobj)
 void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D11PixelShader* replaced_pixel_shader)
 {
 	Player* player = dynamic_cast<Player*> (gameobj);
+	
+	//gamepro_projectilemanager.Render();
 
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+
+	gamepro_projectilemanager.Render(immediate_context,replaced_pixel_shader);
 
 	// 左手系・Y 軸アップへ変換
 	const DirectX::XMFLOAT4X4 coordinate_system_transforms[]{
@@ -117,6 +155,7 @@ void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D
 
 # endif
 		PlayerModel->render(immediate_context, world, player->material_color, &keyframe, replaced_pixel_shader);
+		//BulletModel->render(immediate_context, world, player->material_color, &keyframe, replaced_pixel_shader);
 	}
 	else
 	{

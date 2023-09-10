@@ -355,6 +355,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			//player->rotation.y += rot;
 
 			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
+			//GiftAngle = player->rotation.y;
 			
 			//‘O•ûŒüŽæ“¾
 			/*DirectX::XMFLOAT3 front;
