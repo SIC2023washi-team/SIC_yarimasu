@@ -18,7 +18,7 @@ void StageGraphicsComponent::Initialize(GameObject* gameobj)
 {
 	Stage* stage = dynamic_cast<Stage*> (gameobj);
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-	stage->stageModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\ExampleStage\\ExampleStage.fbx");
+	stage->stageModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\stage\\foor_v001.fbx");
 }
 
 void StageGraphicsComponent::Update(GameObject* gameobj)

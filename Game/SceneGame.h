@@ -20,6 +20,8 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
+//float GiftAngle = 0;
+
 class SceneGame :public Lemur::Scene::BaseScene
 {
 public:
