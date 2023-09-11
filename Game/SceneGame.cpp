@@ -260,7 +260,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 	}
-
 	for (auto& it : projectileList)
 	{
 		it->player_ = player;
@@ -269,7 +268,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->enemyList_ = enemyList;
 	}
-
 	//enemy->player_ = player;
 	player->enemy_ = enemy;
 	player->projectile_ = projectile;
@@ -295,17 +293,21 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 
 
-	for (auto& it : enemyList)
+	if (enemyList.size() != 0)
 	{
-		it->Update(elapsedTime);
-	
-	}
+		for (auto& it : enemyList)
+		{
+			it->Update(elapsedTime);
 
-	for (auto& it : projectileList)
+		}
+	}
+	if (projectileList.size() != 0)
 	{
-		it->Update(elapsedTime);
+		for (auto& it : projectileList)
+		{
+			it->Update(elapsedTime);
+		}
 	}
-
 
 	// ‹óƒm[ƒh‚Ìíœ
 
@@ -322,14 +324,13 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			it++;
 		}
 	}
-
 	auto Proj = projectileList.begin();
 	while (Proj != projectileList.end())
 	{
 		if ((*Proj)->Death)
 		{
 			(*Proj)->Delete();
-			it = projectileList.erase(Proj);
+			Proj = projectileList.erase(Proj);
 		}
 		else
 		{
@@ -343,7 +344,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		if ((*Uiit)->Death)
 		{
 			(*Uiit)->Delete();
-			Uiit = UiList.erase(it);
+			Uiit = UiList.erase(Uiit);
 		}
 		else
 		{
