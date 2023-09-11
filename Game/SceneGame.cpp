@@ -6,9 +6,11 @@
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
+#include "interval.h"
+
 DirectX::XMFLOAT3 GiftAngle = { 0,0,0 };
 DirectX::XMFLOAT4 GiftPosition = { 0,0,0,0 };
-
+int SceneGame::Timer = 0;
 
 using namespace DirectX;
 DirectX::XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
@@ -57,7 +59,7 @@ void SceneGame::Initialize()
 		}
 	}
 
-
+	SetPhase = true;
 	// Stage
 	stage = CreateStage();
 	stage->Initialize();
@@ -67,7 +69,7 @@ void SceneGame::Initialize()
 
 	for (int i = 0; i < 5; i++)
 	{
-		addEnemy();
+		//addEnemy();
 	}
 	addUi(3);
 	//HP
@@ -103,10 +105,10 @@ void SceneGame::Initialize()
 
 	player->pixelShader = chara_ps.Get();
 	stage->pixelShader = stage_ps.Get();
-	for (auto& it : enemyList)
-	{
-		it->pixelShader= chara_ps.Get();
-	}
+	//for (auto& it : enemyList)
+	//{
+	//	it->pixelShader= chara_ps.Get();
+	//}
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
@@ -173,6 +175,12 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+
+	interval<1000>::run([&] {
+		Timer++;
+		});
+
+	Wave();
 	Mouse& mouse = Input::Instance().GetMouse();
 
 	for (auto& it : UiList)
@@ -186,7 +194,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		it->NumDelivery[5] = shop_int;
 	}
 
-	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
 	{
 		if (!isPaused)
 		{
@@ -202,7 +210,16 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		//}
 	}
 
+	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
+	{
+		enemyList.clear();
+	}
 
+	if (enemyList.size() == 0)
+	{
+		Timer = 0;
+		SetPhase = true;
+	}
 
 	if (isPaused)return;
 
@@ -238,37 +255,38 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	for (auto& it : enemyList)
 	{
 		it->Update(elapsedTime);
-	
 	}
 
 
 
 	// 空ノードの削除
-
-	auto it = enemyList.begin();
-	while (it != enemyList.end())
+	if (enemyList.empty())
 	{
-		if ((*it)->Death)
+		auto it = enemyList.begin();
+		while (it != enemyList.end())
 		{
-			(*it)->Delete();
-			it = enemyList.erase(it);
+			if ((*it)->Death)
+			{
+				(*it)->Delete();
+				it = enemyList.erase(it);
+			}
+			else
+			{
+				it++;
+			}
 		}
-		else
+		auto Uiit = UiList.begin();
+		while (Uiit != UiList.end())
 		{
-			it++;
-		}
-	}
-	auto Uiit = UiList.begin();
-	while (Uiit != UiList.end())
-	{
-		if ((*Uiit)->Death)
-		{
-			(*Uiit)->Delete();
-			Uiit = UiList.erase(it);
-		}
-		else
-		{
-			Uiit++;
+			if ((*Uiit)->Death)
+			{
+				(*Uiit)->Delete();
+				Uiit = UiList.erase(it);
+			}
+			else
+			{
+				Uiit++;
+			}
 		}
 	}
 	//auto it = enemyList.begin();
@@ -296,6 +314,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 
 	// エネミー同士の当たり判定
+	if(enemyList.size()>=2)
 	{
 		// 全ての敵と総当たりで衝突判定
 		int enemyCount = enemyList.size();
@@ -422,8 +441,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	ImGui::Begin("ImGUI");
 	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
+	ImGui::SliderFloat("elapsedTime", &elapsedTime, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
+	ImGui::SliderInt("Timer", &Timer, -10.0f, +10.0f);
 
 	//ImGui::SliderInt("", &numdebug, -10.0f, +10.0f);
 
@@ -741,6 +762,15 @@ void SceneGame::addEnemy()
 	enemyList.push_back(e);
 }
 
+void SceneGame::addEnemy(int enemyType, int startTime)
+{
+	GameObject* e;
+	e = CreateEnemy();
+	e->EnemyInitialize(enemyType, startTime);
+	e->pixelShader = chara_ps.Get();
+	enemyList.push_back(e);
+}
+
 void SceneGame::addUi(int Uitype)
 {
 	bool judge = false;
@@ -814,24 +844,60 @@ void SceneGame::UiGetUpdate()
 
 }
 
-void SceneGame::SetEnemyCount()
+void SceneGame::Wave()
 {
-	// 各敵の出現数指定
-	enemyCount[0] = {1,2,1};
-	enemyCount[1] = {};
-	enemyCount[2] = {};
-	enemyCount[3] = {};
-	enemyCount[4] = {};
-	enemyCount[5] = {};
-	enemyCount[6] = {};
-	enemyCount[7] = {};
-	enemyCount[8] = {};
-	enemyCount[9] = {};
-
-
+	if (SetPhase)
+	{
+		switch (WaveNumber)
+		{
+		case 1:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 2:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			addEnemy(3, 5);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 3:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 4:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		case 8:
+			break;
+		case 9:
+			break;
+		case 10:
+			break;
+		}
+	}
 }
 
-void SceneGame::SetWave()
-{
-	
-}
+

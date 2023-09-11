@@ -50,14 +50,14 @@ public:
 
     // “G‚Ì’Ç‰Á
     void addEnemy();
+    void addEnemy(int enemyType,int startTime);
+
     //Ui‚Ì’Ç‰Á
     void addUi(int Uitype);
 
     void UiGetUpdate();
 
-    void SetEnemyCount();
-
-    void SetWave();
+    void Wave();
 
     // ƒvƒŒƒCƒ„[¶¬
     Player* CreatePlayer()
@@ -96,6 +96,7 @@ public:
         );
     }
 
+    static int Timer;
 
     int ShopItemsNum[10] = {};
     int SaveShopUi = {};
@@ -103,13 +104,10 @@ public:
     int UiCount = {};
     bool isPaused = false;
 
-    struct EnemyCount
-    {
-        int SmallEnemyCount = 0;
-        int MidEnemyCount = 0;
-        int BigEnemyCount = 0;
-    }enemyCount[30];
+    bool SetPhase = false;
 
+    int WaveNumber=1;
+    //std::vector<GameObject> waves;
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];

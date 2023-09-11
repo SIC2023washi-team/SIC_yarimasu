@@ -107,7 +107,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 }
 
-void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int StartTime, int EnemyTime)
+void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, int startTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
@@ -118,18 +118,17 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int StartTime, 
 	enemy->position.y = 0.0f;
 	enemy->radius = 1.0f;
 	enemy->height = 1.0f;
-
+	enemy->StartTime = startTime;
 
 
 
 
 	std::mt19937 mt{ std::random_device{}() };
-	std::uniform_int_distribution<int> Type(0, 3);
 	std::uniform_int_distribution<int> Pos(0, 1);
 	std::uniform_int_distribution<int> ePos_1(80, 160);
 	std::uniform_int_distribution<int> ePos_2(80, 160);
 
-	enemy->EnemyType = EnemyTime;
+	enemy->EnemyType = enemyType;
 
 	switch (enemy->EnemyType)
 	{
@@ -171,42 +170,12 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int StartTime, 
 
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
-
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 	//enemy->UpdataHorizontalVelocity(elapsedTime);
 	//enemy->UpdateHorizontalMove(elapsedTime);
 
-	float px = (enemy->player_->position.x -enemy->position.x);
-	float pz = (enemy->player_->position.z - enemy->position.z);
-	DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
-	DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
-	vec_x  = DirectX::XMVector3Normalize(vec_x);
-	vec_z  = DirectX::XMVector3Normalize(vec_z);
-	float floatX = DirectX::XMVectorGetX(vec_x);
-	float floatZ = DirectX::XMVectorGetX(vec_z);
-	enemy->position.x += floatX * enemy->Speed;
-	//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
-	enemy->position.z += floatZ * enemy->Speed;
-	
-	///自機の回転
-	//B-Aのベクトル
-	DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
-	//正規化
-	DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
-
-	enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
-
-	if (enemy->HP <= 0)
+	if (enemy->StartTime <= SceneGame::Timer)
 	{
-		enemy->clip_index = 1;
-		enemy->AnimSpeed = 1.0f;
-
-		// これで再生できる
-
-	}
-	else
-	{
-		enemy->clip_index = 0;
 		float px = (enemy->player_->position.x - enemy->position.x);
 		float pz = (enemy->player_->position.z - enemy->position.z);
 		DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
@@ -219,16 +188,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
 		enemy->position.z += floatZ * enemy->Speed;
 
-		float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
-		if (cross < 0)
-		{
-			enemy->rotation.y += 0.01f;
-		}
-		else
-		{
-			enemy->rotation.y -= 0.01f;
-		}
-
 		///自機の回転
 		//B-Aのベクトル
 		DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
@@ -236,26 +195,67 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
 
 		enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
+
+		if (enemy->HP <= 0)
+		{
+			enemy->clip_index = 1;
+			enemy->AnimSpeed = 1.0f;
+
+			// これで再生できる
+
+		}
+		else
+		{
+			enemy->clip_index = 0;
+			float px = (enemy->player_->position.x - enemy->position.x);
+			float pz = (enemy->player_->position.z - enemy->position.z);
+			DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
+			DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
+			vec_x = DirectX::XMVector3Normalize(vec_x);
+			vec_z = DirectX::XMVector3Normalize(vec_z);
+			float floatX = DirectX::XMVectorGetX(vec_x);
+			float floatZ = DirectX::XMVectorGetX(vec_z);
+			enemy->position.x += floatX * enemy->Speed;
+			//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
+			enemy->position.z += floatZ * enemy->Speed;
+
+			float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
+			if (cross < 0)
+			{
+				enemy->rotation.y += 0.01f;
+			}
+			else
+			{
+				enemy->rotation.y -= 0.01f;
+			}
+
+			///自機の回転
+			//B-Aのベクトル
+			DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
+			//正規化
+			DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
+
+			enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
+		}
+
+		// 当たり判定
+		DirectX::XMFLOAT3 p_p = enemy->position;
+		float p_r = enemy->radius;
+		DirectX::XMFLOAT3 e_p = enemy->player_->position;
+		float e_r = enemy->player_->radius;
+
+		if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+		{
+			enemy->Death = true;
+		}
+
+
+		//種類によっての演出
+		if (enemy->EnemyType == 3)
+		{
+			enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z), 0.4f);
+		}
 	}
-
-	// 当たり判定
-	DirectX::XMFLOAT3 p_p = enemy->position;
-	float p_r = enemy->radius;
-	DirectX::XMFLOAT3 e_p = enemy->player_->position;
-	float e_r = enemy->player_->radius;         
-
-	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
-	{
-		enemy->Death = true;
-	}
-
-
-	//種類によっての演出
-	if (enemy->EnemyType == 3)
-	{
-		enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y+0.5f, enemy->position.z), 0.4f);
-	}
-
 }
 
 void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
@@ -290,7 +290,7 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 void EnemyGraphicsComponent::Update(GameObject* gameobj)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
-	enemy->ef->Play(enemy->player_->position);
+	//enemy->ef->Play(enemy->player_->position);
 	//SceneGame::numdebug++;
 }
 

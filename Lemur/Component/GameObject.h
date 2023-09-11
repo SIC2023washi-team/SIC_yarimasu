@@ -29,6 +29,13 @@ public:
         graphics->Initialize(this);
     }
 
+    virtual void EnemyInitialize(int e_t,int s_t)
+    {
+        input->Initialize(this);
+        physics->EnemyInitialize(this,e_t,s_t);
+        graphics->Initialize(this);
+    }
+
     void Update(float elapsedTime)
     {
         input->Update(this, elapsedTime);
@@ -75,7 +82,7 @@ public:
     float height;
 
     int StartTime = 0;
-
+    int Timer;
     Mouse* mouse;
 
     ID3D11PixelShader* pixelShader = nullptr;
