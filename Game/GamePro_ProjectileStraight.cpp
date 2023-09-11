@@ -90,11 +90,8 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 	project->scale = { 5.0f,5.0f,5.0f };
 	project->position.y = 0.0f;
 	project->attack = 1.0f;
-<<<<<<< HEAD
 	project->speed = 0.01f;
-=======
-	project->speed = 0.05f;
->>>>>>> cb134dd22f1b63f810bba145a0253e81438460f2
+
 	project->damage = 1.0f;
 	project->radius = 1.0f;
 
@@ -130,34 +127,21 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	///“–‚½‚è”»’è
 	DirectX::XMFLOAT3 p_p = project->position;
 	float p_r = project->radius;
-<<<<<<< HEAD
-		for (auto& it : project->enemyList_)
+
+	for (auto& it : project->enemyList_)
+	{
+		DirectX::XMFLOAT3 e_p = it->position;
+		float e_r = it->radius;
+		if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
 		{
-			DirectX::XMFLOAT3 e_p = it->position;
-			float e_r = it->radius;
-			if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
-			{
-
-				
-			}
+			it->NumDelivery[10] = project->damage;
 		}
-		project->HP -= 1;
-=======
+	}
+	project->HP -= 1;
 
-
-
-		//for (auto& it : project->enemyList_)
-		//{
-		//	DirectX::XMFLOAT3 e_p = it->position;
-		//	float e_r = it->radius;
-		//	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
-		//	{
-
-		//		it->Death;
-		//	}
-		//}
-		//project->HP -= 1;
->>>>>>> cb134dd22f1b63f810bba145a0253e81438460f2
-	
+	/*if (project->HP <= 0)
+	{
+		project->Death = true;
+	}*/
 
 }

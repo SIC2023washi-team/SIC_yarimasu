@@ -960,9 +960,7 @@ void SceneGame::EnemyGetUpdate()
 			it->NumDelivery[0] = 0;
 			it->NumDelivery[1] = 1;
 		}
-
 	}
-
 }
 //
 //GamePro_ProjectileStraight* SceneGame::CreateProjectile()
