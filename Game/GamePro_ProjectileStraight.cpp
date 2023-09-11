@@ -57,6 +57,13 @@ void GamePro_ProjectileStraightGraphicsComponent::Render(GameObject* gameobj, fl
 
 
     BulletModel->render(immediate_context, world, project->material_color, nullptr, replaced_pixel_shader);
+
+	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+
+	//衝突判定用のデバッグ円柱を描画
+
+	debugRenderer->DrawSphere(project->position, project->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+
 }
 
 void GamePro_ProjectileStraightInputComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -80,12 +87,16 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
 	project->HP = 1.0f;
-	project->scale = { 50.0f,50.0f,50.0f };
+	project->scale = { 5.0f,5.0f,5.0f };
 	project->position.y = 0.0f;
 	project->attack = 1.0f;
+<<<<<<< HEAD
 	project->speed = 0.01f;
+=======
+	project->speed = 0.05f;
+>>>>>>> cb134dd22f1b63f810bba145a0253e81438460f2
 	project->damage = 1.0f;
-	project->radius = 100.0f;
+	project->radius = 1.0f;
 
 	project->GiftAngle.x = project->NumFloatDelivery[0];
 	project->GiftAngle.z = project->NumFloatDelivery[1];
@@ -119,6 +130,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	///当たり判定
 	DirectX::XMFLOAT3 p_p = project->position;
 	float p_r = project->radius;
+<<<<<<< HEAD
 		for (auto& it : project->enemyList_)
 		{
 			DirectX::XMFLOAT3 e_p = it->position;
@@ -130,6 +142,22 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 			}
 		}
 		project->HP -= 1;
+=======
+
+
+
+		//for (auto& it : project->enemyList_)
+		//{
+		//	DirectX::XMFLOAT3 e_p = it->position;
+		//	float e_r = it->radius;
+		//	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+		//	{
+
+		//		it->Death;
+		//	}
+		//}
+		//project->HP -= 1;
+>>>>>>> cb134dd22f1b63f810bba145a0253e81438460f2
 	
 
 }
