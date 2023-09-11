@@ -86,7 +86,7 @@ public:
     float   friction = 0.5f;
     float   acceleration = 1.0f;
 
-    float radius = 0;
+    float radius = 1.0f;
     float height;
 
     Mouse* mouse;
@@ -98,6 +98,7 @@ public:
     GameObject* player_;
     GameObject* enemy_;
     GameObject* projectile_;
+    std::vector<GameObject*> enemyList_;
 
     //エネミーがautoで一括生成されてしまうのと一括生成の都合上_randがうまく機能しないので用意したやつ
     int NumDelivery[10];

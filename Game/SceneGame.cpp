@@ -246,6 +246,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 	}
+	for (auto& it : projectileList)
+	{
+		it->enemyList_ = enemyList;
+	}
 
 	//enemy->player_ = player;
 	player->enemy_ = enemy;

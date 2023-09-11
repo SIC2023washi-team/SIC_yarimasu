@@ -149,6 +149,8 @@ private:
     GameObject* projectile;
     std::vector<GameObject*> projectileList;
 
+
+
     // ポーズ（ショップ）
 
 

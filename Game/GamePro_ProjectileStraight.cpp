@@ -1,6 +1,8 @@
 #include "GamePro_ProjectileStraight.h"
 #include <imgui.h>
-
+#include "./Lemur/Collision/Collision.h"
+#include"./Lemur/Effekseer/EffekseerManager.h"
+#include"./Lemur/Effekseer/Effect.h"
 
 
 //void GamePro_ProjectileStraight::Launch(GameObject* gameobj, const DirectX::XMFLOAT3& direction, const DirectX::XMFLOAT3& position)
@@ -83,6 +85,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 	project->attack = 1.0f;
 	project->speed = 0.005f;
 	project->damage = 1.0f;
+	project->radius = 100.0f;
 
 	project->GiftAngle.x = project->NumFloatDelivery[0];
 	project->GiftAngle.z = project->NumFloatDelivery[1];
@@ -104,4 +107,23 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	project->position.z += floatZ * project->speed;
 	
 	project->projectEffect->Play(project->position);
+
+	DirectX::XMFLOAT3 p_p = project->position;
+	float p_r = project->radius;
+
+
+
+		for (auto& it : project->enemyList_)
+		{
+			DirectX::XMFLOAT3 e_p = it->position;
+			float e_r = it->radius;
+			if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+			{
+
+				it->Death;
+			}
+		}
+		project->HP -= 1;
+	
+
 }
