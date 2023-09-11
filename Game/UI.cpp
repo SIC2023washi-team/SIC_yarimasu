@@ -123,7 +123,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 	case 3:
 		if (ui->NumDelivery[5] == 1)
 		{
-			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.5f, (0));
+			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.5f, (0),100,100,1920,100);
 			
 		}
 	}
