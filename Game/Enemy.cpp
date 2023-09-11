@@ -71,18 +71,18 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	default:
 		break;
 	case 0://小さいの
-		enemy->Speed = 0.001f;
+		enemy->Speed = 0.005f;
 		enemy->AnimSpeed = 3.0f;
 		break;
 	case 1://中くらいの
-		enemy->Speed = 0.0008f;
+		enemy->Speed = 0.003f;
 		enemy->AnimSpeed = 1.5f;
 		break;
 	case 2://大きいの
-		enemy->Speed = 0.0005f;
+		enemy->Speed = 0.001f;
 		break;
 	case 3://小さいしくそ早
-		enemy->Speed = 0.003f;
+		enemy->Speed = 0.01f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 10.0f;
 		break;
@@ -112,15 +112,21 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	float px = (enemy->player_->position.x -enemy->position.x);
 	float pz = (enemy->player_->position.z - enemy->position.z);
-	DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
-	DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
-	vec_x  = DirectX::XMVector3Normalize(vec_x);
-	vec_z  = DirectX::XMVector3Normalize(vec_z);
-	float floatX = DirectX::XMVectorGetX(vec_x);
-	float floatZ = DirectX::XMVectorGetX(vec_z);
-	enemy->position.x += floatX * enemy->Speed;
+	//DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
+	//DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
+	//vec_x  = DirectX::XMVector3Normalize(vec_x);
+	//vec_z  = DirectX::XMVector3Normalize(vec_z);
+	//float floatX = DirectX::XMVectorGetX(vec_x);
+	//float floatZ = DirectX::XMVectorGetX(vec_z);
+
+
+	float d = sqrt(px*px + pz*pz);
+	px /= d;
+	pz /= d;
+
+	enemy->position.x += px * enemy->Speed;
 	//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
-	enemy->position.z += floatZ * enemy->Speed;
+	enemy->position.z += pz * enemy->Speed;
 	
 	///自機の回転
 	//B-Aのベクトル
@@ -180,9 +186,15 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
 	{
+		enemy->explosionEffect->Play(enemy->position, 0.4f);
+		enemy->NumDelivery[0]++;
+		
+		
+	}
+	if (enemy->NumDelivery[1]>0)
+	{
 		enemy->Death = true;
 	}
-
 
 	//種類によっての演出
 	if (enemy->EnemyType == 3)

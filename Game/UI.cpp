@@ -57,12 +57,16 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 			break;
 		}
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\UiBase.png");
+		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\100junk.png");
 		ui->Uisize = { 200.0f,200.0f };
 ;
 
 		break;
 	case 3:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
+		break;
+	case 4:
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HP_bit.png");
 		break;
 	}
 	ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
@@ -85,17 +89,38 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 				&& ui->Uiposition.x < static_cast<float>(mouse.GetOldPositionX()))
 						//static_cast<float>(mouse.GetOldPositionY());
 			{
-				ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
-				if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+				if (static_cast<float>(mouse.GetOldPositionY()) < ui->Uiposition.y + ui->Uisize.y
+					&& ui->Uiposition.y < static_cast<float>(mouse.GetOldPositionY()))
 				{
-					ui->NumDelivery[6];
-					
+					ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
+					if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+					{
+						ui->NumDelivery[6]++;
+
+					}
 				}
 
 			}
 			else
 			{
 				ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
+			}
+		}
+		break;
+	case 4:
+		ui->player_MAXHP = ui->NumDelivery[2];
+		ui->player_HP = ui->NumDelivery[1];
+
+		for (int i = 0; i < ui->player_MAXHP; i++)
+		{
+			if (i > ui->player_HP-1)
+			{
+				ui->HPUiColor[i] = { 0.5f,0.5f,0.5f,1.0f };
+
+			}
+			else
+			{
+				ui->HPUiColor[i] = { 1.2f,1.2f,1.2f,1.0f };
 			}
 		}
 		break;
@@ -118,6 +143,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		{
 			UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			UiBase[1]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+			UiBase[2]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		}
 		break;
 	case 3:
@@ -125,6 +151,12 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		{
 			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.5f, (0));
 			
+		}
+		break;
+	case 4:
+		for (int i = 0; i < ui->player_MAXHP;i++)
+		{
+			UiBase[0]->render(immediate_context, 20.0f+27.0f*i, 15.0f, 40.0f, 50.0f, ui->HPUiColor[i].x, ui->HPUiColor[i].y, ui->HPUiColor[i].z, ui->HPUiColor[i].w, (0));
 		}
 	}
 

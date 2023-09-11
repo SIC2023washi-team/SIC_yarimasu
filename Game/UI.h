@@ -29,10 +29,13 @@ public:
         Canon,
         PowerUp,
     };
+    int player_HP;
+    int player_MAXHP;
     float AddParameter;
     DirectX::XMFLOAT2 Uiposition;
     DirectX::XMFLOAT2 Uisize;
     DirectX::XMFLOAT4 UiColor;
+    DirectX::XMFLOAT4 HPUiColor[30];
 
 };
 
@@ -58,4 +61,5 @@ private:
     std::shared_ptr<sprite> pause;
     std::shared_ptr<sprite> option[5];
     std::shared_ptr<sprite> UiBase[5];
+    std::shared_ptr<sprite> HPbit;
 };

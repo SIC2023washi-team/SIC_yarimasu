@@ -54,6 +54,7 @@ public:
     void addUi(int Uitype);
 
     void UiGetUpdate();
+    void EnemyGetUpdate();
 
     // ƒvƒŒƒCƒ„[¶¬
     Player* CreatePlayer()
@@ -98,7 +99,12 @@ public:
     int shop_int;
     int UiCount = {};
     bool isPaused = false;
-
+    float speed = 1.0f;
+    float damage = 1.0f;
+    float attack = 1.0f;
+    float HP = 1.0f;
+    float Player_HP = 3.0f;
+    float Player_MAXHP = 3.0f;
 
 private:
     // skkind_mesh

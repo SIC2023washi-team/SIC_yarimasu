@@ -69,6 +69,7 @@ void SceneGame::Initialize()
 	{
 		addEnemy();
 	}
+	addUi(4);
 	addUi(3);
 	//HP
 	addUi(1);
@@ -76,6 +77,7 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(2);
 	addUi(2);
+
 
 
 	
@@ -174,7 +176,8 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
-
+	UiGetUpdate();
+	EnemyGetUpdate();
 
 	Mouse& mouse = Input::Instance().GetMouse();
 
@@ -187,24 +190,31 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 		it->NumDelivery[5] = shop_int;
-		
-	}
-
-	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
-	{
-		if (!isPaused)
+		if (it->NumDelivery[0] == 4)
 		{
-			shop_int = 1;
-			isPaused = true;
+			it->NumDelivery[2] = Player_MAXHP;
 		}
-		//else
-		//{
-		//	shop_int = 0;
-		//	isPaused = false;
-
-
-		//}
+		if (it->NumDelivery[0] == 4)
+		{
+			it->NumDelivery[1] = Player_HP;
+		}
 	}
+
+	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	//{
+	//	if (!isPaused)
+	//	{
+	//		shop_int = 1;
+	//		isPaused = true;
+	//	}
+	//	//else
+	//	//{
+	//	//	shop_int = 0;
+	//	//	isPaused = false;
+
+
+	//	//}
+	//}
 
 
 
@@ -725,12 +735,15 @@ void SceneGame::addUi(int Uitype)
 	GameObject* Ui;
 	Ui = CreateUi();
 	Ui->NumDelivery[0] = Uitype;
+	if (Uitype == 4)Ui->NumDelivery[1] = Player_HP;
+	if (Uitype == 4)Ui->NumDelivery[2] = Player_MAXHP;
+	
 	if (Uitype == 2)
 	{
 		std::mt19937 mt{ std::random_device{}() };
 		for (int i = 0; i < 1;)
 		{
-			std::uniform_int_distribution<int> Type(0, 3);
+			std::uniform_int_distribution<int> Type(0, 4);
 			ShopItemsNum[SaveShopUi] = int(Type(mt));
 			judge = false;
 			for (int j = 0; j < SaveShopUi; j++)
@@ -758,6 +771,7 @@ void SceneGame::addUi(int Uitype)
 	UiList.push_back(Ui);
 
 	if (Uitype == 2)SaveShopUi++;
+
 	UiCount++;
 	
 }
@@ -775,19 +789,53 @@ void SceneGame::UiGetUpdate()
 				switch (it->NumDelivery[2])
 				{
 				case 0:
-
+					//UŒ‚‘¬“x
+					attack += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
 					break;
 				case 1:
+					//’e‘¬“x
+					speed += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
 					break;
 				case 2:
+					//ŠÑ’Ê—Í
+					HP += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
 					break;
 				case 3:
+					//UŒ‚—Í
+					damage += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
+				case 4:
+					//UŒ‚—Í
+					Player_HP += it->NumDelivery[6];
+					Player_MAXHP += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
+
 					break;
 				}
+				shop_int = 0;
+				isPaused = false;
 			}
 		}
 
 	}
 
 
+}
+void SceneGame::EnemyGetUpdate()
+{
+
+	for (auto& it : enemyList)
+	{
+		
+			if (it->NumDelivery[0] >= 1)
+			{
+				Player_HP -= it->NumDelivery[0];
+				it->NumDelivery[0]=0;
+				it->NumDelivery[1]=1;
+			}
+
+	}
 }
