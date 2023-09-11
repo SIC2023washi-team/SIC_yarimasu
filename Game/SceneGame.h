@@ -13,6 +13,9 @@
 //Enemy
 #include "Enemy.h"
 
+//Ui
+#include "Ui.h"
+
 // Audio
 #include <wrl.h>
 #include"./Lemur/Audio/audio.h"
@@ -20,9 +23,12 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
+
 #include<vector>
 #include<algorithm>
 #include <iostream>
+
+
 
 class SceneGame :public Lemur::Scene::BaseScene
 {
@@ -44,6 +50,14 @@ public:
 
     // 敵の追加
     void addEnemy();
+    //Uiの追加
+    void addUi(int Uitype);
+
+    void UiGetUpdate();
+
+    void SetEnemyCount();
+
+    void SetWave();
 
     // プレイヤー生成
     Player* CreatePlayer()
@@ -73,6 +87,29 @@ public:
         );
     }
 
+    Ui* CreateUi()
+    {
+        return new Ui(
+            new UiInputComponent(),
+            new UiPhysicsComponent(),
+            new UiGraphicsComponent()
+        );
+    }
+
+
+    int ShopItemsNum[10] = {};
+    int SaveShopUi = {};
+    int shop_int;
+    int UiCount = {};
+    bool isPaused = false;
+
+    struct EnemyCount
+    {
+        int SmallEnemyCount = 0;
+        int MidEnemyCount = 0;
+        int BigEnemyCount = 0;
+    }enemyCount[30];
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -92,24 +129,16 @@ private:
     //Enemy
     GameObject* enemy;
 
+
+    //Ui
+    GameObject* ui;
     std::vector<GameObject*> enemyList;
+    std::vector<GameObject*> UiList;
+
+
 
     // ポーズ（ショップ）
-    bool isPaused = false;
-    std::shared_ptr<sprite> pause;
-    std::shared_ptr<sprite> option[5];
 
-    int n[5] = {};
-
-    DirectX::XMFLOAT2 pausePosition = { 1920,0 };
-
-    enum ShopNumber {
-        SpeedUp_A = 0,
-        SpeedUp_P,
-        Mine,
-        Canon,
-        PowerUp,
-    };
 
     // エフェクト
     Effect* hitEffect = nullptr;
@@ -177,3 +206,5 @@ private:
     float light_view_near_z{ 2.0f };
     float light_view_far_z{ 18.0f };
 };
+
+

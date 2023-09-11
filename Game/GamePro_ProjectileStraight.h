@@ -1,54 +1,54 @@
 #pragma once
 
+#include "../Lemur/Graphics/skinned_mesh.h"
+
 #include "../Lemur/Component/GameObject.h"
 #include "../Lemur/Graphics/skinned_mesh.h"
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
-#include"./Lemur/Effekseer/EffekseerManager.h"
-#include"./Lemur/Effekseer/Effect.h"
 
-// Effect
-#include"./Lemur/Effekseer/Effect.h"
+#include "SceneGame.h"
 
-
-class Enemy :public GameObject
+class GamePro_ProjectileStraight : public GameObject
 {
 public:
-    Enemy(InputComponent* input_,
+    GamePro_ProjectileStraight(InputComponent* input_,
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
-    float HP = 10.0f;
-    float Speed = 0.001f;
-    float Atk;
-    float AnimSpeed = 1.0f;
-    int EnemyType;
-    int clip_index = 0.0f;
-    Effect* explosionEffect;
-    Effect* firesmokeEffect;
 
-    Effect* ef;
+    //”­ŽË
+    //void Launch(GameObject* gameobj,const DirectX::XMFLOAT3& direction, const DirectX::XMFLOAT3& position);
+
+
+    float speed = 1.0f;
+    float damage = 1.0f;
+    float attack = 1.0f;
+    float HP = 1.0f;
+
+    DirectX::XMFLOAT3 GiftAngle;
+    DirectX::XMFLOAT4 GiftPosition;
 };
 
-class EnemyInputComponent :public InputComponent
+
+class GamePro_ProjectileStraightInputComponent :public InputComponent
 {
     void Initialize(GameObject* gameobj) override {}
     void Update(GameObject* gameobj, float elapsedTime) override;
 };
 
-class EnemyPhysicsComponent :public PhysicsComponent
+class GamePro_ProjectileStraightPhysicsComponent :public PhysicsComponent
 {
     void Initialize(GameObject* gameobj) override;
-    void EnemyInitialize(GameObject* gameobj,int StartTime,int EnemyTime) override;
     void Update(GameObject* gameobj, float elapsedTime) override;
 };
 
-class EnemyGraphicsComponent :public GraphicsComponent
+class GamePro_ProjectileStraightGraphicsComponent :public GraphicsComponent
 {
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj) override;
     void Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) override;
 
 private:
-    std::shared_ptr<skinned_mesh> EnemyModel;
+    std::shared_ptr<skinned_mesh> BulletModel;
 
 };

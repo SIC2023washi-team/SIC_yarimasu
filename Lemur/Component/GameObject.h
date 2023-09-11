@@ -53,20 +53,6 @@ public:
         delete graphics;
     }
 
-
-    // 水平移動更新処理
-    void UpdateHorizontalMove(float elapsedTime);
-
-    // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
-
-    void AddImpulse(const DirectX::XMFLOAT3& impulse)
-    {
-        velocity.x += impulse.x;
-        velocity.y += impulse.y;
-        velocity.z += impulse.z;
-    }
-
 public:
     DirectX::XMFLOAT4X4 World;
 
@@ -88,6 +74,8 @@ public:
     float radius = 0;
     float height;
 
+    int StartTime = 0;
+
     Mouse* mouse;
 
     ID3D11PixelShader* pixelShader = nullptr;
@@ -97,6 +85,10 @@ public:
     GameObject* player_;
     GameObject* enemy_;
 
+    //エネミーがautoで一括生成されてしまうのと一括生成の都合上_randがうまく機能しないので用意したやつ
+    int NumDelivery[10];
+    float NumFloatDelivery[10];
+    
     std::vector<GameObject*> enemys_;
 
     bool Death = false;

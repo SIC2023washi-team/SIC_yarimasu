@@ -3,6 +3,8 @@
 #include <imgui.h>
 #include <random>
 #include "./Lemur/Collision/Collision.h"
+#include"./Lemur/Effekseer/EffekseerManager.h"
+#include"./Lemur/Effekseer/Effect.h"
 
 #define EnemyHitPoint 3.0f
 
@@ -55,6 +57,9 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->height = 1.0f;
 
 
+
+
+
 	std::mt19937 mt{ std::random_device{}() };
 	std::uniform_int_distribution<int> Type(0, 3);
 	std::uniform_int_distribution<int> Pos(0, 1);
@@ -62,6 +67,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	std::uniform_int_distribution<int> ePos_2(80, 160);
 
 	enemy->EnemyType = int(Type(mt));
+
 	switch (enemy->EnemyType)
 	{
 	default:
@@ -85,7 +91,9 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	}
 
 
+
 	switch (int(Pos(mt)))
+
 	{
 	case 0://上下からくる
 		enemy->position.x = int(ePos_1(mt)) * 0.1f;
@@ -99,8 +107,71 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 }
 
+void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int StartTime, int EnemyTime)
+{
+	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+
+	enemy->HP = EnemyHitPoint;
+	enemy->scale.x = 16.f;
+	enemy->scale.y = 16.f;
+	enemy->scale.z = 16.f;
+	enemy->position.y = 0.0f;
+	enemy->radius = 1.0f;
+	enemy->height = 1.0f;
+
+
+
+
+
+	std::mt19937 mt{ std::random_device{}() };
+	std::uniform_int_distribution<int> Type(0, 3);
+	std::uniform_int_distribution<int> Pos(0, 1);
+	std::uniform_int_distribution<int> ePos_1(80, 160);
+	std::uniform_int_distribution<int> ePos_2(80, 160);
+
+	enemy->EnemyType = EnemyTime;
+
+	switch (enemy->EnemyType)
+	{
+	default:
+		break;
+	case 0://小さいの
+		enemy->Speed = 0.001f;
+		enemy->AnimSpeed = 1.5f;
+		break;
+	case 1://中くらいの
+		enemy->Speed = 0.0008f;
+		enemy->AnimSpeed = 1.0f;
+		break;
+	case 2://大きいの
+		enemy->Speed = 0.0005f;
+		break;
+	case 3://小さいしくそ早
+		enemy->Speed = 0.003f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 2.0f;
+		break;
+	}
+
+
+
+	switch (int(Pos(mt)))
+
+	{
+	case 0://上下からくる
+		enemy->position.x = int(ePos_1(mt)) * 0.1f;
+		enemy->position.z = 8 * (-1 + (rand() % 2) * 2);
+		break;
+	case 1://左右からくる
+		enemy->position.x = 8 * (-1 + (rand() % 2) * 2);
+		enemy->position.z = int(ePos_2(mt)) * 0.1f;
+		break;
+	}
+}
+
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
+
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 	//enemy->UpdataHorizontalVelocity(elapsedTime);
 	//enemy->UpdateHorizontalMove(elapsedTime);
@@ -129,6 +200,9 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	{
 		enemy->clip_index = 1;
 		enemy->AnimSpeed = 1.0f;
+
+		// これで再生できる
+
 	}
 	else
 	{
@@ -168,11 +242,18 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	DirectX::XMFLOAT3 p_p = enemy->position;
 	float p_r = enemy->radius;
 	DirectX::XMFLOAT3 e_p = enemy->player_->position;
-	float e_r = enemy->player_->radius;
+	float e_r = enemy->player_->radius;         
 
 	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
 	{
 		enemy->Death = true;
+	}
+
+
+	//種類によっての演出
+	if (enemy->EnemyType == 3)
+	{
+		enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y+0.5f, enemy->position.z), 0.4f);
 	}
 
 }
@@ -202,7 +283,8 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	}
 
-	enemy->ef= new Effect("Data/Effect/Hit.efk");
+	enemy->explosionEffect = new Effect("resources/Effects/explosion.efk");
+	enemy->firesmokeEffect = new Effect("resources/Effects/firesmoke.efk");
 }
 
 void EnemyGraphicsComponent::Update(GameObject* gameobj)
@@ -272,6 +354,11 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		skinned_meshes[0]->update_animation(keyframe);
 # endif
 		EnemyModel->render(immediate_context, world, enemy->material_color, &keyframe, replaced_pixel_shader);
+		if (enemy->clip_index == 1 && frame_index > animation.sequence.size() - 2)
+		{
+			enemy->explosionEffect->Play(enemy->position, 0.4f);
+			enemy->Death = true;
+		}
 	}
 	else
 	{
@@ -282,6 +369,8 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 
 	//衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 	
+
 }
 

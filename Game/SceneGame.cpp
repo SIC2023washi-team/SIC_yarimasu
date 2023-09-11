@@ -1,13 +1,17 @@
 #include "SceneGame.h"
+#include <random>
 #include "Lemur/Input/Mouse.h"
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
+DirectX::XMFLOAT3 GiftAngle = { 0,0,0 };
+DirectX::XMFLOAT4 GiftPosition = { 0,0,0,0 };
+
 
 using namespace DirectX;
-XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
+DirectX::XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
 {
 	using namespace DirectX;
 	XMFLOAT4 p;
@@ -65,14 +69,29 @@ void SceneGame::Initialize()
 	{
 		addEnemy();
 	}
+	addUi(3);
+	//HP
+	addUi(1);
+	//shop
+	addUi(2);
+	addUi(2);
+	addUi(2);
 
+
+	
 	//for (auto& it : enemyList)
 	//{
 	//	it->Initialize();
 	//}
 
+
 	//enemy = CreateEnemy();
 	//enemy->Initialize();
+
+	//ui = CreateUi();
+	//ui->Initialize();
+
+	UiCount = {};
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
@@ -92,15 +111,9 @@ void SceneGame::Initialize()
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
-	pause = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
-	option[ShopNumber::SpeedUp_A] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\AttackSpeedUp.png");
-	option[ShopNumber::SpeedUp_P] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SpeedUp.png");
-	option[ShopNumber::Canon] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\Canon.png");
-	option[ShopNumber::Mine] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\mine.png");
-	option[ShopNumber::PowerUp] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\powerUp.png");
 
 	// ヒットエフェクトにエフェクトのパスを入れる
-	hitEffect = new Effect("resources/Effect/Hit.efk");
+	//hitEffect = new Effect("resources/Effect/Hit.efk");
 
 
 #if 0
@@ -137,12 +150,21 @@ void SceneGame::Finalize()
 {
 	player->Delete();
 	stage->Delete();
+
+	//ui->Delete();
+
 	//enemy->Delete();
 	for (auto& it : enemyList)
 	{
 		it->Delete();
 	}
+	for (auto& it : UiList)
+	{
+		it->Delete();
+	}
 	enemyList.clear();
+	UiList.clear();
+
 
 	delete player;
 	delete stage;
@@ -151,6 +173,36 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+	Mouse& mouse = Input::Instance().GetMouse();
+
+	for (auto& it : UiList)
+	{
+		it->Update(elapsedTime);
+
+	}
+	for (auto& it : UiList)
+	{
+		it->player_ = player;
+		it->NumDelivery[5] = shop_int;
+	}
+
+	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	{
+		if (!isPaused)
+		{
+			shop_int = 1;
+			isPaused = true;
+		}
+		//else
+		//{
+		//	shop_int = 0;
+		//	isPaused = false;
+
+
+		//}
+	}
+
+
 
 	if (isPaused)return;
 
@@ -158,6 +210,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 	}
+
 	//enemy->player_ = player;
 	player->enemy_ = enemy;
 
@@ -177,11 +230,21 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	//enemy->Update(elapsedTime);
 
+
+	//ui->Update(elapsedTime);
+
+
+
 	for (auto& it : enemyList)
 	{
 		it->Update(elapsedTime);
+	
 	}
+
+
+
 	// 空ノードの削除
+
 	auto it = enemyList.begin();
 	while (it != enemyList.end())
 	{
@@ -193,6 +256,19 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		else
 		{
 			it++;
+		}
+	}
+	auto Uiit = UiList.begin();
+	while (Uiit != UiList.end())
+	{
+		if ((*Uiit)->Death)
+		{
+			(*Uiit)->Delete();
+			Uiit = UiList.erase(it);
+		}
+		else
+		{
+			Uiit++;
 		}
 	}
 	//auto it = enemyList.begin();
@@ -214,6 +290,9 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//		enemyList.erase(i);
 	//	}
 	//}
+
+
+
 
 
 	// エネミー同士の当たり判定
@@ -260,7 +339,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 	/////////////////////////////////////////////
-	Mouse& mouse = Input::Instance().GetMouse();
+
 	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 	{
 #if 0
@@ -299,15 +378,15 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 #endif
 
 
-		XMVECTOR L0 = Camera::Instance().GetEye();
-		XMFLOAT4 l0;
-		XMStoreFloat4(&l0, L0);
-		XMFLOAT4 l;
-		XMStoreFloat4(&l, XMVector3Normalize(WorldPosition0 - L0));
+		DirectX::XMVECTOR L0 = Camera::Instance().GetEye();
+		DirectX::XMFLOAT4 l0;
+		DirectX::XMStoreFloat4(&l0, L0);
+		DirectX::XMFLOAT4 l;
+		DirectX::XMStoreFloat4(&l, DirectX::XMVector3Normalize(WorldPosition0 - L0));
 
 		std::string intersected_mesh;
 		std::string intersected_material;
-		XMFLOAT3 intersected_normal;
+		DirectX::XMFLOAT3 intersected_normal;
 		if (stage->stageModel->raycast(l0, l, stage->transform, intersection_point, intersected_normal, intersected_mesh, intersected_material))
 		{
 			OutputDebugStringA("Intersected : ");
@@ -318,34 +397,15 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 			///自機の回転
 			//B-Aのベクトル
-			XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
-			//正規化
-			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
-		
+			DirectX::XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
 
-			//前方向取得
-			//float frontX = sinf(player->rotation.y);
-			//float frontZ = cosf(player->rotation.y);
-			//float dot = (frontX * player->translation.x) + (frontZ * player->translation.z);
-			//float rot = 1.0f - dot;
-			//player->rotation.y += rot;
+			GiftPosition = intersection_point;
+			GiftAngle = rotationangle;
+			//正規化
+			DirectX::XMVECTOR tani = DirectX::XMVector3Normalize(XMLoadFloat3(&rotationangle));
 
 			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
 			
-			//前方向取得
-			/*DirectX::XMFLOAT3 front;
-			front.x = sinf(player->rotation.y);
-			front.y = 0;
-			front.z = cosf(player->rotation.y);
-			
-			XMStoreFloat3(&TANI,tani);
-			front.x = front.x * TANI.x;
-			front.y = front.y * TANI.y;
-			front.z = front.z * TANI.z;
-
-
-
-			player->rotation.y= front.y;*/
 		}
 		else
 		{
@@ -490,10 +550,7 @@ void SceneGame::Render(float elapsedTime)
 
 		ID3D11PixelShader* null_pixel_shader{ NULL };
 		player->Render(elapsedTime);
-		for (auto& it : enemyList)
-		{
-			it->Render(elapsedTime);
-		}
+
 		double_speed_z->deactivate(immediate_context);
 	}
 	// Render scene
@@ -518,7 +575,10 @@ void SceneGame::Render(float elapsedTime)
 	{
 		it->Render(elapsedTime);
 	}
-#if 0
+
+
+#if  0
+
 
 	D3D11_VIEWPORT viewport;
 	UINT num_viewports{ 1 };
@@ -601,8 +661,52 @@ void SceneGame::Render(float elapsedTime)
 	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
 
 	// ここにRender
+#endif
+		// 3Dエフェクト描画
+	{
+		DirectX::XMFLOAT4X4 view{};
+		DirectX::XMFLOAT4X4 projection{};
+
+		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+
+		EffectManager::Instance().Render(view, projection);
+
+		// デバッグレンダラ描画実行
+		graphics.GetDebugRenderer()->Render(graphics.GetDeviceContext(), view, projection);
+
+	}
+
+
 
 	// sprite描画
+
+			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+			immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+
+			immediate_context->IASetInputLayout(sprite_input_layout.Get());
+			immediate_context->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
+			immediate_context->PSSetShader(sprite_pixel_shader.Get(), nullptr, 0);
+			immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
+			immediate_context->PSSetShaderResources(1, 1, mask_texture.GetAddressOf());
+
+			// 定数バッファの更新（ディゾルブ）
+			{
+				dissolve_constants dissolve{};
+				dissolve.parameters.x = dissolve_value;
+				immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
+				immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+			}
+			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+			//ui->Render(elapsedTime);
+			for (auto& it : UiList)
+			{
+				it->Render(elapsedTime);
+			}
+
 	{
 		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
@@ -623,22 +727,10 @@ void SceneGame::Render(float elapsedTime)
 			immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 		}
 	}
-#endif
 
-	// 3Dエフェクト描画
-	{
-		DirectX::XMFLOAT4X4 view{};
-		DirectX::XMFLOAT4X4 projection{};
 
-		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
-		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 
-		EffectManager::Instance().Render(view, projection);
 
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(graphics.GetDeviceContext(), view, projection);
-
-	}
 }
 
 void SceneGame::addEnemy()
@@ -647,4 +739,99 @@ void SceneGame::addEnemy()
 	e = CreateEnemy();
 	e->Initialize();
 	enemyList.push_back(e);
+}
+
+void SceneGame::addUi(int Uitype)
+{
+	bool judge = false;
+	GameObject* Ui;
+	Ui = CreateUi();
+	Ui->NumDelivery[0] = Uitype;
+	if (Uitype == 2)
+	{
+		std::mt19937 mt{ std::random_device{}() };
+		for (int i = 0; i < 1;)
+		{
+			std::uniform_int_distribution<int> Type(0, 3);
+			ShopItemsNum[SaveShopUi] = int(Type(mt));
+			judge = false;
+			for (int j = 0; j < SaveShopUi; j++)
+			{
+
+				if (ShopItemsNum[SaveShopUi] == ShopItemsNum[j])
+				{
+					judge = true;
+					break;
+				}
+
+			}
+			if (!judge)
+			{
+				break;
+			}
+			continue;
+		}
+	}
+	if (Uitype == 2)Ui->NumDelivery[2] = ShopItemsNum[SaveShopUi];
+	if (Uitype == 2)Ui->NumDelivery[1] = SaveShopUi;
+
+	Ui->Initialize();
+	
+	UiList.push_back(Ui);
+
+	if (Uitype == 2)SaveShopUi++;
+	UiCount++;
+	
+}
+
+void SceneGame::UiGetUpdate()
+{
+
+	for (auto& it : UiList)
+	{
+		//Uitype2。能力増加のUIの探索
+		if (it->NumDelivery[0] == 2)
+		{
+			if (it->NumDelivery[6] == 1)
+			{
+				switch (it->NumDelivery[2])
+				{
+				case 0:
+
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				}
+			}
+		}
+
+	}
+
+
+}
+
+void SceneGame::SetEnemyCount()
+{
+	// 各敵の出現数指定
+	enemyCount[0] = {1,2,1};
+	enemyCount[1] = {};
+	enemyCount[2] = {};
+	enemyCount[3] = {};
+	enemyCount[4] = {};
+	enemyCount[5] = {};
+	enemyCount[6] = {};
+	enemyCount[7] = {};
+	enemyCount[8] = {};
+	enemyCount[9] = {};
+
+
+}
+
+void SceneGame::SetWave()
+{
+	
 }
