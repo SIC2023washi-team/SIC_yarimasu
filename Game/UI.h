@@ -29,8 +29,10 @@ public:
         Canon,
         PowerUp,
     };
-
-
+    float AddParameter;
+    DirectX::XMFLOAT2 Uiposition;
+    DirectX::XMFLOAT2 Uisize;
+    DirectX::XMFLOAT4 UiColor;
 
 };
 

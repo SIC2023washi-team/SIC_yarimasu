@@ -65,12 +65,15 @@ void SceneGame::Initialize()
 	{
 		addEnemy();
 	}
+	addUi(3);
 	//HP
 	addUi(1);
 	//shop
 	addUi(2);
 	addUi(2);
 	addUi(2);
+
+
 	
 	//for (auto& it : enemyList)
 	//{
@@ -84,6 +87,7 @@ void SceneGame::Initialize()
 	//ui = CreateUi();
 	//ui->Initialize();
 
+	UiCount = {};
 
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
@@ -189,13 +193,13 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			shop_int = 1;
 			isPaused = true;
 		}
-		else
-		{
-			shop_int = 0;
-			isPaused = false;
+		//else
+		//{
+		//	shop_int = 0;
+		//	isPaused = false;
 
 
-		}
+		//}
 	}
 
 
@@ -652,6 +656,22 @@ void SceneGame::Render(float elapsedTime)
 
 	// ここにRender
 #endif
+		// 3Dエフェクト描画
+	{
+		DirectX::XMFLOAT4X4 view{};
+		DirectX::XMFLOAT4X4 projection{};
+
+		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+
+		EffectManager::Instance().Render(view, projection);
+
+		// デバッグレンダラ描画実行
+		graphics.GetDebugRenderer()->Render(graphics.GetDeviceContext(), view, projection);
+
+	}
+
+
 
 	// sprite描画
 
@@ -704,20 +724,7 @@ void SceneGame::Render(float elapsedTime)
 
 
 
-	// 3Dエフェクト描画
-	{
-		DirectX::XMFLOAT4X4 view{};
-		DirectX::XMFLOAT4X4 projection{};
 
-		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
-		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
-
-		EffectManager::Instance().Render(view, projection);
-
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(graphics.GetDeviceContext(), view, projection);
-
-	}
 }
 
 void SceneGame::addEnemy()
@@ -767,5 +774,36 @@ void SceneGame::addUi(int Uitype)
 	UiList.push_back(Ui);
 
 	if (Uitype == 2)SaveShopUi++;
+	UiCount++;
 	
+}
+
+void SceneGame::UiGetUpdate()
+{
+
+	for (auto& it : UiList)
+	{
+		//Uitype2。能力増加のUIの探索
+		if (it->NumDelivery[0] == 2)
+		{
+			if (it->NumDelivery[6] == 1)
+			{
+				switch (it->NumDelivery[2])
+				{
+				case 0:
+
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				}
+			}
+		}
+
+	}
+
+
 }

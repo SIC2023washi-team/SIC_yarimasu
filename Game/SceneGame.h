@@ -52,6 +52,8 @@ public:
     //Ui‚Ì’Ç‰Á
     void addUi(int Uitype);
 
+    void UiGetUpdate();
+
     // ƒvƒŒƒCƒ„[¶¬
     Player* CreatePlayer()
     {
@@ -93,6 +95,7 @@ public:
     int ShopItemsNum[10] = {};
     int SaveShopUi = {};
     int shop_int;
+    int UiCount = {};
     bool isPaused = false;
 
 private:
