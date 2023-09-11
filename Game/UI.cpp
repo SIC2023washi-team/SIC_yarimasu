@@ -36,6 +36,9 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 	switch (ui->UiTypes)
 	{
 	case 2:
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\UiBase.png");
+		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\100junk.png");
+		ui->Uisize = { 200.0f,200.0f };
 		switch (ui->NumDelivery[2])
 		{
 		case 0:
@@ -55,10 +58,12 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 			//çUåÇóÕ
 			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\offensive_power.png");
 			break;
+		case 4:
+			//çUåÇóÕ
+			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HP.png");
+			break;
 		}
-		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\UiBase.png");
-		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\100junk.png");
-		ui->Uisize = { 200.0f,200.0f };
+
 ;
 
 		break;
@@ -67,6 +72,19 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	case 4:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HP_bit.png");
+		break;
+	case 5:
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\return.png");
+		ui->Uisize = { 400.0f, 30.0f };
+		break;
+	case 6:
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\junk.png");
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
+		ui->junkDigits = 1;
+		ui->Uiposition2 = { 25,80 };
+		ui->Uisize2 = { 20,40 };
+		ui->Uiposition = { 45,80 };
+		ui->Uisize = { 80,40 };
 		break;
 	}
 	ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
@@ -87,13 +105,13 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 		{
 			if (static_cast<float>(mouse.GetOldPositionX()) < ui->Uiposition.x + ui->Uisize.x
 				&& ui->Uiposition.x < static_cast<float>(mouse.GetOldPositionX()))
-						//static_cast<float>(mouse.GetOldPositionY());
+				//static_cast<float>(mouse.GetOldPositionY());
 			{
 				if (static_cast<float>(mouse.GetOldPositionY()) < ui->Uiposition.y + ui->Uisize.y
 					&& ui->Uiposition.y < static_cast<float>(mouse.GetOldPositionY()))
 				{
 					ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
-					if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+					if (mouse.GetButtonDown() == mouse.BTN_LEFT && ui->NumDelivery[7] > 99)
 					{
 						ui->NumDelivery[6]++;
 
@@ -113,7 +131,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 
 		for (int i = 0; i < ui->player_MAXHP; i++)
 		{
-			if (i > ui->player_HP-1)
+			if (i > ui->player_HP - 1)
 			{
 				ui->HPUiColor[i] = { 0.5f,0.5f,0.5f,1.0f };
 
@@ -123,6 +141,66 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 				ui->HPUiColor[i] = { 1.2f,1.2f,1.2f,1.0f };
 			}
 		}
+		break;
+	case 5:
+		ui->Uiposition = { 1280 / 2 - ui->Uisize.x / 2, 720 - ui->Uisize.y };
+		if (static_cast<float>(mouse.GetOldPositionX()) < ui->Uiposition.x + ui->Uisize.x
+			&& ui->Uiposition.x < static_cast<float>(mouse.GetOldPositionX()))
+			//static_cast<float>(mouse.GetOldPositionY());
+		{
+			if (static_cast<float>(mouse.GetOldPositionY()) < ui->Uiposition.y + ui->Uisize.y
+				&& ui->Uiposition.y < static_cast<float>(mouse.GetOldPositionY()))
+			{
+				ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
+				if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+				{
+					if (ui->NumDelivery[6] == 0)
+					{
+						ui->NumDelivery[6]++;
+					}
+					else
+					{
+						ui->NumDelivery[6] = 0;
+					}
+				}
+			}
+			else
+			{
+				ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
+			}
+		}
+		break;
+	case 6:
+		int jank = ui->NumDelivery[1];
+		ui->junkDigits = 0;
+		while (jank != 0)
+		{
+			jank /= 10;
+			// äÑÇ¡ÇΩâÒêîÇÉJÉEÉìÉg
+			++ui->junkDigits;
+		}
+		int jankdig_ = ui->junkDigits;
+		jank = ui->NumDelivery[1];
+		if (jank > 0)
+		{
+			for (int i = 0; i < ui->junkDigits; i++)
+			{
+				ui->saveJank[i] = jank / pow(10, jankdig_ - 1);
+				jankdig_--;
+				int n = pow(10, jankdig_ - 1);
+				if (jank > 10)
+				{
+					jank -= ui->saveJank[i]*pow(10, jankdig_);
+				}
+				int a = 0;
+			}
+		}
+		else
+		{
+			ui->saveJank[0] = 0;
+			ui->junkDigits = 1;
+		}
+
 		break;
 	}
 
@@ -149,7 +227,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 	case 3:
 		if (ui->NumDelivery[5] == 1)
 		{
-			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.5f, (0));
+			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.9f, (0));
 			
 		}
 		break;
@@ -158,6 +236,19 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		{
 			UiBase[0]->render(immediate_context, 20.0f+27.0f*i, 15.0f, 40.0f, 50.0f, ui->HPUiColor[i].x, ui->HPUiColor[i].y, ui->HPUiColor[i].z, ui->HPUiColor[i].w, (0));
 		}
+		break;
+	case 5:
+			
+			UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y,ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+		break;
+	case 6:
+			
+			UiBase[0]->render(immediate_context, ui->Uiposition.x+(ui->Uisize2.x*ui->junkDigits), ui->Uiposition.y,ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+			for (int i = 0; i < ui->junkDigits;i++)
+			{
+				UiBase[1]->render(immediate_context, ui->Uiposition2.x + i*(ui->Uisize2.x+5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 *ui->saveJank[i], 0, 134.6, 211);
+			}
+		break;
 	}
 
 

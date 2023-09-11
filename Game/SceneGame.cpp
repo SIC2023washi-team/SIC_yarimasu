@@ -59,6 +59,19 @@ void SceneGame::Initialize()
 		}
 	}
 
+	//値の初期化
+	ShopItemsNum[10] = {};
+	SaveShopUi = {};
+	shop_int = 0;
+	UiCount = {};
+	jank = 0;
+	isPaused = false;
+	speed = 1.0f;
+	damage = 1.0f;
+	attack = 1.0f;
+	HP = 1.0f;
+	Player_HP = 3.0f;
+	Player_MAXHP = 3.0f;
 
 	// Stage
 	stage = CreateStage();
@@ -72,15 +85,16 @@ void SceneGame::Initialize()
 		addEnemy();
 	}
 
-
-
-
-
 	
-
-
-	addUi(4);
+	//pauseバック
 	addUi(3);
+	//HP
+	addUi(4);
+	//shop
+	addUi(5);
+	//ジャンク　お金
+	addUi(6);
+
 	//HP
 	addUi(1);
 	//shop
@@ -207,13 +221,18 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 		it->NumDelivery[5] = shop_int;
-		if (it->NumDelivery[0] == 4)
+		if (it->NumDelivery[0] == 2)
 		{
-			it->NumDelivery[2] = Player_MAXHP;
+			it->NumDelivery[7] = jank;
 		}
 		if (it->NumDelivery[0] == 4)
 		{
+			it->NumDelivery[2] = Player_MAXHP;
 			it->NumDelivery[1] = Player_HP;
+		}
+		if (it->NumDelivery[0] == 6)
+		{
+			it->NumDelivery[1] = jank;
 		}
 	}
 
@@ -398,7 +417,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 	{
-#if 0
+		
+#if 0	
 		scene_constants scene_data{};
 		POINT p;
 		GetCursorPos(&p);
@@ -874,33 +894,64 @@ void SceneGame::UiGetUpdate()
 					//攻撃速度
 					attack += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					jank -= 100;
 					break;
 				case 1:
 					//弾速度
 					speed += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					jank -= 100;
 					break;
 				case 2:
 					//貫通力
 					HP += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					jank -= 100;
 					break;
 				case 3:
 					//攻撃力
 					damage += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					jank -= 100;
+					break;
 				case 4:
 					//攻撃力
 					Player_HP += it->NumDelivery[6];
 					Player_MAXHP += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					jank -= 100;
 
 					break;
 				}
 				shop_int = 0;
 				isPaused = false;
+
+				for (auto& it : UiList)
+				{
+					if (it->NumDelivery[0] == 5)
+					{
+						it->NumDelivery[6] = 0;
+					}
+				}
 			}
 		}
+		//UItype5 shop
+		if (it->NumDelivery[0] == 5)
+		{
+			if (it->NumDelivery[6] == 1)
+			{
+				
+				shop_int = 1;
+				isPaused = true;
+			}
+			else
+			{
+				
+				shop_int = 0;
+				isPaused = false;
+			}
+		}
+
 
 	}
 
@@ -919,7 +970,13 @@ void SceneGame::EnemyGetUpdate()
 			it->NumDelivery[0] = 0;
 			it->NumDelivery[1] = 1;
 		}
-
+		if (it->NumDelivery[3] >= 1)
+		{
+			
+			jank += it->NumDelivery[2];
+			it->NumDelivery[3] = 0;
+			it->NumDelivery[4]++;
+		}
 	}
 
 }

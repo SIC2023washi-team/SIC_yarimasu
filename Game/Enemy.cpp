@@ -77,17 +77,21 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 		enemy->Speed = 0.005f;
 		enemy->AnimSpeed = 3.0f;
 		break;
+		enemy->EnemyMoney = 10;
 	case 1://’†‚­‚ç‚¢‚Ì
 		enemy->Speed = 0.003f;
 		enemy->AnimSpeed = 1.5f;
+		enemy->EnemyMoney = 25;
 		break;
 	case 2://‘å‚«‚¢‚Ì
 		enemy->Speed = 0.001f;
+		enemy->EnemyMoney = 50;
 		break;
 	case 3://¬‚³‚¢‚µ‚­‚»‘
 		enemy->Speed = 0.01f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 25;
 		break;
 	}
 
@@ -140,12 +144,21 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
 
 	enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
+	if (enemy->NumDelivery[10] != 0)
+	{
+		enemy->HP -= enemy->NumDelivery[10];
+		enemy->NumDelivery[10] = 0;
+	}
 
 	if (enemy->HP <= 0)
 	{
 		enemy->clip_index = 1;
 		enemy->AnimSpeed = 1.0f;
-
+		if (enemy->NumDelivery[3] == 0 && enemy->NumDelivery[4] == 0)
+		{
+			enemy->NumDelivery[2] += enemy->EnemyMoney;
+			enemy->NumDelivery[3]++;
+		}
 		// ‚±‚ê‚ÅÄ¶‚Å‚«‚é
 
 	}
@@ -193,6 +206,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	{
 		enemy->explosionEffect->Play(enemy->position, 0.4f);
 		enemy->NumDelivery[0]++;
+		
 		
 		
 	}

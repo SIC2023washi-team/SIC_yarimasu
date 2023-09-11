@@ -112,6 +112,7 @@ public:
     int SaveShopUi = {};
     int shop_int;
     int UiCount = {};
+    int jank = 0;
     bool isPaused = false;
     float speed = 1.0f;
     float damage = 1.0f;
