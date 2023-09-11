@@ -135,10 +135,14 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 		if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
 		{
 			it->NumDelivery[10] = project->damage;
+			project->HP -= 1;
 		}
 	}
-	project->HP -= 1;
 
+	if (project->HP <= 0)
+	{
+		project->Death = true;
+	}
 	/*if (project->HP <= 0)
 	{
 		project->Death = true;

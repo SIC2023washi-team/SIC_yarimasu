@@ -62,6 +62,20 @@ void SceneGame::Initialize()
 		}
 	}
 
+	//値の初期化
+	ShopItemsNum[10] = {};
+	SaveShopUi = {};
+	shop_int = 0;
+	UiCount = {};
+	jank = 0;
+	isPaused = false;
+	speed = 1.0f;
+	damage = 1.0f;
+	attack = 1.0f;
+	HP = 1.0f;
+	Player_HP = 3.0f;
+	Player_MAXHP = 3.0f;
+
 	SetPhase = true;
 	// Stage
 	stage = CreateStage();
@@ -70,41 +84,22 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-	for (int i = 0; i < 5; i++)
-	{
-		//addEnemy();
-	}
 
-
-
-
-
-	
-
-
-	addUi(4);
+	//pauseバック
 	addUi(3);
+	//HP
+	addUi(4);
+	//shop
+	addUi(5);
+	//ジャンク　お金
+	addUi(6);
+
 	//HP
 	addUi(1);
 	//shop
 	addUi(2);
 	addUi(2);
 	addUi(2);
-
-
-
-	
-	//for (auto& it : enemyList)
-	//{
-	//	it->Initialize();
-	//}
-
-
-	//enemy = CreateEnemy();
-	//enemy->Initialize();
-
-	//ui = CreateUi();
-	//ui->Initialize();
 
 	UiCount = {};
 
@@ -130,11 +125,6 @@ void SceneGame::Initialize()
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
-
-
-	// ヒットエフェクトにエフェクトのパスを入れる
-	//hitEffect = new Effect("resources/Effect/Hit.efk");
-
 
 #if 0
 	// BLOOM
@@ -217,18 +207,24 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 		it->NumDelivery[5] = shop_int;
-		if (it->NumDelivery[0] == 4)
+		if (it->NumDelivery[0] == 2)
 		{
-			it->NumDelivery[2] = Player_MAXHP;
+			it->NumDelivery[7] = jank;
 		}
 		if (it->NumDelivery[0] == 4)
 		{
+			it->NumDelivery[2] = Player_MAXHP;
 			it->NumDelivery[1] = Player_HP;
+		}
+		if (it->NumDelivery[0] == 6)
+		{
+			it->NumDelivery[1] = jank;
 		}
 	}
 
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
 	{
+		// HACK これで敵を全て削除
 		enemyList.clear();
 	}
 	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
@@ -242,18 +238,15 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//	//{
 	//	//	shop_int = 0;
 	//	//	isPaused = false;
-
-
 	//	//}
 	//}
+	if (isPaused)return;
 
 	if (enemyList.size() == 0)
 	{
 		Timer = 0;
 		SetPhase = true;
 	}
-
-	if (isPaused)return;
 
 	for (auto& it : enemyList)
 	{
@@ -286,13 +279,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	stage->Update(elapsedTime);
 
 	player->Update(elapsedTime);
-
-	//enemy->Update(elapsedTime);
-
-
-	//ui->Update(elapsedTime);
-
-
 
 	for (auto& it : enemyList)
 	{
@@ -461,23 +447,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 
-	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
-	{
-		// これで再生できる
-		hitEffect->Play(player->position);
-
-	}
-
 	ImGui::Begin("ImGUI");
 	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
-	ImGui::SliderFloat("elapsedTime", &elapsedTime, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
 	ImGui::SliderInt("Timer", &Timer, -10.0f, +10.0f);
-
-	//ImGui::SliderInt("", &numdebug, -10.0f, +10.0f);
-
-
 	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
 	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
 	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
@@ -717,7 +691,7 @@ void SceneGame::Render(float elapsedTime)
 
 	// ここにRender
 #endif
-		// 3Dエフェクト描画
+	// 3Dエフェクト描画
 	{
 		DirectX::XMFLOAT4X4 view{};
 		DirectX::XMFLOAT4X4 projection{};
@@ -732,35 +706,30 @@ void SceneGame::Render(float elapsedTime)
 
 	}
 
-
-
 	// sprite描画
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
-			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-			immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	immediate_context->IASetInputLayout(sprite_input_layout.Get());
+	immediate_context->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
+	immediate_context->PSSetShader(sprite_pixel_shader.Get(), nullptr, 0);
+	immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
+	immediate_context->PSSetShaderResources(1, 1, mask_texture.GetAddressOf());
 
-			immediate_context->IASetInputLayout(sprite_input_layout.Get());
-			immediate_context->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
-			immediate_context->PSSetShader(sprite_pixel_shader.Get(), nullptr, 0);
-			immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
-			immediate_context->PSSetShaderResources(1, 1, mask_texture.GetAddressOf());
+	// 定数バッファの更新（ディゾルブ）
+	{
+		dissolve_constants dissolve{};
+		dissolve.parameters.x = dissolve_value;
+		immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
+		immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+		immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+	}
 
-			// 定数バッファの更新（ディゾルブ）
-			{
-				dissolve_constants dissolve{};
-				dissolve.parameters.x = dissolve_value;
-				immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
-				immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-			}
-			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-			//ui->Render(elapsedTime);
-			for (auto& it : UiList)
-			{
-				it->Render(elapsedTime);
-			}
+	for (auto& it : UiList)
+	{
+		it->Render(elapsedTime);
+	}
 
 	{
 		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
@@ -782,10 +751,6 @@ void SceneGame::Render(float elapsedTime)
 			immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 		}
 	}
-
-
-
-
 }
 
 void SceneGame::addEnemy()
@@ -1002,15 +967,20 @@ void SceneGame::Wave()
 
 void SceneGame::EnemyGetUpdate()
 {
-
 	for (auto& it : enemyList)
 	{
-
 		if (it->NumDelivery[0] >= 1)
 		{
 			Player_HP -= it->NumDelivery[0];
 			it->NumDelivery[0] = 0;
 			it->NumDelivery[1] = 1;
+		}
+		if (it->NumDelivery[3] >= 1)
+		{
+
+			jank += it->NumDelivery[2];
+			it->NumDelivery[3] = 0;
+			it->NumDelivery[4]++;
 		}
 	}
 }

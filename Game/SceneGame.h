@@ -119,6 +119,7 @@ public:
     int SaveShopUi = {};
     int shop_int;
     int UiCount = {};
+    int jank = 0;
     bool isPaused = false;
 
     bool SetPhase = false;

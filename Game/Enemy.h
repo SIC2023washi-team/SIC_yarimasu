@@ -22,12 +22,11 @@ public:
     float Atk;
     float AnimSpeed = 1.0f;
     int EnemyType;
+    int EnemyMoney;
     int clip_index = 0.0f;
     float jank;
     Effect* explosionEffect;
     Effect* firesmokeEffect;
-
-    //Effect* ef;
 };
 
 class EnemyInputComponent :public InputComponent

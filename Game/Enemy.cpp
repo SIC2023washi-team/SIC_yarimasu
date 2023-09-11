@@ -8,14 +8,8 @@
 
 #define EnemyHitPoint 3.0f
 
-//void EnemyInputComponent::Initialize(GameObject* gameobj)
-//{
-//
-//}
-
 void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
 {
-
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
 	if (ImGui::TreeNode("TreeNode"))
@@ -26,22 +20,6 @@ void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
 		ImGui::DragFloat("HP", &enemy->HP);
 		ImGui::TreePop();
 	}
-
-	//if (ImGui::BeginMenu("menu"))
-	//{
-	//	ImGui::InputFloat3("Positon", &enemy->position.x);
-	//	ImGui::EndMenu();
-	//}
-
-	//ImGui::Begin("Enemy"/*, nullptr, ImGuiWindowFlags_None)*/);
-
-	//ImGui::InputFloat3("Positon", &enemy->position.x);
-
-	//ImGui::DragFloat3("pos", &enemy->position.x);
-
-	//ImGui::SliderFloat3("p", &enemy->position.x, 0.0f, 10.0f);
-
-	//ImGui::End();
 }
 
 void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
@@ -55,9 +33,6 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->position.y = 0.0f;
 	enemy->radius = 1.0f;
 	enemy->height = 1.0f;
-
-
-
 
 
 	std::mt19937 mt{ std::random_device{}() };
@@ -151,8 +126,6 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 		break;
 	}
 
-
-
 	switch (int(Pos(mt)))
 
 	{
@@ -175,10 +148,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	if (enemy->StartTime <= SceneGame::Timer)
 	{
-
-
-		if (enemy->HP >= 0)//HACK 1
-		{
 			float px = (enemy->player_->position.x - enemy->position.x);
 			float pz = (enemy->player_->position.z - enemy->position.z);
 			float d = sqrt(px * px + pz * pz);
@@ -196,14 +165,22 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
 
 			enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
-
-		}
+			if (enemy->NumDelivery[9] != 0)
+			{
+				enemy->HP -= enemy->NumDelivery[9];
+				enemy->NumDelivery[9] = 0;
+			}
+		
 
 		if (enemy->HP <= 0)
 		{
 			enemy->clip_index = 1;
 			enemy->AnimSpeed = 1.0f;
-
+			if (enemy->NumDelivery[3] == 0 && enemy->NumDelivery[4] == 0)
+			{
+				enemy->NumDelivery[2] += enemy->EnemyMoney;
+				enemy->NumDelivery[3]++;
+			}
 			// ‚±‚ê‚ÅÄ¶‚Å‚«‚é
 
 		}
@@ -241,25 +218,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
 		}
 
-
-		//HACK 1
-		//// “–‚½‚è”»’è
-		//DirectX::XMFLOAT3 p_p = enemy->position;
-		//float p_r = enemy->radius;
-		//DirectX::XMFLOAT3 e_p = enemy->player_->position;
-		//float e_r = enemy->player_->radius;
-
-		//if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
-		//{
-		//	enemy->Death = true;
-		//}
-
-
-		//Ží—Þ‚É‚æ‚Á‚Ä‚Ì‰‰o
-		//if (enemy->EnemyType == 3)
-		//{
-		//	enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z), 0.4f);
-		//}
 		// “–‚½‚è”»’è
 		DirectX::XMFLOAT3 p_p = enemy->position;
 		float p_r = enemy->radius;
@@ -275,6 +233,12 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		{
 			enemy->Death = true;
 		}
+
+		//Ží—Þ‚É‚æ‚Á‚Ä‚Ì‰‰o
+		//if (enemy->EnemyType == 3)
+		//{
+		//	enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z), 0.4f);
+		//}
 	}
 }
 

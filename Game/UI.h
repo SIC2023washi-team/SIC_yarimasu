@@ -31,9 +31,13 @@ public:
     };
     int player_HP;
     int player_MAXHP;
+    int junkDigits = 1;
     float AddParameter;
+    int saveJank[30];
     DirectX::XMFLOAT2 Uiposition;
+    DirectX::XMFLOAT2 Uiposition2;
     DirectX::XMFLOAT2 Uisize;
+    DirectX::XMFLOAT2 Uisize2;
     DirectX::XMFLOAT4 UiColor;
     DirectX::XMFLOAT4 HPUiColor[30];
 
