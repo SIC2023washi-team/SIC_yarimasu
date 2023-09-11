@@ -23,10 +23,11 @@ public:
     float AnimSpeed = 1.0f;
     int EnemyType;
     int clip_index = 0.0f;
+    float jank;
     Effect* explosionEffect;
     Effect* firesmokeEffect;
 
-    Effect* ef;
+    //Effect* ef;
 };
 
 class EnemyInputComponent :public InputComponent

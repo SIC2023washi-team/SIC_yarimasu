@@ -5,12 +5,15 @@
 #include"./Lemur/Resource/ResourceManager.h"
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
+#include "GamePro_ProjectileStraight.h"
 
 #include "interval.h"
 
 DirectX::XMFLOAT3 GiftAngle = { 0,0,0 };
 DirectX::XMFLOAT4 GiftPosition = { 0,0,0,0 };
 int SceneGame::Timer = 0;
+
+
 
 using namespace DirectX;
 DirectX::XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
@@ -71,6 +74,15 @@ void SceneGame::Initialize()
 	{
 		//addEnemy();
 	}
+
+
+
+
+
+	
+
+
+	addUi(4);
 	addUi(3);
 	//HP
 	addUi(1);
@@ -78,6 +90,7 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(2);
 	addUi(2);
+
 
 
 	
@@ -105,10 +118,15 @@ void SceneGame::Initialize()
 
 	player->pixelShader = chara_ps.Get();
 	stage->pixelShader = stage_ps.Get();
-	//for (auto& it : enemyList)
-	//{
-	//	it->pixelShader= chara_ps.Get();
-	//}
+	for (auto& it : enemyList)
+	{
+		it->pixelShader= chara_ps.Get();
+	}
+	for (auto& it : projectileList)
+	{
+		it->pixelShader = zelda_ps.Get();
+	}
+
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
@@ -164,9 +182,13 @@ void SceneGame::Finalize()
 	{
 		it->Delete();
 	}
+	for (auto& it : projectileList)
+	{
+		it->Delete();
+	}
 	enemyList.clear();
 	UiList.clear();
-
+	projectileList.clear();
 
 	delete player;
 	delete stage;
@@ -175,10 +197,13 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
-
 	interval<1000>::run([&] {
 		Timer++;
 		});
+
+	UiGetUpdate();
+	EnemyGetUpdate();
+
 
 	Wave();
 	Mouse& mouse = Input::Instance().GetMouse();
@@ -192,28 +217,35 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 		it->NumDelivery[5] = shop_int;
-	}
-
-	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
-	{
-		if (!isPaused)
+		if (it->NumDelivery[0] == 4)
 		{
-			shop_int = 1;
-			isPaused = true;
+			it->NumDelivery[2] = Player_MAXHP;
 		}
-		//else
-		//{
-		//	shop_int = 0;
-		//	isPaused = false;
-
-
-		//}
+		if (it->NumDelivery[0] == 4)
+		{
+			it->NumDelivery[1] = Player_HP;
+		}
 	}
 
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
 	{
 		enemyList.clear();
 	}
+	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+	//{
+	//	if (!isPaused)
+	//	{
+	//		shop_int = 1;
+	//		isPaused = true;
+	//	}
+	//	//else
+	//	//{
+	//	//	shop_int = 0;
+	//	//	isPaused = false;
+
+
+	//	//}
+	//}
 
 	if (enemyList.size() == 0)
 	{
@@ -228,8 +260,18 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		it->player_ = player;
 	}
 
+	for (auto& it : projectileList)
+	{
+		it->player_ = player;
+	}
+	for (auto& it : projectileList)
+	{
+		it->enemyList_ = enemyList;
+	}
+
 	//enemy->player_ = player;
 	player->enemy_ = enemy;
+	player->projectile_ = projectile;
 
 	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -257,61 +299,54 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		it->Update(elapsedTime);
 	}
 
+	for (auto& it : projectileList)
+	{
+		it->Update(elapsedTime);
+	}
 
 
 	// ãÛÉmÅ[ÉhÇÃçÌèú
-	if (enemyList.empty())
+	auto it = enemyList.begin();
+	while (it != enemyList.end())
 	{
-		auto it = enemyList.begin();
-		while (it != enemyList.end())
+		if ((*it)->Death)
 		{
-			if ((*it)->Death)
-			{
-				(*it)->Delete();
-				it = enemyList.erase(it);
-			}
-			else
-			{
-				it++;
-			}
+			(*it)->Delete();
+			it = enemyList.erase(it);
 		}
-		auto Uiit = UiList.begin();
-		while (Uiit != UiList.end())
+		else
 		{
-			if ((*Uiit)->Death)
-			{
-				(*Uiit)->Delete();
-				Uiit = UiList.erase(it);
-			}
-			else
-			{
-				Uiit++;
-			}
+			it++;
 		}
 	}
-	//auto it = enemyList.begin();
-	//while (it != enemyList.end())
-	//{
-	//	if(it->Death)
-	//	{
-	//		it = enemyList.erase(it);
-	//	}
-	//	else
-	//	{
-	//		it++;
-	//	}
-	//}
-	//for (int i = 0; i < enemyList.size(); i++)
-	//{
-	//	if (enemyList[i]->Death)
-	//	{
-	//		enemyList.erase(i);
-	//	}
-	//}
+	auto Proj = projectileList.begin();
+	while (Proj != projectileList.end())
+	{
+		if ((*Proj)->Death)
+		{
+			(*Proj)->Delete();
+			Proj = projectileList.erase(Proj);
+		}
+		else
+		{
+			Proj++;
+		}
+	}
+	auto Uiit = UiList.begin();
+	while (Uiit != UiList.end())
+	{
+		if ((*Uiit)->Death)
+		{
+			(*Uiit)->Delete();
+			Uiit = UiList.erase(Uiit);
+		}
+		else
+		{
+			Uiit++;
+		}
+	}
 
-
-
-
+	ProjectileVSEnemy();
 
 	// ÉGÉlÉ~Å[ìØémÇÃìñÇΩÇËîªíË
 	if(enemyList.size()>=2)
@@ -337,29 +372,17 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 					)
 				{
 					enemyB->position = outPosition;
-
-					//const float power = 10.0f;
-					//DirectX::XMFLOAT3 impulse;
-					//DirectX::XMFLOAT3 e = enemyList.at(j)->position;
-					//DirectX::XMFLOAT3 p = enemyList.at(i)->position;
-					//float vx = e.x - p.x;
-					//float vz = e.z - p.z;
-					//float lengthXZ = sqrtf(vx * vx + vz * vz);
-					////ê≥ãKâª
-					//vx /= lengthXZ;
-					//vz /= lengthXZ;
-					//impulse.x = vx * power;
-					//impulse.y = power * 0.5f;
-					//impulse.z = vz * power;
-					//enemyList.at(j)->AddImpulse(impulse);
-
 				}
 			}
 		}
 	}
 	/////////////////////////////////////////////
 
-	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+
+	/////çUåÇë¨ìx
+	attack++;
+
+	if (mouse.GetButton() == mouse.BTN_LEFT)
 	{
 #if 0
 		scene_constants scene_data{};
@@ -396,6 +419,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		);
 #endif
 
+	
 
 		DirectX::XMVECTOR L0 = Camera::Instance().GetEye();
 		DirectX::XMFLOAT4 l0;
@@ -429,6 +453,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		else
 		{
 			OutputDebugStringA("Unintersected...\n");
+		}
+		if (attack >= 150)
+		{
+			addProjectile();
+			attack = 0;
 		}
 	}
 
@@ -593,6 +622,11 @@ void SceneGame::Render(float elapsedTime)
 
 	//enemy->Render(elapsedTime);
 	for (auto& it:enemyList)
+	{
+		it->Render(elapsedTime);
+	}
+
+	for (auto& it : projectileList)
 	{
 		it->Render(elapsedTime);
 	}
@@ -769,6 +803,49 @@ void SceneGame::addEnemy(int enemyType, int startTime)
 	e->EnemyInitialize(enemyType, startTime);
 	e->pixelShader = chara_ps.Get();
 	enemyList.push_back(e);
+	}
+void SceneGame::addProjectile()
+{
+	GameObject* p;
+	p = CreateProjectile();
+	p->NumFloatDelivery[0] = GiftAngle.x;
+	p->NumFloatDelivery[1] = GiftAngle.z;
+	p->Initialize();
+	projectileList.push_back(p);
+}
+
+void SceneGame::ProjectileVSEnemy()
+{
+	//TODO íeÇ∆ìGÇÃÇÃìñÇΩÇËîªíË
+	if(enemyList.size()!=0&& projectileList.size() != 0)
+	{
+		// ëçìñÇΩÇËÇ≈è’ìÀîªíË
+		int enemyCount = enemyList.size();
+		for (int i = 0; i < enemyCount; ++i)
+		{
+			GameObject* ene = enemyList.at(i);
+			int projectileCount = projectileList.size();
+			for (int j = 0; j < projectileCount; ++j)
+			{
+				GameObject* pro = projectileList.at(j);
+				// è’ìÀîªíË
+				DirectX::XMFLOAT3 outPosition;
+				if (Collision::IntersectSphereVsCylinder
+				(pro->position,
+					pro->radius,
+					ene->position,
+					ene->radius,
+					ene->height,
+					outPosition)
+					)
+				{
+					ene->Death = true;
+					//Ç±Ç±Ç®äËÇ¢ÇµÇ‹Ç∑
+
+				}
+			}
+		}
+	}
 }
 
 void SceneGame::addUi(int Uitype)
@@ -777,12 +854,15 @@ void SceneGame::addUi(int Uitype)
 	GameObject* Ui;
 	Ui = CreateUi();
 	Ui->NumDelivery[0] = Uitype;
+	if (Uitype == 4)Ui->NumDelivery[1] = Player_HP;
+	if (Uitype == 4)Ui->NumDelivery[2] = Player_MAXHP;
+	
 	if (Uitype == 2)
 	{
 		std::mt19937 mt{ std::random_device{}() };
 		for (int i = 0; i < 1;)
 		{
-			std::uniform_int_distribution<int> Type(0, 3);
+			std::uniform_int_distribution<int> Type(0, 4);
 			ShopItemsNum[SaveShopUi] = int(Type(mt));
 			judge = false;
 			for (int j = 0; j < SaveShopUi; j++)
@@ -810,6 +890,7 @@ void SceneGame::addUi(int Uitype)
 	UiList.push_back(Ui);
 
 	if (Uitype == 2)SaveShopUi++;
+
 	UiCount++;
 	
 }
@@ -827,15 +908,34 @@ void SceneGame::UiGetUpdate()
 				switch (it->NumDelivery[2])
 				{
 				case 0:
-
+					//çUåÇë¨ìx
+					attack += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
 					break;
 				case 1:
+					//íeë¨ìx
+					speed += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
 					break;
 				case 2:
+					//ä—í óÕ
+					HP += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
 					break;
 				case 3:
+					//çUåÇóÕ
+					damage += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
+				case 4:
+					//çUåÇóÕ
+					Player_HP += it->NumDelivery[6];
+					Player_MAXHP += it->NumDelivery[6];
+					it->NumDelivery[6] = 0;
+
 					break;
 				}
+				shop_int = 0;
+				isPaused = false;
 			}
 		}
 
@@ -900,4 +1000,17 @@ void SceneGame::Wave()
 	}
 }
 
+void SceneGame::EnemyGetUpdate()
+{
 
+	for (auto& it : enemyList)
+	{
+
+		if (it->NumDelivery[0] >= 1)
+		{
+			Player_HP -= it->NumDelivery[0];
+			it->NumDelivery[0] = 0;
+			it->NumDelivery[1] = 1;
+		}
+	}
+}

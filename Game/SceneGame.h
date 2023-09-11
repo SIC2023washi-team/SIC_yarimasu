@@ -16,6 +16,9 @@
 //Ui
 #include "Ui.h"
 
+// Projectile
+#include "GamePro_ProjectileStraight.h"
+//class GamePro_ProjectileStraight;
 // Audio
 #include <wrl.h>
 #include"./Lemur/Audio/audio.h"
@@ -54,8 +57,13 @@ public:
 
     //Ui‚Ì’Ç‰Á
     void addUi(int Uitype);
-
     void UiGetUpdate();
+    void EnemyGetUpdate();
+
+    // ’e‚Ì’Ç‰Á
+    void addProjectile();
+
+    void ProjectileVSEnemy();
 
     void Wave();
 
@@ -97,6 +105,15 @@ public:
     }
 
     static int Timer;
+    //GamePro_ProjectileStraight* CreateProjectile();
+    GamePro_ProjectileStraight* CreateProjectile()
+    {
+        return new GamePro_ProjectileStraight(
+            new GamePro_ProjectileStraightInputComponent(),
+            new GamePro_ProjectileStraightPhysicsComponent(),
+            new GamePro_ProjectileStraightGraphicsComponent()
+        );
+    }
 
     int ShopItemsNum[10] = {};
     int SaveShopUi = {};
@@ -105,6 +122,13 @@ public:
     bool isPaused = false;
 
     bool SetPhase = false;
+
+    float speed = 1.0f;
+    float damage = 1.0f;
+    float attack = 1.0f;
+    float HP = 1.0f;
+    float Player_HP = 3.0f;
+    float Player_MAXHP = 3.0f;
 
     int WaveNumber=1;
     //std::vector<GameObject> waves;
@@ -132,6 +156,10 @@ private:
     GameObject* ui;
     std::vector<GameObject*> enemyList;
     std::vector<GameObject*> UiList;
+
+    // Projectile
+    GameObject* projectile;
+    std::vector<GameObject*> projectileList;
 
 
 

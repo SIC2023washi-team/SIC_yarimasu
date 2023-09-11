@@ -6,8 +6,8 @@
 #include "../Lemur/Graphics/skinned_mesh.h"
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
-
-#include "SceneGame.h"
+#include"./Lemur/Effekseer/Effect.h"
+//#include "SceneGame.h"
 
 class GamePro_ProjectileStraight : public GameObject
 {
@@ -24,7 +24,7 @@ public:
     float damage = 1.0f;
     float attack = 1.0f;
     float HP = 1.0f;
-
+    Effect* projectEffect;
     DirectX::XMFLOAT3 GiftAngle;
     DirectX::XMFLOAT4 GiftPosition;
 };

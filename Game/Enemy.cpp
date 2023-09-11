@@ -73,18 +73,19 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	default:
 		break;
 	case 0://小さいの
-		enemy->Speed = 0.001f;
-		enemy->AnimSpeed = 1.5f;
+
+		enemy->Speed = 0.005f;
+		enemy->AnimSpeed = 3.0f;
 		break;
 	case 1://中くらいの
-		enemy->Speed = 0.0008f;
-		enemy->AnimSpeed = 1.0f;
+		enemy->Speed = 0.003f;
+		enemy->AnimSpeed = 1.5f;
 		break;
 	case 2://大きいの
-		enemy->Speed = 0.0005f;
+		enemy->Speed = 0.001f;
 		break;
 	case 3://小さいしくそ早
-		enemy->Speed = 0.003f;
+		enemy->Speed = 0.01f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
 		break;
@@ -119,8 +120,6 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	enemy->radius = 1.0f;
 	enemy->height = 1.0f;
 	enemy->StartTime = startTime;
-
-
 
 
 	std::mt19937 mt{ std::random_device{}() };
@@ -176,25 +175,29 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	if (enemy->StartTime <= SceneGame::Timer)
 	{
-		float px = (enemy->player_->position.x - enemy->position.x);
-		float pz = (enemy->player_->position.z - enemy->position.z);
-		DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
-		DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
-		vec_x = DirectX::XMVector3Normalize(vec_x);
-		vec_z = DirectX::XMVector3Normalize(vec_z);
-		float floatX = DirectX::XMVectorGetX(vec_x);
-		float floatZ = DirectX::XMVectorGetX(vec_z);
-		enemy->position.x += floatX * enemy->Speed;
-		//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
-		enemy->position.z += floatZ * enemy->Speed;
 
-		///自機の回転
-		//B-Aのベクトル
-		DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
-		//正規化
-		DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
 
-		enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
+		if (enemy->HP >= 0)//HACK 1
+		{
+			float px = (enemy->player_->position.x - enemy->position.x);
+			float pz = (enemy->player_->position.z - enemy->position.z);
+			float d = sqrt(px * px + pz * pz);
+			px /= d;
+			pz /= d;
+
+			enemy->position.x += px * enemy->Speed;
+			//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
+			enemy->position.z += pz * enemy->Speed;
+
+			///自機の回転
+			//B-Aのベクトル
+			DirectX::XMFLOAT3 RotationAngle = { enemy->player_->position.x - enemy->position.x,enemy->player_->position.y - enemy->position.y,enemy->player_->position.z - enemy->position.z };
+			//正規化
+			DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
+
+			enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
+
+		}
 
 		if (enemy->HP <= 0)
 		{
@@ -238,6 +241,25 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
 		}
 
+
+		//HACK 1
+		//// 当たり判定
+		//DirectX::XMFLOAT3 p_p = enemy->position;
+		//float p_r = enemy->radius;
+		//DirectX::XMFLOAT3 e_p = enemy->player_->position;
+		//float e_r = enemy->player_->radius;
+
+		//if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+		//{
+		//	enemy->Death = true;
+		//}
+
+
+		//種類によっての演出
+		//if (enemy->EnemyType == 3)
+		//{
+		//	enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z), 0.4f);
+		//}
 		// 当たり判定
 		DirectX::XMFLOAT3 p_p = enemy->position;
 		float p_r = enemy->radius;
@@ -246,14 +268,12 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 		if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
 		{
-			enemy->Death = true;
+			enemy->explosionEffect->Play(enemy->position, 0.4f);
+			enemy->NumDelivery[0]++;
 		}
-
-
-		//種類によっての演出
-		if (enemy->EnemyType == 3)
+		if (enemy->NumDelivery[1] > 0)
 		{
-			enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z), 0.4f);
+			enemy->Death = true;
 		}
 	}
 }
@@ -286,6 +306,13 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 	enemy->explosionEffect = new Effect("resources/Effects/explosion.efk");
 	enemy->firesmokeEffect = new Effect("resources/Effects/firesmoke.efk");
 	animation_tick = 0;
+
+	//種類によっての演出
+	if (enemy->EnemyType == 3)
+	{
+		enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y+0.5f, enemy->position.z), 0.4f);
+	}
+
 }
 
 void EnemyGraphicsComponent::Update(GameObject* gameobj)
@@ -369,8 +396,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 
 	//衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
-	//debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
-	
+
 
 }
 
