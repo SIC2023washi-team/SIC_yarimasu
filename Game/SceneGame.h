@@ -61,6 +61,8 @@ public:
     // 弾の追加
     void addProjectile();
 
+    void ProjectileVSEnemy();
+
     // プレイヤー生成
     Player* CreatePlayer()
     {
@@ -149,6 +151,8 @@ private:
     // Projectile
     GameObject* projectile;
     std::vector<GameObject*> projectileList;
+
+
 
     // ポーズ（ショップ）
 

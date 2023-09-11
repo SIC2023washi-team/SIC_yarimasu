@@ -144,10 +144,10 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
 
 	enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
-	if (enemy->NumDelivery[10] != 0)
+	if (enemy->NumDelivery[9] != 0)
 	{
-		enemy->HP -= enemy->NumDelivery[10];
-		enemy->NumDelivery[10] = 0;
+		enemy->HP -= enemy->NumDelivery[9];
+		enemy->NumDelivery[9] = 0;
 	}
 
 	if (enemy->HP <= 0)
