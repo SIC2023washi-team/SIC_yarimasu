@@ -14,7 +14,10 @@ void GamePro_ProjectileStraightGraphicsComponent::Initialize(GameObject* gameobj
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
-    BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Sword\\Sword.fbx");
+	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
+
+    //BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Sword\\Sword.fbx");
+	project->projectEffect = new Effect("shot_stylize.efk");
 }
 
 void GamePro_ProjectileStraightGraphicsComponent::Update(GameObject* gameobj)
@@ -51,7 +54,7 @@ void GamePro_ProjectileStraightGraphicsComponent::Render(GameObject* gameobj, fl
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
 
 
-    BulletModel->render(immediate_context, world, project->material_color, nullptr, replaced_pixel_shader);
+    //BulletModel->render(immediate_context, world, project->material_color, nullptr, replaced_pixel_shader);
 }
 
 void GamePro_ProjectileStraightInputComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -88,5 +91,5 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	gamepro_gameprojectilestraight->position.x += floatX * gamepro_gameprojectilestraight->speed;
 	gamepro_gameprojectilestraight->position.z += floatZ * gamepro_gameprojectilestraight->speed;
 
-
+	gamepro_gameprojectilestraight->projectEffect->Play(gamepro_gameprojectilestraight->position);
 }
