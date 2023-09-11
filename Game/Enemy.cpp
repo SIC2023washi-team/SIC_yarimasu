@@ -285,6 +285,7 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 
 	enemy->explosionEffect = new Effect("resources/Effects/explosion.efk");
 	enemy->firesmokeEffect = new Effect("resources/Effects/firesmoke.efk");
+	animation_tick = 0;
 }
 
 void EnemyGraphicsComponent::Update(GameObject* gameobj)
@@ -330,10 +331,9 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		// アニメーション用
 		int clip_index = enemy->clip_index;
 		int frame_index = 0;
-		static float animation_tick = 0;
 #if 1
 		animation& animation{ EnemyModel->animation_clips.at(clip_index) };
-		frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
+		frame_index = static_cast<int>(animation_tick * animation.sampling_rate)*enemy->AnimSpeed;
 		if (frame_index > animation.sequence.size() - 1)
 		{
 			frame_index = 0;

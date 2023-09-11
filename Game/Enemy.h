@@ -50,5 +50,6 @@ class EnemyGraphicsComponent :public GraphicsComponent
 
 private:
     std::shared_ptr<skinned_mesh> EnemyModel;
+    float animation_tick = 0;
 
 };
