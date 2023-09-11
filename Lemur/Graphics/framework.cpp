@@ -9,6 +9,7 @@
 
 // SceneGame
 #include "./Game/SceneGame.h"
+#include "./Game/SceneTitle.h"
 
 
 framework::framework(HWND hwnd) 
@@ -26,7 +27,7 @@ bool framework::initialize()
 	EffectManager::Instance().Initialize();
 
 	// シーン初期化
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
 
 	return true;
 }

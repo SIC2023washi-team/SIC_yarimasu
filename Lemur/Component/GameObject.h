@@ -52,9 +52,25 @@ public:
         delete physics;
         delete graphics;
     }
+
+
+    // 水平移動更新処理
+    void UpdateHorizontalMove(float elapsedTime);
+
+    // 水平速力更新処理
+    void UpdataHorizontalVelocity(float elapsedFrame);
+
+    void AddImpulse(const DirectX::XMFLOAT3& impulse)
+    {
+        velocity.x += impulse.x;
+        velocity.y += impulse.y;
+        velocity.z += impulse.z;
+    }
+
 public:
     DirectX::XMFLOAT4X4 World;
 
+    DirectX::XMFLOAT3 velocity{ 0, 0, 0 };  // 速力
     DirectX::XMFLOAT3 position{ 0, 0, 0 };  // 位置
     DirectX::XMFLOAT3 scale{ 3.0f, 3.0f, 3.0f }; // スケール
     DirectX::XMFLOAT3 rotation{ 0, 0, 0 }; //　回転
@@ -63,7 +79,14 @@ public:
     DirectX::XMFLOAT3 direction = { 0,0,1 };// 方向
     DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };// 行列
 
+    float   maxMoveSpeed = 5.0f;
+    float   moveVecX = 0.0f;
+    float   moveVecZ = 0.0f;
+    float   friction = 0.5f;
+    float   acceleration = 1.0f;
+
     float radius = 0;
+    float height;
 
     Mouse* mouse;
 

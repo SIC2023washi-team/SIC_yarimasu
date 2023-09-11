@@ -1,11 +1,12 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneOver.h"
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
-void SceneTitle::Initialize()
+void SceneOver::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	SetState();
@@ -44,11 +45,11 @@ void SceneTitle::Initialize()
 
 }
 
-void SceneTitle::Finalize()
+void SceneOver::Finalize()
 {
 }
 
-void SceneTitle::Update(HWND hwnd,float elapsedTime)
+void SceneOver::Update(HWND hwnd, float elapsedTime)
 {
 	Camera& camera = Camera::Instance();
 
@@ -67,7 +68,7 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 	ImGui::End();
 }
 
-void SceneTitle::Render(float elapsedTime)
+void SceneOver::Render(float elapsedTime)
 {
 	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();

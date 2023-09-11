@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "SceneGame.h"
 #include <imgui.h>
 #include <random>
 #include "./Lemur/Collision/Collision.h"
@@ -51,6 +52,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->scale.z = 16.f;
 	enemy->position.y = 0.0f;
 	enemy->radius = 1.0f;
+	enemy->height = 1.0f;
 
 
 	std::mt19937 mt{ std::random_device{}() };
@@ -100,6 +102,8 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+	//enemy->UpdataHorizontalVelocity(elapsedTime);
+	//enemy->UpdateHorizontalMove(elapsedTime);
 
 	float px = (enemy->player_->position.x -enemy->position.x);
 	float pz = (enemy->player_->position.z - enemy->position.z);
@@ -198,11 +202,14 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	}
 
+	enemy->ef= new Effect("Data/Effect/Hit.efk");
 }
 
 void EnemyGraphicsComponent::Update(GameObject* gameobj)
 {
-
+	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+	enemy->ef->Play(enemy->player_->position);
+	//SceneGame::numdebug++;
 }
 
 void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
@@ -244,7 +251,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		static float animation_tick = 0;
 #if 1
 		animation& animation{ EnemyModel->animation_clips.at(clip_index) };
-		frame_index = static_cast<int>(animation_tick * animation.sampling_rate) * enemy->AnimSpeed;
+		frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
 		if (frame_index > animation.sequence.size() - 1)
 		{
 			frame_index = 0;
@@ -274,7 +281,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
 
 	//衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
 	
 }
 

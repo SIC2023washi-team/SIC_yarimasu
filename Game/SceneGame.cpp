@@ -5,6 +5,7 @@
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
+
 using namespace DirectX;
 XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
 {
@@ -78,12 +79,14 @@ void SceneGame::Initialize()
 
 	// ZELDA
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/zelda_ps.cso", zelda_ps.GetAddressOf());
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_ps.cso", stage_ps.GetAddressOf());
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/character_ps.cso", chara_ps.GetAddressOf());
 
-	player->pixelShader = zelda_ps.Get();
-	stage->pixelShader = zelda_ps.Get();
+	player->pixelShader = chara_ps.Get();
+	stage->pixelShader = stage_ps.Get();
 	for (auto& it : enemyList)
 	{
-		it->pixelShader= zelda_ps.Get();
+		it->pixelShader= chara_ps.Get();
 	}
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
@@ -97,10 +100,7 @@ void SceneGame::Initialize()
 	option[ShopNumber::PowerUp] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\powerUp.png");
 
 	// ヒットエフェクトにエフェクトのパスを入れる
-	//hitEffect = new Effect("Data/Effect/Hit.efk");
-
-	// これで再生できる
-	//hitEffect->Play(player->position);
+	hitEffect = new Effect("resources/Effect/Hit.efk");
 
 
 #if 0
@@ -228,16 +228,33 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 				GameObject* enemyB = enemyList.at(j);
 				// 衝突判定
 				DirectX::XMFLOAT3 outPosition;
-				if (Collision::IntersectSphereVsSphereOut
+				if (Collision::IntersectCylinderVsCylinder
 				(enemyA->position,
 					enemyA->radius,
+					enemyA->height,
 					enemyB->position,
 					enemyB->radius,
+					enemyB->height,
 					outPosition)
 					)
 				{
-					//TODO 要修正
-					enemyList.at(j)->position.x+=1;
+					enemyB->position = outPosition;
+
+					//const float power = 10.0f;
+					//DirectX::XMFLOAT3 impulse;
+					//DirectX::XMFLOAT3 e = enemyList.at(j)->position;
+					//DirectX::XMFLOAT3 p = enemyList.at(i)->position;
+					//float vx = e.x - p.x;
+					//float vz = e.z - p.z;
+					//float lengthXZ = sqrtf(vx * vx + vz * vz);
+					////正規化
+					//vx /= lengthXZ;
+					//vz /= lengthXZ;
+					//impulse.x = vx * power;
+					//impulse.y = power * 0.5f;
+					//impulse.z = vz * power;
+					//enemyList.at(j)->AddImpulse(impulse);
+
 				}
 			}
 		}
@@ -336,11 +353,20 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 
+	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
+	{
+		// これで再生できる
+		hitEffect->Play(player->position);
+
+	}
 
 	ImGui::Begin("ImGUI");
 	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
+
+	//ImGui::SliderInt("", &numdebug, -10.0f, +10.0f);
+
 
 	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
 	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);

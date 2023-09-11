@@ -5,6 +5,10 @@
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
 
+// Effect
+#include"./Lemur/Effekseer/Effect.h"
+
+
 class Enemy :public GameObject
 {
 public:
@@ -18,6 +22,7 @@ public:
     int EnemyType;
     int clip_index = 0.0f;
 
+    Effect* ef;
 };
 
 class EnemyInputComponent :public InputComponent

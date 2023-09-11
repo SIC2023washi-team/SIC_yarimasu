@@ -114,6 +114,7 @@ private:
     // エフェクト
     Effect* hitEffect = nullptr;
 
+
 //----------------------------------------------------------------------------------------------------
 //  ↓シェーダー関連
 //----------------------------------------------------------------------------------------------------
@@ -139,6 +140,8 @@ private:
 
     // Zelda_Shader
     Microsoft::WRL::ComPtr<ID3D11PixelShader> zelda_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> chara_ps;
 
     // SKYMAP
     std::unique_ptr<fullscreen_quad> bit_block_transfer_sky;
