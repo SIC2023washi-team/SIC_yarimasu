@@ -201,11 +201,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		enemy->Death = true;
 	}
 
-	//Ží—Þ‚É‚æ‚Á‚Ä‚Ì‰‰o
-	if (enemy->EnemyType == 3)
-	{
-		enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y+0.5f, enemy->position.z), 0.4f);
-	}
 
 }
 
@@ -238,6 +233,11 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 	enemy->explosionEffect = new Effect("resources/Effects/explosion.efk");
 	enemy->firesmokeEffect = new Effect("resources/Effects/firesmoke.efk");
 
+	//Ží—Þ‚É‚æ‚Á‚Ä‚Ì‰‰o
+	if (enemy->EnemyType == 3)
+	{
+		enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y+0.5f, enemy->position.z), 0.4f);
+	}
 
 }
 

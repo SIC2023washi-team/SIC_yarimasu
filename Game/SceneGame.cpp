@@ -400,7 +400,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	}
 	/////////////////////////////////////////////
 
-	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+
+	/////UŒ‚‘¬“x
+	attack++;
+
+	if (mouse.GetButton() == mouse.BTN_LEFT)
 	{
 #if 0
 		scene_constants scene_data{};
@@ -472,7 +476,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
-		addProjectile();
+		if (attack >= 150)
+		{
+			addProjectile();
+			attack = 0;
+		}
 	}
 
 	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
