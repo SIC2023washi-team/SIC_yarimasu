@@ -5,6 +5,10 @@
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
+DirectX::XMFLOAT3 GiftAngle = { 0,0,0 };
+DirectX::XMFLOAT4 GiftPosition = { 0,0,0,0 };
+
+
 using namespace DirectX;
 XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
 {
@@ -343,34 +347,14 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			///自機の回転
 			//B-Aのベクトル
 			XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
+
+			GiftPosition = intersection_point;
+			GiftAngle = rotationangle;
 			//正規化
 			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
-		
-
-			//前方向取得
-			//float frontX = sinf(player->rotation.y);
-			//float frontZ = cosf(player->rotation.y);
-			//float dot = (frontX * player->translation.x) + (frontZ * player->translation.z);
-			//float rot = 1.0f - dot;
-			//player->rotation.y += rot;
 
 			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
-			//GiftAngle = player->rotation.y;
 			
-			//前方向取得
-			/*DirectX::XMFLOAT3 front;
-			front.x = sinf(player->rotation.y);
-			front.y = 0;
-			front.z = cosf(player->rotation.y);
-			
-			XMStoreFloat3(&TANI,tani);
-			front.x = front.x * TANI.x;
-			front.y = front.y * TANI.y;
-			front.z = front.z * TANI.z;
-
-
-
-			player->rotation.y= front.y;*/
 		}
 		else
 		{
