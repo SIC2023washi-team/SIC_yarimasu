@@ -28,6 +28,8 @@
 #include<algorithm>
 #include <iostream>
 
+ //DirectX::XMFLOAT3 GiftAngle;
+ //DirectX::XMFLOAT4 GiftPosition;
 
 class SceneGame :public Lemur::Scene::BaseScene
 {

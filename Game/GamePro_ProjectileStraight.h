@@ -7,6 +7,8 @@
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
 
+#include "SceneGame.h"
+
 class GamePro_ProjectileStraight : public GameObject
 {
 public:
@@ -19,6 +21,9 @@ public:
 
 
     float speed = 1.0f;
+    float damage = 1.0f;
+    float attack = 1.0f;
+    float HP = 1.0f;
 };
 
 
@@ -41,6 +46,6 @@ class GamePro_ProjectileStraightGraphicsComponent :public GraphicsComponent
     void Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) override;
 
 private:
-    std::shared_ptr<skinned_mesh> BulletModel = nullptr;
+    std::shared_ptr<skinned_mesh> BulletModel;
 
 };

@@ -110,8 +110,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
-
-
 	float px = (enemy->player_->position.x -enemy->position.x);
 	float pz = (enemy->player_->position.z - enemy->position.z);
 	DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
