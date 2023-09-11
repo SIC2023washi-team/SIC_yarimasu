@@ -114,10 +114,10 @@ public:
     int SaveShopUi = {};
     int shop_int;
     int UiCount = {};
-    int jank = 0;
+    int jank = 1000;
     bool isPaused = false;
-    float speed = 1.0f;
-    float damage = 1.0f;
+    float speed = 0.005f;
+    float damage = 5.0f;
     float attack = 1.0f;
     float HP = 1.0f;
     float Player_HP = 3.0f;

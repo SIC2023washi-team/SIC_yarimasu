@@ -64,10 +64,10 @@ void SceneGame::Initialize()
 	SaveShopUi = {};
 	shop_int = 0;
 	UiCount = {};
-	jank = 0;
+	jank = 1000;
 	isPaused = false;
-	speed = 1.0f;
-	damage = 1.0f;
+	speed = 0.05f;
+	damage = 5.0f;
 	attack = 1.0f;
 	HP = 1.0f;
 	Player_HP = 3.0f;
@@ -263,10 +263,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	for (auto& it : projectileList)
 	{
 		it->player_ = player;
-	}
-	for (auto& it : projectileList)
-	{
 		it->enemyList_ = enemyList;
+		
 	}
 	//enemy->player_ = player;
 	player->enemy_ = enemy;
@@ -835,6 +833,9 @@ void SceneGame::addProjectile()
 	p = CreateProjectile();
 	p->NumFloatDelivery[0] = GiftAngle.x;
 	p->NumFloatDelivery[1] = GiftAngle.z;
+	p->NumFloatDelivery[2] = speed;
+	p->NumDelivery[3] = damage;
+	p->NumDelivery[4] = HP;
 	p->Initialize();
 	projectileList.push_back(p);
 }
@@ -940,7 +941,7 @@ void SceneGame::UiGetUpdate()
 					break;
 				case 1:
 					//’e‘¬“x
-					speed += it->NumDelivery[6];
+					speed += 0.01f;
 					it->NumDelivery[6] = 0;
 					jank -= 100;
 					break;
@@ -952,12 +953,12 @@ void SceneGame::UiGetUpdate()
 					break;
 				case 3:
 					//UŒ‚—Í
-					damage += it->NumDelivery[6];
+					damage += 5;
 					it->NumDelivery[6] = 0;
 					jank -= 100;
 					break;
 				case 4:
-					//UŒ‚—Í
+					//ƒvƒŒƒCƒ„[
 					Player_HP += it->NumDelivery[6];
 					Player_MAXHP += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;

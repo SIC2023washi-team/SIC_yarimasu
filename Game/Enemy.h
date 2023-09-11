@@ -5,7 +5,7 @@
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
 #include"./Lemur/Effekseer/EffekseerManager.h"
-#include"./Lemur/Effekseer/Effect.h"
+
 
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
@@ -27,7 +27,7 @@ public:
     float jank;
     Effect* explosionEffect;
     Effect* firesmokeEffect;
-
+    Effekseer::Handle Effecthandle;
     //Effect* ef;
 };
 

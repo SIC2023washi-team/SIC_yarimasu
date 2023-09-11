@@ -212,14 +212,17 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	}
 	if (enemy->NumDelivery[1]>0)
 	{
+		if (enemy->EnemyType == 3)
+		{
+			enemy->firesmokeEffect->Stop(enemy->Effecthandle);
+		}
 		enemy->Death = true;
 	}
-
-	//Ží—Þ‚É‚æ‚Á‚Ä‚Ì‰‰o
 	if (enemy->EnemyType == 3)
 	{
-		enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y+0.5f, enemy->position.z), 0.4f);
+		 enemy->firesmokeEffect->SetPosition(enemy->Effecthandle,DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z));
 	}
+
 
 }
 
@@ -252,6 +255,11 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 	enemy->explosionEffect = new Effect("resources/Effects/explosion.efk");
 	enemy->firesmokeEffect = new Effect("resources/Effects/firesmoke.efk");
 
+	//Ží—Þ‚É‚æ‚Á‚Ä‚Ì‰‰o
+	if (enemy->EnemyType == 3)
+	{
+		enemy->Effecthandle = enemy->firesmokeEffect->Play(DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z), 0.4f);
+	}
 
 }
 
@@ -324,7 +332,12 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		EnemyModel->render(immediate_context, world, enemy->material_color, &keyframe, replaced_pixel_shader);
 		if (enemy->clip_index == 1 && frame_index > animation.sequence.size() - 2)
 		{
+			
 			enemy->explosionEffect->Play(enemy->position, 0.4f);
+			if (enemy->EnemyType == 3)
+			{
+				enemy->firesmokeEffect->Stop(enemy->Effecthandle);
+			}
 			enemy->Death = true;
 		}
 	}
