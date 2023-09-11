@@ -12,7 +12,8 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 	Player* player = dynamic_cast<Player*> (gameobj);
 
 
-	player->scale.x = player->scale.y = player->scale.z = 3.0f;
+	player->scale.x = player->scale.y = player->scale.z = 4.0f;
+	player->position.y = -1.0f;
 
 	/*for (int i = 0; i < 100; i++)
 	{

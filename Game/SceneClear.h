@@ -12,11 +12,11 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
-class SceneTitle :public Lemur::Scene::BaseScene
+class SceneClear :public Lemur::Scene::BaseScene
 {
 public:
-    SceneTitle() {}
-    ~SceneTitle() override {}
+    SceneClear() {}
+    ~SceneClear() override {}
 
     // ‰Šú‰»
     void Initialize()override;

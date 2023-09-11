@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "SceneGame.h"
 #include <imgui.h>
 #include <random>
 #include "./Lemur/Collision/Collision.h"
@@ -53,6 +54,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	enemy->scale.z = 16.f;
 	enemy->position.y = 0.0f;
 	enemy->radius = 1.0f;
+	enemy->height = 1.0f;
 
 
 
@@ -71,6 +73,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	default:
 		break;
 	case 0://小さいの
+
 		enemy->Speed = 0.005f;
 		enemy->AnimSpeed = 3.0f;
 		break;
@@ -84,7 +87,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	case 3://小さいしくそ早
 		enemy->Speed = 0.01f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
-		enemy->AnimSpeed = 10.0f;
+		enemy->AnimSpeed = 2.0f;
 		break;
 	}
 
@@ -109,6 +112,8 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+	//enemy->UpdataHorizontalVelocity(elapsedTime);
+	//enemy->UpdateHorizontalMove(elapsedTime);
 
 	float px = (enemy->player_->position.x -enemy->position.x);
 	float pz = (enemy->player_->position.z - enemy->position.z);
@@ -229,14 +234,18 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	}
 
+
 	enemy->explosionEffect = new Effect("resources/Effects/explosion.efk");
 	enemy->firesmokeEffect = new Effect("resources/Effects/firesmoke.efk");
+
 
 }
 
 void EnemyGraphicsComponent::Update(GameObject* gameobj)
 {
-
+	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+	//enemy->ef->Play(enemy->player_->position);
+	//SceneGame::numdebug++;
 }
 
 void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
@@ -313,7 +322,9 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
 
 	//衝突判定用のデバッグ円柱を描画
-	//debugRenderer->DrawSphere(enemy->position, enemy->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+
+	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
+
 	
 
 }

@@ -7,6 +7,10 @@
 #include"./Lemur/Effekseer/EffekseerManager.h"
 #include"./Lemur/Effekseer/Effect.h"
 
+// Effect
+#include"./Lemur/Effekseer/Effect.h"
+
+
 class Enemy :public GameObject
 {
 public:
@@ -23,6 +27,7 @@ public:
     Effect* explosionEffect;
     Effect* firesmokeEffect;
 
+    //Effect* ef;
 };
 
 class EnemyInputComponent :public InputComponent

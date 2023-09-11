@@ -1,5 +1,5 @@
 #include "GamePro_ProjectileStraight.h"
-
+#include <imgui.h>
 
 
 
@@ -16,7 +16,7 @@ void GamePro_ProjectileStraightGraphicsComponent::Initialize(GameObject* gameobj
     ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
-    //BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Sword\\Sword.fbx");
+    BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_v001.fbx");
 	project->projectEffect = new Effect("shot_stylize.efk");
 }
 
@@ -54,42 +54,54 @@ void GamePro_ProjectileStraightGraphicsComponent::Render(GameObject* gameobj, fl
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
 
 
-    //BulletModel->render(immediate_context, world, project->material_color, nullptr, replaced_pixel_shader);
+    BulletModel->render(immediate_context, world, project->material_color, nullptr, replaced_pixel_shader);
 }
 
 void GamePro_ProjectileStraightInputComponent::Update(GameObject* gameobj, float elapsedTime)
 {
+	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+
+	if (ImGui::TreeNode("pro"))
+	{
+		ImGui::DragFloat3("pos", &project->position.x);
+		ImGui::DragFloat3("rotate", &project->rotation.x);
+		ImGui::DragFloat3("scale", &project->scale.x);
+		ImGui::DragFloat("HP", &project->HP);
+		ImGui::TreePop();
+	}
 }
 
 void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 {
-	GamePro_ProjectileStraight* gamepro_gameprojectilestraight = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
+	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
-	gamepro_gameprojectilestraight->HP = 1.0f;
-	gamepro_gameprojectilestraight->scale = { 1.0f,1.0f,1.0f };
-	gamepro_gameprojectilestraight->position.y = 0.0f;
-	gamepro_gameprojectilestraight->attack = 1.0f;
-	gamepro_gameprojectilestraight->speed = 1.0f;
-	gamepro_gameprojectilestraight->damage = 1.0f;
+	project->HP = 1.0f;
+	project->scale = { 5.0f,5.0f,5.0f };
+	project->position.y = 0.0f;
+	project->attack = 1.0f;
+	project->speed = 0.5f;
+	project->damage = 1.0f;
 
-	gamepro_gameprojectilestraight->GiftAngle.x = gamepro_gameprojectilestraight->NumFloatDelivery[0];
-	gamepro_gameprojectilestraight->GiftAngle.z = gamepro_gameprojectilestraight->NumFloatDelivery[1];
+	project->GiftAngle.x = project->NumFloatDelivery[0];
+	project->GiftAngle.z = project->NumFloatDelivery[1];
 }
 
 void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
-	GamePro_ProjectileStraight* gamepro_gameprojectilestraight = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
+	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
-	float px = gamepro_gameprojectilestraight->GiftAngle.x;
-	float pz = gamepro_gameprojectilestraight->GiftAngle.z;
+	float px = project->GiftAngle.x;
+	float pz = project->GiftAngle.z;
 	DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
 	DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
 	vec_x = DirectX::XMVector3Normalize(vec_x);
 	vec_z = DirectX::XMVector3Normalize(vec_z);
 	float floatX = DirectX::XMVectorGetX(vec_x);
 	float floatZ = DirectX::XMVectorGetX(vec_z);
-	gamepro_gameprojectilestraight->position.x += floatX * gamepro_gameprojectilestraight->speed;
-	gamepro_gameprojectilestraight->position.z += floatZ * gamepro_gameprojectilestraight->speed;
-
-	gamepro_gameprojectilestraight->projectEffect->Play(gamepro_gameprojectilestraight->position);
+	project->position.x += floatX * project->speed;
+	project->position.z += floatZ * project->speed;
+	
+	project->projectEffect->Play(project->position);
 }

@@ -6,8 +6,8 @@
 #include "../Lemur/Graphics/skinned_mesh.h"
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
-
-#include "SceneGame.h"
+#include"./Lemur/Effekseer/Effect.h"
+//#include "SceneGame.h"
 
 class GamePro_ProjectileStraight : public GameObject
 {

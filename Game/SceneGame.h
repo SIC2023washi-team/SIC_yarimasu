@@ -17,8 +17,8 @@
 #include "Ui.h"
 
 // Projectile
-// #include "GamePro_ProjectileStraight.h"
-class GamePro_ProjectileStraight;
+#include "GamePro_ProjectileStraight.h"
+//class GamePro_ProjectileStraight;
 // Audio
 #include <wrl.h>
 #include"./Lemur/Audio/audio.h"
@@ -98,15 +98,15 @@ public:
         );
     }
 
-    GamePro_ProjectileStraight* CreateProjectile();
-    //GamePro_ProjectileStraight* CreateProjectile()
-    //{
-    //    return new GamePro_ProjectileStraight(
-    //        new GamePro_ProjectileStraightInputComponent(),
-    //        new GamePro_ProjectileStraightPhysicsComponent(),
-    //        new GamePro_ProjectileStraightGraphicsComponent()
-    //    );
-    //}
+    //GamePro_ProjectileStraight* CreateProjectile();
+    GamePro_ProjectileStraight* CreateProjectile()
+    {
+        return new GamePro_ProjectileStraight(
+            new GamePro_ProjectileStraightInputComponent(),
+            new GamePro_ProjectileStraightPhysicsComponent(),
+            new GamePro_ProjectileStraightGraphicsComponent()
+        );
+    }
 
     int ShopItemsNum[10] = {};
     int SaveShopUi = {};
@@ -155,6 +155,7 @@ private:
     // エフェクト
     Effect* hitEffect = nullptr;
 
+
 //----------------------------------------------------------------------------------------------------
 //  ↓シェーダー関連
 //----------------------------------------------------------------------------------------------------
@@ -180,6 +181,8 @@ private:
 
     // Zelda_Shader
     Microsoft::WRL::ComPtr<ID3D11PixelShader> zelda_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> chara_ps;
 
     // SKYMAP
     std::unique_ptr<fullscreen_quad> bit_block_transfer_sky;
