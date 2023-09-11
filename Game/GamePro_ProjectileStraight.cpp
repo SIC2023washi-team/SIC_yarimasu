@@ -78,10 +78,10 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
 	project->HP = 1.0f;
-	project->scale = { 5.0f,5.0f,5.0f };
+	project->scale = { 50.0f,50.0f,50.0f };
 	project->position.y = 0.0f;
 	project->attack = 1.0f;
-	project->speed = 0.5f;
+	project->speed = 0.005f;
 	project->damage = 1.0f;
 
 	project->GiftAngle.x = project->NumFloatDelivery[0];

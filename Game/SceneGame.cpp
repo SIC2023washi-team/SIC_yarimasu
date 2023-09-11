@@ -433,7 +433,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		);
 #endif
 
-		addProjectile();
+	
 
 		XMVECTOR L0 = Camera::Instance().GetEye();
 		XMFLOAT4 l0;
@@ -468,6 +468,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
+		addProjectile();
 	}
 
 	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
@@ -807,6 +808,8 @@ void SceneGame::addProjectile()
 {
 	GameObject* p;
 	p = CreateProjectile();
+	p->NumFloatDelivery[0] = GiftAngle.x;
+	p->NumFloatDelivery[1] = GiftAngle.z;
 	p->Initialize();
 	projectileList.push_back(p);
 }
