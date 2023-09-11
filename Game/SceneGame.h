@@ -28,8 +28,7 @@
 #include<algorithm>
 #include <iostream>
 
- //DirectX::XMFLOAT3 GiftAngle;
- //DirectX::XMFLOAT4 GiftPosition;
+
 
 class SceneGame :public Lemur::Scene::BaseScene
 {
@@ -99,6 +98,7 @@ public:
     int shop_int;
     int UiCount = {};
     bool isPaused = false;
+
 
 private:
     // skkind_mesh

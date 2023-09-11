@@ -68,14 +68,17 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 	gamepro_gameprojectilestraight->attack = 1.0f;
 	gamepro_gameprojectilestraight->speed = 1.0f;
 	gamepro_gameprojectilestraight->damage = 1.0f;
+
+	gamepro_gameprojectilestraight->GiftAngle.x = gamepro_gameprojectilestraight->NumFloatDelivery[0];
+	gamepro_gameprojectilestraight->GiftAngle.z = gamepro_gameprojectilestraight->NumFloatDelivery[1];
 }
 
 void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	GamePro_ProjectileStraight* gamepro_gameprojectilestraight = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
-	float px = GiftAngle.x;
-	float pz = GiftAngle.z;
+	float px = gamepro_gameprojectilestraight->GiftAngle.x;
+	float pz = gamepro_gameprojectilestraight->GiftAngle.z;
 	DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
 	DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
 	vec_x = DirectX::XMVector3Normalize(vec_x);
