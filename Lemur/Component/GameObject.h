@@ -81,6 +81,8 @@ public:
     float radius = 1.0f;
     float height;
 
+    float HP = 10.0f;
+
     int StartTime = 0;
     int Timer;
     Mouse* mouse;

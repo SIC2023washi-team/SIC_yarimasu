@@ -43,23 +43,27 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 	enemy->EnemyType = int(Type(mt));
 
+	//TODO 三澤君
 	switch (enemy->EnemyType)
 	{
 	default:
 		break;
 	case 0://小さいの
-
-		enemy->Speed = 0.005f;
-		enemy->AnimSpeed = 3.0f;
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.005f;// 速度
+		enemy->AnimSpeed = 3.0f;// アニメーションの速度
 		break;
 	case 1://中くらいの
+		enemy->HP = 1.0f;
 		enemy->Speed = 0.003f;
 		enemy->AnimSpeed = 1.5f;
 		break;
 	case 2://大きいの
+		enemy->HP = 1.0f;
 		enemy->Speed = 0.001f;
 		break;
 	case 3://小さいしくそ早
+		enemy->HP = 1.0f;
 		enemy->Speed = 0.01f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
@@ -182,7 +186,8 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 				enemy->NumDelivery[3]++;
 			}
 			// これで再生できる
-
+			//TODO  Debug
+			enemy->Death = true;
 		}
 		else
 		{
@@ -229,10 +234,10 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			enemy->explosionEffect->Play(enemy->position, 0.4f);
 			enemy->NumDelivery[0]++;
 		}
-		if (enemy->NumDelivery[1] > 0)
-		{
-			enemy->Death = true;
-		}
+		//if (enemy->NumDelivery[1] < 0)
+		//{
+		//	enemy->Death = true;
+		//}
 
 		//種類によっての演出
 		//if (enemy->EnemyType == 3)

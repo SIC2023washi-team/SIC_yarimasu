@@ -17,7 +17,6 @@ public:
     Enemy(InputComponent* input_,
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
-    float HP = 10.0f;
     float Speed = 0.001f;
     float Atk;
     float AnimSpeed = 1.0f;

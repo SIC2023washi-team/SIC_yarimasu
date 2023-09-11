@@ -221,7 +221,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			it->NumDelivery[1] = jank;
 		}
 	}
-
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
 	{
 		// HACK ‚±‚ê‚Å“G‚ð‘S‚Äíœ
@@ -240,6 +239,16 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//	//	isPaused = false;
 	//	//}
 	//}
+	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
+	{
+		if (!isPaused)
+		{
+			shop_int = 1;
+			isPaused = true;
+		}
+		else if (isPaused)isPaused = false;
+	}
+	//if (isPaused && mouse.GetButtonDown() == mouse.BTN_RIGHT)isPaused = false;
 	if (isPaused)return;
 
 	if (enemyList.size() == 0)
@@ -804,14 +813,14 @@ void SceneGame::ProjectileVSEnemy()
 					outPosition)
 					)
 				{
-					ene->Death = true;
+					ene->HP--;
+					pro->Death=true;
 					//‚±‚±‚¨Šè‚¢‚µ‚Ü‚·
-
 				}
 			}
 		}
 	}
-}
+} 
 
 void SceneGame::addUi(int Uitype)
 {
@@ -911,6 +920,7 @@ void SceneGame::UiGetUpdate()
 
 void SceneGame::Wave()
 {
+	//TODO ŽOàVŒN
 	if (SetPhase)
 	{
 		switch (WaveNumber)
