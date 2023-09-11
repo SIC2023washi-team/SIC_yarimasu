@@ -16,6 +16,9 @@
 //Ui
 #include "Ui.h"
 
+// Projectile
+// #include "GamePro_ProjectileStraight.h"
+class GamePro_ProjectileStraight;
 // Audio
 #include <wrl.h>
 #include"./Lemur/Audio/audio.h"
@@ -52,8 +55,10 @@ public:
     void addEnemy();
     //Uiの追加
     void addUi(int Uitype);
-
     void UiGetUpdate();
+
+    // 弾の追加
+    void addProjectile();
 
     // プレイヤー生成
     Player* CreatePlayer()
@@ -92,6 +97,15 @@ public:
         );
     }
 
+    GamePro_ProjectileStraight* CreateProjectile();
+    //GamePro_ProjectileStraight* CreateProjectile()
+    //{
+    //    return new GamePro_ProjectileStraight(
+    //        new GamePro_ProjectileStraightInputComponent(),
+    //        new GamePro_ProjectileStraightPhysicsComponent(),
+    //        new GamePro_ProjectileStraightGraphicsComponent()
+    //    );
+    //}
 
     int ShopItemsNum[10] = {};
     int SaveShopUi = {};
@@ -125,7 +139,9 @@ private:
     std::vector<GameObject*> enemyList;
     std::vector<GameObject*> UiList;
 
-
+    // Projectile
+    GameObject* projectile;
+    std::vector<GameObject*> projectileList;
 
     // ポーズ（ショップ）
 

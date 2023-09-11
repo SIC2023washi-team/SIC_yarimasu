@@ -5,6 +5,7 @@
 #include"./Lemur/Resource/ResourceManager.h"
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
+#include "GamePro_ProjectileStraight.h"
 
 DirectX::XMFLOAT3 GiftAngle = { 0,0,0 };
 DirectX::XMFLOAT4 GiftPosition = { 0,0,0,0 };
@@ -69,6 +70,12 @@ void SceneGame::Initialize()
 	{
 		addEnemy();
 	}
+
+	for (int i = 0; i < 100; i++)
+	{
+		addProjectile();
+	}
+
 	addUi(3);
 	//HP
 	addUi(1);
@@ -104,6 +111,10 @@ void SceneGame::Initialize()
 	for (auto& it : enemyList)
 	{
 		it->pixelShader= zelda_ps.Get();
+	}
+	for (auto& it : projectileList)
+	{
+		it->pixelShader = zelda_ps.Get();
 	}
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
@@ -163,9 +174,13 @@ void SceneGame::Finalize()
 	{
 		it->Delete();
 	}
+	for (auto& it : projectileList)
+	{
+		it->Delete();
+	}
 	enemyList.clear();
 	UiList.clear();
-
+	projectileList.clear();
 
 	delete player;
 	delete stage;
@@ -215,8 +230,14 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		it->player_ = player;
 	}
 
+	for (auto& it : projectileList)
+	{
+		it->player_ = player;
+	}
+
 	//enemy->player_ = player;
 	player->enemy_ = enemy;
+	player->projectile_ = projectile;
 
 	Camera& camera = Camera::Instance();
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -245,6 +266,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	
 	}
 
+	for (auto& it : projectileList)
+	{
+		it->Update(elapsedTime);
+	}
 
 
 	// ‹óƒm[ƒh‚Ìíœ
@@ -262,6 +287,21 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			it++;
 		}
 	}
+
+	auto Proj = projectileList.begin();
+	while (Proj != projectileList.end())
+	{
+		if ((*Proj)->Death)
+		{
+			(*Proj)->Delete();
+			it = projectileList.erase(Proj);
+		}
+		else
+		{
+			Proj++;
+		}
+	}
+
 	auto Uiit = UiList.begin();
 	while (Uiit != UiList.end())
 	{
@@ -554,6 +594,11 @@ void SceneGame::Render(float elapsedTime)
 		it->Render(elapsedTime);
 	}
 
+	for (auto& it : projectileList)
+	{
+		it->Render(elapsedTime);
+	}
+
 
 #if  0
 
@@ -719,6 +764,14 @@ void SceneGame::addEnemy()
 	enemyList.push_back(e);
 }
 
+void SceneGame::addProjectile()
+{
+	GameObject* p;
+	p = CreateProjectile();
+	p->Initialize();
+	projectileList.push_back(p);
+}
+
 void SceneGame::addUi(int Uitype)
 {
 	bool judge = false;
@@ -790,4 +843,14 @@ void SceneGame::UiGetUpdate()
 	}
 
 
+}
+
+
+GamePro_ProjectileStraight* SceneGame::CreateProjectile()
+{
+	return new GamePro_ProjectileStraight(
+		new GamePro_ProjectileStraightInputComponent(),
+		new GamePro_ProjectileStraightPhysicsComponent(),
+		new GamePro_ProjectileStraightGraphicsComponent()
+	);
 }
