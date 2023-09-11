@@ -75,6 +75,7 @@ public:
 
     GameObject* player_;
     GameObject* enemy_;
+    GameObject* projectile_;
 
     //エネミーがautoで一括生成されてしまうのと一括生成の都合上_randがうまく機能しないので用意したやつ
     int NumDelivery[10];
