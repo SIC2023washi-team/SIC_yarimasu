@@ -61,6 +61,8 @@ public:
     // ’e‚Ì’Ç‰Á
     void addProjectile();
 
+    void ProjectileVSEnemy();
+
     // ƒvƒŒƒCƒ„[¶¬
     Player* CreatePlayer()
     {

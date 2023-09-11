@@ -352,7 +352,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//}
 
 
-
+	ProjectileVSEnemy();
 
 
 	// エネミー同士の当たり判定
@@ -816,6 +816,40 @@ void SceneGame::addProjectile()
 	p->NumFloatDelivery[1] = GiftAngle.z;
 	p->Initialize();
 	projectileList.push_back(p);
+}
+
+void SceneGame::ProjectileVSEnemy()
+{
+	//TODO 弾と敵のの当たり判定
+	if(enemyList.size()!=0&& projectileList.size() != 0)
+	{
+		// 総当たりで衝突判定
+		int enemyCount = enemyList.size();
+		for (int i = 0; i < enemyCount; ++i)
+		{
+			GameObject* ene = enemyList.at(i);
+			int projectileCount = projectileList.size();
+			for (int j = 0; j < projectileCount; ++j)
+			{
+				GameObject* pro = projectileList.at(j);
+				// 衝突判定
+				DirectX::XMFLOAT3 outPosition;
+				if (Collision::IntersectSphereVsCylinder
+				(pro->position,
+					pro->radius,
+					ene->position,
+					ene->radius,
+					ene->height,
+					outPosition)
+					)
+				{
+					ene->Death = true;
+					//ここお願いします
+
+				}
+			}
+		}
+	}
 }
 
 void SceneGame::addUi(int Uitype)
