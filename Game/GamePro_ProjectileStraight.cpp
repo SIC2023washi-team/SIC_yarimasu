@@ -83,7 +83,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 	project->scale = { 50.0f,50.0f,50.0f };
 	project->position.y = 0.0f;
 	project->attack = 1.0f;
-	project->speed = 0.005f;
+	project->speed = 0.01f;
 	project->damage = 1.0f;
 	project->radius = 100.0f;
 
@@ -95,7 +95,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 {
 	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
-	float px = project->GiftAngle.x;
+	/*float px = project->GiftAngle.x;
 	float pz = project->GiftAngle.z;
 	DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
 	DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
@@ -104,15 +104,21 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	float floatX = DirectX::XMVectorGetX(vec_x);
 	float floatZ = DirectX::XMVectorGetX(vec_z);
 	project->position.x += floatX * project->speed;
-	project->position.z += floatZ * project->speed;
+	project->position.z += floatZ * project->speed;*/
+
+	float cos = project->GiftAngle.x;
+	float sin = project->GiftAngle.z;
+
+	float angle = atan2f(sin, cos);
+
+	project->position.x += cosf(angle) * project->speed;
+	project->position.z += sinf(angle) * project->speed;
 	
 	project->projectEffect->Play(project->position);
 
+	///“–‚½‚è”»’è
 	DirectX::XMFLOAT3 p_p = project->position;
 	float p_r = project->radius;
-
-
-
 		for (auto& it : project->enemyList_)
 		{
 			DirectX::XMFLOAT3 e_p = it->position;
