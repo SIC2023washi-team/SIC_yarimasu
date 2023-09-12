@@ -192,6 +192,11 @@ public:
 
     //Effect
     Effect* explosionEffect;
+    Effect* barelEffect;
+
+    DirectX::XMFLOAT3 TANI;
+    DirectX::XMFLOAT3 TANI_Effect;
+    DirectX::XMVECTOR tani;
 
 
 private:
