@@ -10,6 +10,9 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
+#include <wrl.h>
+#include "../Lemur/Audio/audio.h"
+
 
 class Enemy :public GameObject
 {
@@ -27,6 +30,10 @@ public:
     Effect* explosionEffect;
     Effect* firesmokeEffect;
     Effekseer::Handle Effecthandle;
+
+    Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
+    IXAudio2MasteringVoice* master_voice = nullptr;
+    std::unique_ptr<Lemur::Audio::audio> explosion;
 };
 
 class EnemyInputComponent :public InputComponent

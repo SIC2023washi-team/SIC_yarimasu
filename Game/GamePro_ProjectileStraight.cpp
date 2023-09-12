@@ -25,6 +25,7 @@ void GamePro_ProjectileStraightGraphicsComponent::Initialize(GameObject* gameobj
 
 void GamePro_ProjectileStraightGraphicsComponent::Update(GameObject* gameobj)
 {
+
 }
 
 void GamePro_ProjectileStraightGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
@@ -100,7 +101,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 	project->GiftAngle.x = project->NumFloatDelivery[0];
 	project->GiftAngle.z = project->NumFloatDelivery[1];
 
-
+	
 }
 
 void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -117,6 +118,8 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	float floatZ = DirectX::XMVectorGetX(vec_z);
 	project->position.x += floatX * project->speed;
 	project->position.z += floatZ * project->speed;*/
+
+	
 
 	float cos = project->GiftAngle.x;
 	float sin = project->GiftAngle.z;

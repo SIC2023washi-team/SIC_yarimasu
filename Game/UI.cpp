@@ -11,6 +11,18 @@ void UiInputComponent::Update(GameObject* gameobj, float elapsedTime)
 
 void UiPhysicsComponent::Initialize(GameObject* gameobj)
 {
+	Ui* ui = dynamic_cast<Ui*> (gameobj);
+	HRESULT hr{ S_OK };
+
+	hr = XAudio2Create(ui->xaudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	hr = ui->xaudio2->CreateMasteringVoice(&ui->master_voice);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	
+	ui->shop = std::make_unique<Lemur::Audio::audio>(ui->xaudio2.Get(), L".\\resources\\Audio\\SE\\shop.wav");
+	
 }
 
 void UiPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -222,6 +234,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 					{
 						ui->NumDelivery[6] = 0;
 					}
+					ui->shop->play();
 				}
 			}
 			else
