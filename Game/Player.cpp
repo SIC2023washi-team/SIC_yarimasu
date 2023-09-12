@@ -122,9 +122,14 @@ void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D
 	DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(player->scale.x, player->scale.y, player->scale.z) };
 	DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(player->rotation.x, player->rotation.y, player->rotation.z) };
 	DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(player->position.x, player->position.y, player->position.z) };
+
+	DirectX::XMMATRIX R2{ DirectX::XMMatrixRotationRollPitchYaw(0,0,0) };
+
 	// ƒ[ƒ‹ƒh•ÏŠ·s—ñ‚ðì¬
 	DirectX::XMFLOAT4X4 world;
+	DirectX::XMFLOAT4X4 world2;
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
+	DirectX::XMStoreFloat4x4(&world2, C * S * R2 * T);
 
 
 	if (PlayerModel->animation_clips.size() > 0)
@@ -157,13 +162,13 @@ void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D
 
 # endif
 		PlayerModel->render(immediate_context, world, player->material_color, &keyframe, replaced_pixel_shader);
-		Player2Model->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
+		Player2Model->render(immediate_context, world2, player->material_color, nullptr, replaced_pixel_shader);
 		//BulletModel->render(immediate_context, world, player->material_color, &keyframe, replaced_pixel_shader);
 	}
 	else
 	{
 		PlayerModel->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
-		Player2Model->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
+		Player2Model->render(immediate_context, world2, player->material_color, nullptr, replaced_pixel_shader);
 	}
 
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
