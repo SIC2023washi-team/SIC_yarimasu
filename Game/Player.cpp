@@ -20,6 +20,15 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 		bullet[i].life = false;
 	}*/
 
+	HRESULT hr{ S_OK };
+
+	hr = XAudio2Create(player->xaudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	hr = player->xaudio2->CreateMasteringVoice(&player->master_voice);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	player->explosion = std::make_unique<Lemur::Audio::audio>(player->xaudio2.Get(), L".\\resources\\Audio\\SE\\explosion.wav");
 }
 
 void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -28,52 +37,7 @@ void PlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 	
 	Mouse& mouse = Input::Instance().GetMouse();
 
-	//int NO = -1;
-	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
-	//{
-	//	//íeÇÃçÏê¨
-	//	for (int i = 0; i < 100; i++)
-	//	{
-	//		if (!bullet[i].life)
-	//		{
-	//			NO = i;
-	//			break;
-	//		}
-	//	}
-	//	if (NO != -1)
-	//	{
-	//		bullet[NO].position.x = player->position.x;
-	//		bullet[NO].position.y = player->position.y;
-	//		bullet[NO].position.z = player->position.z;
-	//		bullet[NO].angle = GiftAngle;
-	//		bullet[NO].life = true;
-	//	}
-
-	//	//íeÇÃà⁄ìÆ
-	//	for (int i = 0; i < 100; i++)
-	//	{
-	//		if (bullet[i].life)
-	//		{
-	//			bullet[i].position.x += bullet[i].angle * player->ProjectileSpeed;
-	//			bullet[i].position.z += bullet[i].angle * player->ProjectileSpeed;
-	//		}
-	//		//íeÇÃçÌèú
-	//		//if(bullet[i].life && )
-	//	}
-	//}
-
 	gamepro_projectilemanager.Update(elapsedTime);
-
-	//DirectX::XMFLOAT3 e_p = player->enemy_->position;
-	//float e_r = player->enemy_->radius;
-	//DirectX::XMFLOAT3 p_p = player->position;
-	//float p_r = player->radius;
-
-	//if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
-	//{
-	//	//player->enemy_->Delete();
-	//}
-
 }
 
 void PlayerGraphicsComponent::Initialize(GameObject* gameobj)

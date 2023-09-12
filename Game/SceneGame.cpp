@@ -1,5 +1,10 @@
 #include "SceneGame.h"
+<<<<<<< HEAD
 #include "SceneTitle.h"
+=======
+#include "SceneClear.h"
+#include "SceneOver.h"
+>>>>>>> origin/washinao4
 #include <random>
 #include "Lemur/Input/Mouse.h"
 #include"./Lemur/Graphics/Camera.h"
@@ -157,10 +162,14 @@ void SceneGame::Initialize()
 
 
 	shot = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\shot.wav");
-	BGM = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Play.wav");
 	purchase = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\purchase.wav");
 	explosion = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\explosion.wav");
 	damageSE = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\damage.wav");
+	BGM = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Play.wav");
+	BGM2 = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\play2.wav");
+	BGM3 = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\play3.wav");
+
+	explosionEffect = new Effect("resources/Effects/explosion.efk");
 
 	// BLOOM
 	bloomer = std::make_unique<bloom>(graphics.GetDevice(), 1280, 720);
@@ -224,8 +233,24 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
-	BGM->volume(0.5);
-	BGM->play();
+	BGM->volume(0.25);
+	BGM2->volume(0.25);
+	BGM3->volume(0.25);
+
+	if (WaveNumber < 11)
+	{
+		BGM->play(10);
+	}
+	if (WaveNumber < 21 && WaveNumber > 10)
+	{
+		BGM2->play(10);
+	}
+	if (WaveNumber < 31 && WaveNumber > 20)
+	{
+		BGM3->play(10);
+	}
+
+	
 	interval<1000>::run([&] {
 		Timer++;
 		});
@@ -561,6 +586,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 
+<<<<<<< HEAD
 	//ImGui::Begin("ImGUI");
 	//ImGui::DragFloat("light_direction.x", &light_direction.x);
 	//ImGui::DragFloat("light_direction.y", &light_direction.y);
@@ -570,13 +596,30 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//ImGui::DragFloat("light_view_size", &light_view_size);
 	//ImGui::DragFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
 	//ImGui::DragFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
+=======
+	
+
+	ImGui::Begin("ImGUI");
+	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
+	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
+	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
+	ImGui::SliderInt("Timer", &Timer, -10.0f, +10.0f);
+	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
+	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
+	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
+	ImGui::SliderFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
+>>>>>>> origin/washinao4
 
 	//// BLOOM
 	//ImGui::DragFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold);
 	//ImGui::DragFloat("bloom_intensity", &bloomer->bloom_intensity);
 
+<<<<<<< HEAD
 	//ImGui::End();
 
+=======
+	ImGui::End();
+>>>>>>> origin/washinao4
 }
 
 void SceneGame::Render(float elapsedTime)
@@ -1041,7 +1084,6 @@ void SceneGame::addUi(int Uitype)
 		case 4:
 			//ƒvƒŒƒCƒ„[
 			if (Uitype == 2)Ui->NumDelivery[3] = Player_MAXHP_Lv;
-
 			if (Uitype == 2)Ui->NumDelivery[4] = Player_MAXHP_MAXLv;
 			break;
 		case 5:
@@ -1240,7 +1282,16 @@ void SceneGame::Wave()
 		{
 		case 1:
 			addEnemy(0, 2);
+<<<<<<< HEAD
 
+=======
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			addEnemy(2, 4);
+			addEnemy(3, 4);
+			
+			
+>>>>>>> origin/washinao4
 			WaveNumber++;
 			SetPhase = false;
 			break;
@@ -1356,9 +1407,26 @@ void SceneGame::EnemyGetUpdate()
 	{
 		if (it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] >= 1)
 		{
+<<<<<<< HEAD
 			Player_HP -= it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)];
 			it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] = 0;
 			it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Call)] = 1;
+=======
+			Player_HP -= it->NumDelivery[0];
+			if (Player_HP >= 1)
+			{
+				damageSE->stop();
+				damageSE->play();
+			}
+			if (Player_HP <= 0)
+			{
+				explosionEffect->Play(player->position,2.0f);
+				explosion->stop();
+				explosion->play();
+			}
+			it->NumDelivery[0] = 0;
+			it->NumDelivery[1] = 1;
+>>>>>>> origin/washinao4
 		}
 		if (it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)] >= 1)
 		{
