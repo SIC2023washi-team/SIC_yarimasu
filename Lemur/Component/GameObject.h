@@ -106,6 +106,7 @@ public:
 
     //エネミーがautoで一括生成されてしまうのと一括生成の都合上_randがうまく機能しないので用意したやつ
     int NumDelivery[20];
+    int itemLevelsave[20];
     float NumFloatDelivery[10];
     
     std::vector<GameObject*> enemys_;

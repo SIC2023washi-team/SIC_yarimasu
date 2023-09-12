@@ -121,6 +121,7 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(7);
 	addUi(8);
+	addUi(9);
 
 
 
@@ -976,7 +977,7 @@ void SceneGame::ProjectileVSEnemy()
 			GameObject* ene = enemyList.at(i);
 			if (ene->StartTime <= Timer)
 			{
-				if (enemyList.at(i)->NumDelivery[int(enemyNum::EnemyDeath_Flag)] != 1)
+				if (enemyList.at(i)->NumDelivery[int(enemyNum::EnemyDeath_Flag)] != 1 && enemyList.at(i)->NumDelivery[int(enemyNum::EnemyDeath_Call)] != 1)
 				{
 					int projectileCount = projectileList.size();
 					for (int j = 0; j < projectileCount; ++j)

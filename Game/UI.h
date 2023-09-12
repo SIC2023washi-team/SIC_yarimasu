@@ -37,10 +37,12 @@ public:
     int levelDigits = 1;
     float AddParameter;
     int saveJank[30];
+    int savelavel_min[10][3];
     int savelevel[5];
     int price;
     int jank;
     int jankdig_;
+    int laveldig_[10];
     float uitimer;
     DirectX::XMFLOAT2 Uiposition;
     DirectX::XMFLOAT2 Uiposition2;
@@ -80,5 +82,6 @@ private:
     std::shared_ptr<sprite> pause;
     std::shared_ptr<sprite> option[5];
     std::shared_ptr<sprite> UiBase[5];
+    std::shared_ptr<sprite> Uiitem[10];
     std::shared_ptr<sprite> HPbit;
 };
