@@ -1207,9 +1207,48 @@ void SceneGame::EnemyGetUpdate()
 	}
 }
 
-void SceneGame::JudgeState(int i)
+bool SceneGame::JudgeState(int i)
 {
 
+	switch (ShopItemsNum[SaveShopUi])
+	{
+	case 0:
+		//UŒ‚‘¬“x
+		if (attack_lv >= attack_MAXlv)
+		{
+			return true;
+		}
+		break;
+	case 1:
+		//’e‘¬“x
+		if (speed_lv >= speed_MAXlv)
+		{
+			return true;
+		}
+		break;
+	case 2:
+		//ŠÑ’Ê—Í
+		if (HP_lv >= HP_MAXlv)
+		{
+			return true;
+		}
+		break;
+	case 3:
+		//UŒ‚—Í
+		if (damage_lv >= damage_MAXlv)
+		{
+			return true;
+		}
+		break;
+	case 4:
+		//ƒvƒŒƒCƒ„[
+		if (Player_MAXHP_Lv >= Player_MAXHP_MAXLv)
+		{
+			return true;
+		}
 
+
+		break;
+	}
 
 }
