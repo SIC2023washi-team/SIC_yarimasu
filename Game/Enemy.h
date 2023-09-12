@@ -36,6 +36,8 @@ public:
     IXAudio2MasteringVoice* master_voice = nullptr;
     std::unique_ptr<Lemur::Audio::audio> explosion;
 
+
+
     //std::mt19937 mt{ std::random_device{}() };
 };
 

@@ -454,7 +454,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 
 	/////UŒ‚‘¬“x
-	attack++;
+	attacktimer++;
 
 	if (mouse.GetButton() == mouse.BTN_LEFT)
 	{
@@ -529,12 +529,12 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
-		if (attack >= 150)
+		if (attack*10+attacktimer >= 150)
 		{
 			shot->stop();
 			addProjectile();
 			shot->play();
-			attack = 0;
+			attacktimer = 0;
 		}
 	}
 
@@ -1207,19 +1207,19 @@ void SceneGame::EnemyGetUpdate()
 {
 	for (auto& it : enemyList)
 	{
-		if (it->NumDelivery[0] >= 1)
+		if (it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] >= 1)
 		{
-			Player_HP -= it->NumDelivery[0];
-			it->NumDelivery[0] = 0;
-			it->NumDelivery[1] = 1;
+			Player_HP -= it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)];
+			it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] = 0;
+			it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Call)] = 1;
 		}
-		if (it->NumDelivery[3] >= 1)
+		if (it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)] >= 1)
 		{
-			jank += it->NumDelivery[2];
+			jank += it->NumDelivery[int(SceneGame::enemyNum::EnemyMomey)];
 
 			it->Death = true;
-			it->NumDelivery[3] = 0;
-			it->NumDelivery[4]++;
+			it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)] = 0;
+			//it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Call)]++;
 		}
 	}
 }

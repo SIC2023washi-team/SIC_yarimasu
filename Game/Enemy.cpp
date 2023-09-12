@@ -115,8 +115,8 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 
 	std::mt19937 mt{ std::random_device{}() };
 	std::uniform_int_distribution<int> Pos(0, 1);
-	std::uniform_int_distribution<int> ePos_1(80, 160);
-	std::uniform_int_distribution<int> ePos_2(80, 160);
+	std::uniform_int_distribution<int> ePos_1(-21, 21);
+	std::uniform_int_distribution<int> ePos_2(-13, 13);
 	std::uniform_int_distribution<int> Ran(0, 1);
 
 	enemy->EnemyType = enemyType;
@@ -157,12 +157,12 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	switch (int(Pos(mt)))
 	{
 	case 0://上下からくる
-		enemy->position.x = int(ePos_1(mt))*0.1f;
-		enemy->position.z = 8 * (-1 + (int(Ran(mt))) * 2);
+		enemy->position.x = int(ePos_1(mt));
+		enemy->position.z = 13 * (-1 + (int(Ran(mt))) * 2);
 		break;
 	case 1://左右からくる
-		enemy->position.x = 8 * (-1 + (int(Ran(mt))) * 2);
-		enemy->position.z = int(ePos_2(mt)) * 0.1f;
+		enemy->position.x = 21 * (-1 + (int(Ran(mt))) * 2);
+		enemy->position.z = int(ePos_2(mt));
 		break;
 	}
 }
@@ -201,10 +201,10 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		DirectX::XMVECTOR Normalizer = DirectX::XMVector3Normalize(XMLoadFloat3(&RotationAngle));
 
 		enemy->rotation.y = atan2(RotationAngle.x, RotationAngle.z);
-		if (enemy->NumDelivery[9] != 0)
+		if (enemy->NumDelivery[int(SceneGame::enemyNum::EnemyDamage)] != 0)
 		{
-			enemy->HP -= enemy->NumDelivery[9];
-			enemy->NumDelivery[9] = 0;
+			enemy->HP -= enemy->NumDelivery[int(SceneGame::enemyNum::EnemyDamage)];
+			enemy->NumDelivery[int(SceneGame::enemyNum::EnemyDamage)] = 0;
 		}
 
 		if (enemy->HP <= 0)
@@ -213,10 +213,10 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			enemy->clip_index = 1;
 			enemy->AnimSpeed = 1.0f;
-			if (enemy->NumDelivery[3] == 0 && enemy->NumDelivery[4] == 0)
+			if (enemy->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)] == 0 && enemy->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Call)] == 0)
 			{
-				enemy->NumDelivery[2] += enemy->EnemyMoney;
-				enemy->NumDelivery[3]++;
+				enemy->NumDelivery[int(SceneGame::enemyNum::EnemyMomey)] += enemy->EnemyMoney;
+				enemy->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)]++;
 			}
 			// これで再生できる
 		}
@@ -259,16 +259,17 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		float p_r = enemy->radius;
 		DirectX::XMFLOAT3 e_p = enemy->player_->position;
 		float e_r = enemy->player_->radius;
-
+		//プレイヤーと当たった時用
 		if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
 		{
 			enemy->explosionEffect->Play(enemy->position, 0.4f);
-			enemy->NumDelivery[0]++;
+			enemy->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)]++;
 
 
 
 		}
-		if (enemy->NumDelivery[1] > 0)
+		//煙出てる敵が死ぬときに煙止める用
+		if (enemy->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] > 0)
 		{
 			if (enemy->EnemyType == 3)
 			{

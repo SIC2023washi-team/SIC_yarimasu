@@ -137,6 +137,7 @@ public:
     float speed = 0.005f;
     float damage = 5.0f;
     float attack = 1.0f;
+    float attacktimer = 0;
     float HP = 1.0f;
     float Player_HP = 3.0f;
     float Player_MAXHP = 3.0f;
@@ -168,7 +169,16 @@ public:
 
     enum class enemyNum
     {
-        ene,
+        EnemyPlayerDeath_Flag,
+        EnemyPlayerDeath_Call,
+        EnemyMomey,
+        EnemyDeath_Flag,
+        EnemyDeath_Call,
+        a5,
+        a6,
+        a7,
+        a8,
+        EnemyDamage
     };
 
 private:
