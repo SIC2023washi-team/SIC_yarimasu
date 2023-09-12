@@ -100,7 +100,9 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	case 5:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\return.png");
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SHOP.png");
 		ui->Uisize = { 400.0f, 30.0f };
+		ui->Uisize2 = { 400.0f, 30.0f };
 		break;
 	case 6:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\junk.png");
@@ -322,6 +324,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		if (ui->NumDelivery[5] == 1)
 		{
 			UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+			UiBase[4]->render(immediate_context, ui->Uiposition.x+5, ui->Uiposition.y+5, ui->Uisize.x-5, ui->Uisize.y-5, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, 0.3f, (0));
 			UiBase[1]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			UiBase[2]->render(immediate_context, ui->Uiposition_[0].x+(ui->Uisize2.x * ui->junkDigits), ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			for (int i = 0; i < ui->junkDigits; i++)
@@ -352,6 +355,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 	case 5:
 
 		UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+		UiBase[1]->render(immediate_context, ui->Uiposition.x+120, ui->Uiposition.y-40, ui->Uisize.x-240, ui->Uisize.y+10, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		break;
 	case 6:
 

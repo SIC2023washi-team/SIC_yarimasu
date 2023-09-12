@@ -127,21 +127,25 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 		enemy->HP = 3.0f;
 		enemy->Speed = 0.001f;
 		enemy->AnimSpeed = 1.5f;
+		enemy->EnemyMoney = 25;
 		break;
 	case 1://中くらいの
 		enemy->HP = 3.0f;
 		enemy->Speed = 0.0008f;
 		enemy->AnimSpeed = 1.0f;
+		enemy->EnemyMoney = 25;
 		break;
 	case 2://大きいの
 		enemy->HP = 3.0f;
 		enemy->Speed = 0.0005f;
+		enemy->EnemyMoney = 25;
 		break;
 	case 3://小さいしくそ早
 		enemy->HP = 3.0f;
 		enemy->Speed = 0.003f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 25;
 		break;
 	}
 
@@ -394,10 +398,10 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 		EnemyModel->render(immediate_context, world, enemy->material_color, nullptr, replaced_pixel_shader);
 	}
 
-	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-
-	//衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+	//
+	////衝突判定用のデバッグ円柱を描画
+	//debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
 
 
 }
