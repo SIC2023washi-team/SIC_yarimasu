@@ -210,6 +210,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		if (enemy->HP <= 0)
 		{
 			//TODO エフェクト止める
+			
 			enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			enemy->clip_index = 1;
 			enemy->AnimSpeed = 1.0f;
@@ -219,6 +220,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 				enemy->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)]++;
 			}
 			// これで再生できる
+
 		}
 		else
 		{

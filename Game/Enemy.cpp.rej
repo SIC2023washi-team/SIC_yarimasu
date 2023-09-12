@@ -1,9 +1,9 @@
 diff a/Game/Enemy.cpp b/Game/Enemy.cpp	(rejected hunks)
-@@ -84,6 +84,7 @@
- =======
- 
- 
-+>>>>>>> origin/newmuta
- 	switch (rand() % 2)
- 	{
- 	case 0://�㉺���炭��
+@@ -221,6 +221,7 @@
+ 			}
+ 			// ����ōĐ��ł���
+ <<<<<<< HEAD
++=======
+ 			
+ 		}
+ 		else

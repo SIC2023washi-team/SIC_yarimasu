@@ -20,16 +20,12 @@ void UiPhysicsComponent::Initialize(GameObject* gameobj)
 	hr = ui->xaudio2->CreateMasteringVoice(&ui->master_voice);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-	
 	ui->shop = std::make_unique<Lemur::Audio::audio>(ui->xaudio2.Get(), L".\\resources\\Audio\\SE\\shop.wav");
-	
 }
 
 void UiPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Mouse& mouse = Input::Instance().GetMouse();
-	
-
 }
 
 void UiGraphicsComponent::Initialize(GameObject* gameobj)
@@ -137,8 +133,12 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize = { 140,65 };
 		break;
 	case 8://ƒŠƒUƒ‹ƒg
-		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\result.png");
+		
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
+		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\backtitle.png");
+		ui->Uiposition_[0] = { 30,680 };
+		ui->Uisize_[0] = { 150,65 };
 		
 		break;
 	case 9:
@@ -370,7 +370,30 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			ui->saveJank[0] = 0;
 			ui->junkDigits = 1;
 		};
+	case 8:
+		if (ui->NumDelivery[3])
+		{
+			if (static_cast<float>(mouse.GetOldPositionX()) < ui->Uiposition_[0].x + ui->Uisize_[0].x
+				&& ui->Uiposition_[0].x < static_cast<float>(mouse.GetOldPositionX()))
+				//static_cast<float>(mouse.GetOldPositionY());
+			{
+				if (static_cast<float>(mouse.GetOldPositionY()) < ui->Uiposition_[0].y + ui->Uisize_[0].y
+					&& ui->Uiposition_[0].y < static_cast<float>(mouse.GetOldPositionY()))
+				{
+					ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
+					if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+					{
+						ui->NumDelivery[9] = 1;
 
+					}
+				}
+				else
+				{
+					ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
+				}
+			}
+		}
+		break;
 	}
 }
 
@@ -440,10 +463,10 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 			UiBase[1]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
 		}
 		break;
-	case8:
-		if (ui->NumDelivery[5] == 1)
+	case 8:
+		if (ui->NumDelivery[3] == 1)
 		{
-			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w - 0.1f, (0));
+			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		}
 		break;
 

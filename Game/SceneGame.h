@@ -133,6 +133,8 @@ public:
     bool hit=false;
 
 
+
+
     //ステータス
     float speed = 0.005f;
     float damage = 5.0f;
@@ -168,6 +170,7 @@ public:
     std::unique_ptr<Lemur::Audio::audio> purchase;
     std::unique_ptr<Lemur::Audio::audio> explosion;
 
+
     enum class enemyNum
     {
         EnemyPlayerDeath_Flag,
@@ -181,6 +184,9 @@ public:
         a8,
         EnemyDamage
     };
+
+
+    std::unique_ptr<Lemur::Audio::audio> damageSE;
 
 private:
     // skkind_mesh

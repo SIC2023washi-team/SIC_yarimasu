@@ -1,8 +1,10 @@
 #include "SceneGame.h"
+#include "SceneTitle.h"
 #include <random>
 #include "Lemur/Input/Mouse.h"
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
+#include"./Lemur/Scene/SceneManager.h"
 
 #include"./Lemur/Effekseer/EffekseerManager.h"
 #include "GamePro_ProjectileStraight.h"
@@ -116,23 +118,9 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(2);
 	addUi(7);
+	addUi(8);
 
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
+
 
 	UiCount = {};
 
@@ -170,6 +158,7 @@ void SceneGame::Initialize()
 	BGM = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Play.wav");
 	purchase = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\purchase.wav");
 	explosion = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\explosion.wav");
+	damageSE = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\damage.wav");
 
 	// BLOOM
 	bloomer = std::make_unique<bloom>(graphics.GetDevice(), 1280, 720);
@@ -233,6 +222,7 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+	BGM->volume(0.5);
 	BGM->play();
 	interval<1000>::run([&] {
 		Timer++;
@@ -257,7 +247,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	for (auto& it : UiList)
 	{
 		it->player_ = player;
-		it->NumDelivery[5] = shop_int;
+		if (!player_dead)
+		{
+			it->NumDelivery[5] = shop_int;
+		}
 		switch (it->NumDelivery[0])
 		{
 		case 2:
@@ -306,14 +299,20 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		case 7:
 			it->NumDelivery[3] = WaveNumber - 1;
 			break;
-		case 9:
-			if (player_dead)
+		case 8:
+			if(it->NumDelivery[9] >= 1)
+			{
+				Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
+			}
+			if(player_dead)
 			{
 				it->NumDelivery[3] = 1;
+				isPaused = true;
 			}
 			else
 			{
 				it->NumDelivery[3] = 0;
+				
 			}
 			break;
 		}
@@ -342,7 +341,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	// 敵が死んだときにタイマー初期化、敵をセットするフラグをON
 	if (enemyList.size() == 0)
 	{
-		explosion->play();
+		
 		Timer = 0;
 		SetPhase = true;
 	}
@@ -472,7 +471,9 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 
 	/////攻撃速度
+
 	attacktimer++;
+
 
 	if (mouse.GetButton() == mouse.BTN_LEFT)
 	{
@@ -547,12 +548,16 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
+
 		if (attack*10+attacktimer >= 150)
+
 		{
 			shot->stop();
 			addProjectile();
 			shot->play();
+
 			attacktimer = 0;
+
 		}
 	}
 
@@ -963,6 +968,8 @@ void SceneGame::ProjectileVSEnemy()
 						ene->NumDelivery[9] = pro->damage;
 						pro->HP -= 1;
 						pro->EnemyHitSave[i] = true;
+						damageSE->stop();
+						damageSE->play();
 					}
 				}
 			}
