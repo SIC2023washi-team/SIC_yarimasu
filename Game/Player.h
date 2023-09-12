@@ -6,6 +6,9 @@
 #include"../Lemur/Input/Input.h"
 #include "GamePro_ProjectileManager.h"
 
+#include <wrl.h>
+#include "../Lemur/Audio/audio.h"
+
 //struct Bullet {
 //    bool life; //ê∂ë∂ämîF
 //    DirectX::XMFLOAT3 position; //ç¿ïW
@@ -26,7 +29,10 @@ public:
     float ProjectileSize = 1.0f;
 
     GamePro_ProjectileManager gamepro_projectilemanager;
-    
+
+    Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
+    IXAudio2MasteringVoice* master_voice = nullptr;
+    std::unique_ptr<Lemur::Audio::audio> explosion;
 };
 
 class PlayerInputComponent :public InputComponent

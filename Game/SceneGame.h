@@ -130,7 +130,6 @@ public:
 
     float attacktimer = 0.0f;
 
-
     //ステータス
     float speed = 0.005f;
     float damage = 5.0f;
@@ -160,10 +159,16 @@ public:
     Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
     IXAudio2MasteringVoice* master_voice = nullptr;
     std::unique_ptr<Lemur::Audio::audio> shot;
-    std::unique_ptr<Lemur::Audio::audio> BGM;
     std::unique_ptr<Lemur::Audio::audio> purchase;
     std::unique_ptr<Lemur::Audio::audio> explosion;
     std::unique_ptr<Lemur::Audio::audio> damageSE;
+    std::unique_ptr<Lemur::Audio::audio> BGM;
+    std::unique_ptr<Lemur::Audio::audio> BGM2;
+    std::unique_ptr<Lemur::Audio::audio> BGM3;
+
+    //Effect
+    Effect* explosionEffect;
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
