@@ -59,11 +59,11 @@ void GamePro_ProjectileStraightGraphicsComponent::Render(GameObject* gameobj, fl
 
     BulletModel->render(immediate_context, world, project->material_color, nullptr, replaced_pixel_shader);
 
-	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-
-	//衝突判定用のデバッグ円柱を描画
-
-	debugRenderer->DrawSphere(project->position, project->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+	//
+	////衝突判定用のデバッグ円柱を描画
+	//
+	//debugRenderer->DrawSphere(project->position, project->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 
 }
 

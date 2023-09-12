@@ -40,6 +40,11 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\junk.png");
 		UiBase[3] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
 		ui->Uisize = { 200.0f,200.0f };
+		ui->Uiposition.x = 300.0 + 250 * ui->NumDelivery[1];
+		ui->Uiposition.y = 130.0f;
+		ui->Uiposition_[0].x = 300.0 + 250 * ui->NumDelivery[1];
+		ui->Uiposition_[0].y = 100.0f;
+		ui->Uisize_[0] = { 75,75 };
 		switch (ui->NumDelivery[2])
 		{
 		case 0:
@@ -109,14 +114,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 	switch (ui->UiTypes)
 	{
 	case 2:
-		ui->Uiposition.x = 300.0 + 250 * ui->NumDelivery[1];
-		ui->Uiposition.y = 130.0f;
-		ui->Uiposition2.x = 300.0 + 250 * ui->NumDelivery[1];
-		ui->Uiposition2.y = 150.0f;
-		ui->Uiposition3.x = 300.0 + 250 * ui->NumDelivery[1];
-		ui->Uiposition3.y = 100.0f;
 
-		ui->Uisize3 = { 30,30 };
 		if (ui->NumDelivery[5] == 1)
 		{
 			if (static_cast<float>(mouse.GetOldPositionX()) < ui->Uiposition.x + ui->Uisize.x
@@ -171,6 +169,9 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			ui->saveJank[0] = 0;
 			ui->junkDigits = 1;
 		}
+
+		ui->Uiposition2 = { 350.0f + 250.0f * ui->NumDelivery[1],130.0f };
+		ui->Uisize2 = { 20,40 };
 
 
 		break;
@@ -228,7 +229,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			// 割った回数をカウント
 			++ui->junkDigits;
 		}
-		int jankdig_2 = ui->junkDigits;
+		ui->jankdig_ = ui->junkDigits;
 		ui->jank = ui->NumDelivery[1];
 		if (ui->jank > 0)
 		{
@@ -236,14 +237,12 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			{
 				ui->saveJank[i] = ui->jank / pow(10, ui->jankdig_ - 1);
 				ui->jankdig_--;
-				int n = pow(10, jankdig_2 - 1);
+				int n = pow(10, ui->jankdig_ - 1);
 				if (ui->jank > 10)
 				{
-<<<<<<< HEAD
+
 					ui->jank -= ui->saveJank[i]*pow(10, ui->jankdig_);
-=======
-					jank -= ui->saveJank[i] * pow(10, jankdig_);
->>>>>>> origin/washinao4
+
 				}
 				int a = 0;
 			}
@@ -271,15 +270,17 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		{
 			UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			UiBase[1]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
-			UiBase[2]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
-			UiBase[1]->render(immediate_context, ui->Uiposition3.x, ui->Uiposition3.y, 20,30, ui->HPUiColor[0].x, ui->HPUiColor[0].y, ui->HPUiColor[0].z, ui->HPUiColor[0].w, (0));
-			//level用
-			UiBase[3]->render(immediate_context, ui->Uiposition3.x, ui->Uiposition3.y, ui->Uisize3.x, ui->Uisize3.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->NumDelivery[3], 0, 134.6, 211);
+			UiBase[2]->render(immediate_context, ui->Uiposition_[0].x, ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			for (int i = 0; i < ui->junkDigits; i++)
 			{
-				//値段用
-				UiBase[3]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
+			//値段用
+			UiBase[3]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
 			}
+			
+			//UiBase[1]->render(immediate_context, ui->Uiposition3.x, ui->Uiposition[3].y, 20,30, ui->HPUiColor[0].x, ui->HPUiColor[0].y, ui->HPUiColor[0].z, ui->HPUiColor[0].w, (0));
+			////level用
+			//UiBase[3]->render(immediate_context, ui->Uiposition3.x, ui->Uiposition3.y, ui->Uisize3.x, ui->Uisize3.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->NumDelivery[3], 0, 134.6, 211);
+	
 		}
 		break;
 	case 3:
