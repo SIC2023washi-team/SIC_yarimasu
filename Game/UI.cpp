@@ -148,6 +148,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 					if (mouse.GetButtonDown() == mouse.BTN_LEFT && ui->NumDelivery[7] >= ui->price)
 					{
 						ui->NumDelivery[6]++;
+						ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 
 					}
 				}
@@ -231,10 +232,12 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 					if (ui->NumDelivery[6] == 0)
 					{
 						ui->NumDelivery[6]++;
+						ui->UiColor = { 1.2f,1.2f,1.2f,1.0f };
 					}
 					else
 					{
 						ui->NumDelivery[6] = 0;
+						ui->UiColor = { 1.2f,1.2f,1.2f,1.0f };
 					}
 					ui->shop->play();
 				}
@@ -349,7 +352,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 	case 4:
 		for (int i = 0; i < ui->player_MAXHP; i++)
 		{
-			UiBase[0]->render(immediate_context, 20.0f + 27.0f * i, 15.0f, 40.0f, 50.0f, ui->HPUiColor[i].x, ui->HPUiColor[i].y, ui->HPUiColor[i].z, ui->HPUiColor[i].w, (0));
+			UiBase[0]->render(immediate_context, 20.0f + 27.0f * i, 15.0f, 35.0f, 50.0f, ui->HPUiColor[i].x, ui->HPUiColor[i].y, ui->HPUiColor[i].z, ui->HPUiColor[i].w, (0));
 		}
 		break;
 	case 5:

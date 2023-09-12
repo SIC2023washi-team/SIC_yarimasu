@@ -493,18 +493,18 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	}
 
 	ImGui::Begin("ImGUI");
-	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
-	ImGui::SliderInt("Timer", &Timer, -10.0f, +10.0f);
-	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
-	ImGui::SliderFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
+	ImGui::DragFloat("light_direction.x", &light_direction.x);
+	ImGui::DragFloat("light_direction.y", &light_direction.y);
+	ImGui::DragFloat("light_direction.z", &light_direction.z);
+	ImGui::DragInt("Timer", &Timer, -10.0f, +10.0f);
+	ImGui::DragFloat("light_view_distance", &light_view_distance);
+	ImGui::DragFloat("light_view_size", &light_view_size);
+	ImGui::DragFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
+	ImGui::DragFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
 
 	// BLOOM
-	ImGui::SliderFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold, +0.0f, +5.0f);
-	ImGui::SliderFloat("bloom_intensity", &bloomer->bloom_intensity, +0.0f, +5.0f);
+	ImGui::DragFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold);
+	ImGui::DragFloat("bloom_intensity", &bloomer->bloom_intensity);
 
 	ImGui::End();
 
@@ -895,6 +895,7 @@ void SceneGame::ProjectileVSEnemy()
 				{
 					if (ene->NumDelivery[9] == 0&&!pro->EnemyHitSave[i])
 					{
+
 						ene->NumDelivery[9] = pro->damage;
 						pro->HP -= 1;
 						pro->EnemyHitSave[i] = true;
