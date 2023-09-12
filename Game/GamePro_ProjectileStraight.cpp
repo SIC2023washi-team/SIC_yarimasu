@@ -19,7 +19,8 @@ void GamePro_ProjectileStraightGraphicsComponent::Initialize(GameObject* gameobj
 	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
     BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_v001.fbx");
-	project->projectEffect = new Effect("shot_stylize.efk");
+	project->projectEffect = new Effect("resources/Effects/shot_stylize.efk");
+	project->handle = project->projectEffect->Play(project->position, 0.5f);
 }
 
 void GamePro_ProjectileStraightGraphicsComponent::Update(GameObject* gameobj)
@@ -86,6 +87,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 {
 	GamePro_ProjectileStraight* project = dynamic_cast<GamePro_ProjectileStraight*> (gameobj);
 
+
 	project->HP = project->NumDelivery[4];
 	project->scale = { 5.0f,5.0f,5.0f };
 	project->position.y = 0.0f;
@@ -97,6 +99,8 @@ void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
 
 	project->GiftAngle.x = project->NumFloatDelivery[0];
 	project->GiftAngle.z = project->NumFloatDelivery[1];
+
+
 }
 
 void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -122,7 +126,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	project->position.x += cosf(angle) * project->speed;
 	project->position.z += sinf(angle) * project->speed;
 	
-	project->projectEffect->Play(project->position);
+	project->projectEffect->SetPosition(project->handle, project->position);
 
 	///“–‚½‚è”»’è
 	//DirectX::XMFLOAT3 p_p = project->position;

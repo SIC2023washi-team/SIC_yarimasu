@@ -27,6 +27,8 @@ public:
     Effect* projectEffect;
     DirectX::XMFLOAT3 GiftAngle;
     DirectX::XMFLOAT4 GiftPosition;
+
+    Effekseer::Handle handle;
 };
 
 
