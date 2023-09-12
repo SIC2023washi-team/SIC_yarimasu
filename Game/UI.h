@@ -5,6 +5,8 @@
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
 
+#include <wrl.h>
+#include"./Lemur/Audio/audio.h"
 
 #include "Lemur/Input/Mouse.h"
 #include <sstream>
@@ -40,6 +42,11 @@ public:
     DirectX::XMFLOAT2 Uisize2;
     DirectX::XMFLOAT4 UiColor;
     DirectX::XMFLOAT4 HPUiColor[30];
+
+    Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
+    IXAudio2MasteringVoice* master_voice = nullptr;
+    std::unique_ptr<Lemur::Audio::audio> shop;
+    
 
 };
 

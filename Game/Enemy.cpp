@@ -89,6 +89,15 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 		break;
 	}
 
+	HRESULT hr{ S_OK };
+
+	hr = XAudio2Create(enemy->xaudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	hr = enemy->xaudio2->CreateMasteringVoice(&enemy->master_voice);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	enemy->explosion = std::make_unique<Lemur::Audio::audio>(enemy->xaudio2.Get(), L".\\resources\\Audio\\SE\\explosion.wav");
 }
 
 void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, int startTime)

@@ -140,6 +140,18 @@ void SceneGame::Initialize()
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
+
+	hr = XAudio2Create(xaudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	hr = xaudio2->CreateMasteringVoice(&master_voice);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+
+	shot = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\shot.wav");
+	BGM = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Play.wav");
+	purchase = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\purchase.wav");
+
 #if 0
 	// BLOOM
 	bloomer = std::make_unique<bloom>(graphics.GetDevice(), 1280, 720);
@@ -201,6 +213,7 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+	//BGM->play();
 	interval<1000>::run([&] {
 		Timer++;
 		});
@@ -392,7 +405,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	if (mouse.GetButton() == mouse.BTN_LEFT)
 	{
-		
+		if(shot->queuing())
+		shot->stop(true);
+		shot->play(0);
+
 #if 0	
 		scene_constants scene_data{};
 		POINT p;
@@ -465,7 +481,9 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 		if (attack >= 150)
 		{
+			//shot->stop();
 			addProjectile();
+			//shot->play();
 			attack = 0;
 		}
 	}
@@ -899,6 +917,7 @@ void SceneGame::UiGetUpdate()
 		{
 			if (it->NumDelivery[6] == 1)
 			{
+				purchase->play();
 				switch (it->NumDelivery[2])
 				{
 				case 0:

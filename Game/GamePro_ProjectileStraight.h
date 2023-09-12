@@ -7,7 +7,9 @@
 #include "../Lemur/Graphics/Graphics.h"
 #include "../Lemur/Resource/ResourceManager.h"
 #include"./Lemur/Effekseer/Effect.h"
-//#include "SceneGame.h"
+
+#include <wrl.h>
+#include"./Lemur/Audio/audio.h"
 
 class GamePro_ProjectileStraight : public GameObject
 {
@@ -29,6 +31,10 @@ public:
     DirectX::XMFLOAT4 GiftPosition;
 
     Effekseer::Handle handle;
+
+    Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
+    IXAudio2MasteringVoice* master_voice = nullptr;
+    std::unique_ptr<Lemur::Audio::audio> shot;
 };
 
 

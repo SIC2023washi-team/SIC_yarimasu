@@ -26,6 +26,10 @@
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
 
+// Audio
+#include <wrl.h>
+#include "../Lemur/Audio/audio.h"
+
 
 #include<vector>
 #include<algorithm>
@@ -147,6 +151,13 @@ public:
     int HP_MAXlv;
     int Player_MAXHP_MAXLv;
 
+    //BGMÅESE
+    Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
+    IXAudio2MasteringVoice* master_voice = nullptr;
+    std::unique_ptr<Lemur::Audio::audio> shot;
+    std::unique_ptr<Lemur::Audio::audio> BGM;
+    std::unique_ptr<Lemur::Audio::audio> purchase;
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -203,10 +214,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffers[8];
 
     // Audio
-    Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
-    IXAudio2MasteringVoice* master_voice = nullptr;
-    std::unique_ptr<Lemur::Audio::audio> bgm[8];
-    std::unique_ptr<Lemur::Audio::audio> se[8];
+    //Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
+    //IXAudio2MasteringVoice* master_voice = nullptr;
+    //std::unique_ptr<Lemur::Audio::audio> bgm[8];
+    //std::unique_ptr<Lemur::Audio::audio> se[8];
 
     // Zelda_Shader
     Microsoft::WRL::ComPtr<ID3D11PixelShader> zelda_ps;
