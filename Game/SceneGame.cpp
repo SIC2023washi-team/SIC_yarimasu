@@ -125,16 +125,16 @@ void SceneGame::Initialize()
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_ps.cso", stage_ps.GetAddressOf());
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/character_ps.cso", chara_ps.GetAddressOf());
 
-	//player->pixelShader = chara_ps.Get();
-	//stage->pixelShader = chara_ps.Get();
-	//for (auto& it : enemyList)
-	//{
-	//	it->pixelShader= chara_ps.Get();
-	//}
-	//for (auto& it : projectileList)
-	//{
-	//	it->pixelShader = chara_ps.Get();
-	//}
+	player->pixelShader = chara_ps.Get();
+	stage->pixelShader = chara_ps.Get();
+	for (auto& it : enemyList)
+	{
+		it->pixelShader= chara_ps.Get();
+	}
+	for (auto& it : projectileList)
+	{
+		it->pixelShader = chara_ps.Get();
+	}
 
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
@@ -551,6 +551,13 @@ void SceneGame::Render(float elapsedTime)
 	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
 	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
 	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+	// SKYMAP
+	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	//bit_block_transfer_sky->blit(immediate_context, skymap.GetAddressOf(), 0, 1, pixel_shaders[1].Get());
+	//
+
+#endif
 
 	//3D•`‰æ
 	{
@@ -559,6 +566,21 @@ void SceneGame::Render(float elapsedTime)
 		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 		player->Render(elapsedTime);
+
+		stage->Render(elapsedTime);
+
+
+		//enemy->Render(elapsedTime);
+		for (auto& it : enemyList)
+		{
+			it->Render(elapsedTime);
+		}
+
+		for (auto& it : projectileList)
+		{
+			it->Render(elapsedTime);
+		}
+
 		framebuffers[0]->deactivate(immediate_context);
 		// BLOOM
 		bloomer->make(immediate_context, framebuffers[0]->shader_resource_views[0].Get());
@@ -574,13 +596,6 @@ void SceneGame::Render(float elapsedTime)
 		};
 		bit_block_transfer->blit(immediate_context, shader_resource_views, 0, 2, pixel_shaders[0].Get());
 	}
-	// SKYMAP
-	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-	//bit_block_transfer_sky->blit(immediate_context, skymap.GetAddressOf(), 0, 1, pixel_shaders[1].Get());
-	//
-
-#endif
 	// SHADOW : make shadow map
 	{
 		using namespace DirectX;
@@ -600,12 +615,11 @@ void SceneGame::Render(float elapsedTime)
 		double_speed_z->clear(immediate_context, 1.0f);
 		double_speed_z->activate(immediate_context);
 
-		ID3D11PixelShader* null_pixel_shader{ NULL };
-		player->Render(elapsedTime);
 		for (auto& it : enemyList)
 		{
 			it->Render(elapsedTime);
 		}
+		player->Render(elapsedTime);
 		double_speed_z->deactivate(immediate_context);
 	}
 	// Render scene
@@ -618,43 +632,43 @@ void SceneGame::Render(float elapsedTime)
 	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
 	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
 
-	framebuffers[0]->clear(immediate_context);
-	framebuffers[0]->activate(immediate_context);
+	//framebuffers[0]->clear(immediate_context);
+	//framebuffers[0]->activate(immediate_context);
 
 	// SHADOW : bind shadow map at slot 8
 	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
-	player->Render(elapsedTime);
+	//player->Render(elapsedTime);
 
-	stage->Render(elapsedTime);
+	//stage->Render(elapsedTime);
 
 
-	//enemy->Render(elapsedTime);
-	for (auto& it:enemyList)
-	{
-		it->Render(elapsedTime);
-	}
+	////enemy->Render(elapsedTime);
+	//for (auto& it:enemyList)
+	//{
+	//	it->Render(elapsedTime);
+	//}
 
-	for (auto& it : projectileList)
-	{
-		it->Render(elapsedTime);
-	}
+	//for (auto& it : projectileList)
+	//{
+	//	it->Render(elapsedTime);
+	//}
 
 
 	// UNIT.32
-	framebuffers[0]->deactivate(immediate_context);
-
-	// BLOOM
-	bloomer->make(immediate_context, framebuffers[0]->shader_resource_views[0].Get());
-
-	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
-	ID3D11ShaderResourceView* shader_resource_views[] =
-	{
-		framebuffers[0]->shader_resource_views[0].Get(),
-		bloomer->shader_resource_view(),
-	};
-	bit_block_transfer->blit(immediate_context, shader_resource_views, 0, 2, pixel_shaders[0].Get());
+	//framebuffers[0]->deactivate(immediate_context);
+	//
+	//// BLOOM
+	//bloomer->make(immediate_context, framebuffers[0]->shader_resource_views[0].Get());
+	//
+	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	//immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	//ID3D11ShaderResourceView* shader_resource_views[] =
+	//{
+	//	framebuffers[0]->shader_resource_views[0].Get(),
+	//	bloomer->shader_resource_view(),
+	//};
+	//bit_block_transfer->blit(immediate_context, shader_resource_views, 0, 2, pixel_shaders[0].Get());
 
 #if  0
 
