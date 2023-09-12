@@ -115,21 +115,21 @@ void SceneGame::Initialize()
 	addUi(7);
 
 	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
-	addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
+	//addEnemy(0, 0);
 
 	UiCount = {};
 
@@ -280,8 +280,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 				//ƒvƒŒƒCƒ„[
 				it->NumDelivery[3] = Player_MAXHP_Lv;
 				it->NumDelivery[4] = Player_MAXHP_MAXLv;
-
-
 				break;
 			}
 		
@@ -945,6 +943,7 @@ void SceneGame::ProjectileVSEnemy()
 						ene->NumDelivery[9] = pro->damage;
 						pro->HP -= 1;
 						pro->EnemyHitSave[i] = true;
+						ene->HitReaction = true;
 					}
 				}
 			}
@@ -1217,9 +1216,8 @@ void SceneGame::EnemyGetUpdate()
 		{
 			jank += it->NumDelivery[int(SceneGame::enemyNum::EnemyMomey)];
 
-			it->Death = true;
 			it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)] = 0;
-			//it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Call)]++;
+			it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Call)]++;
 		}
 	}
 }

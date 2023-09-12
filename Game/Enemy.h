@@ -36,8 +36,7 @@ public:
     IXAudio2MasteringVoice* master_voice = nullptr;
     std::unique_ptr<Lemur::Audio::audio> explosion;
 
-
-
+    DirectX::XMFLOAT4 SaveColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     //std::mt19937 mt{ std::random_device{}() };
 };
 
@@ -52,6 +51,8 @@ class EnemyPhysicsComponent :public PhysicsComponent
     void Initialize(GameObject* gameobj) override;
     void EnemyInitialize(GameObject* gameobj,int StartTime,int EnemyTime) override;
     void Update(GameObject* gameobj, float elapsedTime) override;
+    void Reaction(GameObject* gameobj, float elapsedTime);
+    int TimerPhisics;
 };
 
 class EnemyGraphicsComponent :public GraphicsComponent
@@ -59,6 +60,7 @@ class EnemyGraphicsComponent :public GraphicsComponent
     void Initialize(GameObject* gameobj) override;
     void Update(GameObject* gameobj) override;
     void Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader) override;
+
 
 private:
     std::shared_ptr<skinned_mesh> EnemyModel;

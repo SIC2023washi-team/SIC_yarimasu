@@ -6,6 +6,8 @@
 #include"./Lemur/Effekseer/EffekseerManager.h"
 #include"./Lemur/Effekseer/Effect.h"
 
+#include "interval.h"
+
 #define EnemyHitPoint 3.0f
 
 void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -153,6 +155,8 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 		enemy->radius = 0.5f;
 		break;
 	}
+	// F•Û‘¶—p
+	enemy->SaveColor = enemy->material_color;
 
 	switch (int(Pos(mt)))
 	{
@@ -264,23 +268,57 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		{
 			enemy->explosionEffect->Play(enemy->position, 0.4f);
 			enemy->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)]++;
-
-
-
 		}
 		//‰Œo‚Ä‚é“G‚ªŽ€‚Ê‚Æ‚«‚É‰ŒŽ~‚ß‚é—p
-		if (enemy->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] > 0)
+		if (enemy->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Call)] > 0)
 		{
 			if (enemy->EnemyType == 3)
 			{
 				enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			}
-			//enemy->Death = true;
+			enemy->Death = true;
 		}
 		if (enemy->EnemyType == 3)
 		{
 			enemy->firesmokeEffect->SetPosition(enemy->Effecthandle, DirectX::XMFLOAT3(enemy->position.x, enemy->position.y + 0.5f, enemy->position.z));
 		}
+	}
+
+	//TODO ‚Ý‚·‚Ÿ
+	if (enemy->HitReaction)
+	{
+		// “_–ÅŠÔŠu
+		interval<100>::run([&] {
+			TimerPhisics++;
+			});
+		Reaction(gameobj, elapsedTime);
+		if (TimerPhisics >= 4)// “_–Å‰ñ”
+		{
+			enemy->material_color.x = enemy->SaveColor.x;
+			enemy->material_color.y = enemy->SaveColor.y;
+			enemy->material_color.z = enemy->SaveColor.z;
+			enemy->HitReaction = false;
+			TimerPhisics = 0;
+		}
+	}
+
+}
+
+void EnemyPhysicsComponent::Reaction(GameObject* gameobj, float elapsedTime)
+{
+	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+	
+	if (TimerPhisics % 2 == 1)
+	{
+		enemy->material_color.x = enemy->SaveColor.x * 3.0f;
+		enemy->material_color.y = enemy->SaveColor.y * 3.0f;
+		enemy->material_color.z = enemy->SaveColor.z * 3.0f;
+	}
+	else if(TimerPhisics % 2 == 0)
+	{
+		enemy->material_color.x = enemy->SaveColor.x;
+		enemy->material_color.y = enemy->SaveColor.y;
+		enemy->material_color.z = enemy->SaveColor.z;
 	}
 }
 
@@ -325,6 +363,7 @@ void EnemyGraphicsComponent::Update(GameObject* gameobj)
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 	//enemy->ef->Play(enemy->player_->position);
 	//SceneGame::numdebug++;
+
 }
 
 void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
