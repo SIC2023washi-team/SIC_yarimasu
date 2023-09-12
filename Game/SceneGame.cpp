@@ -918,9 +918,42 @@ void SceneGame::addUi(int Uitype)
 			}
 			continue;
 		}
+		Ui->NumDelivery[2] = ShopItemsNum[SaveShopUi];
+		Ui->NumDelivery[1] = SaveShopUi;
+		switch (ShopItemsNum[SaveShopUi])
+		{
+		case 0:
+			//UŒ‚‘¬“x
+			if (Uitype == 2)Ui->NumDelivery[3] = attack_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] = attack_MAXlv;
+			break;
+		case 1:
+			//’e‘¬“x
+			if (Uitype == 2)Ui->NumDelivery[3] = speed_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] = speed_MAXlv;
+			break;
+		case 2:
+			//ŠÑ’Ê—Í
+			if (Uitype == 2)Ui->NumDelivery[3] = HP_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] =HP_MAXlv;
+			break;
+		case 3:
+			//UŒ‚—Í
+			if (Uitype == 2)Ui->NumDelivery[3] = damage_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] = damage_MAXlv;
+			break;
+		case 4:
+			//ƒvƒŒƒCƒ„[
+			if (Uitype == 2)Ui->NumDelivery[3] = Player_MAXHP_Lv;
+
+			if (Uitype == 2)Ui->NumDelivery[4] = Player_MAXHP_MAXLv;
+
+
+			break;
+		}
 	}
-	if (Uitype == 2)Ui->NumDelivery[2] = ShopItemsNum[SaveShopUi];
-	if (Uitype == 2)Ui->NumDelivery[1] = SaveShopUi;
+
+
 
 	Ui->Initialize();
 	
