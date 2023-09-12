@@ -114,6 +114,7 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(2);
 	addUi(2);
+	addUi(7);
 
 	UiCount = {};
 
@@ -233,6 +234,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		if (it->NumDelivery[0] == 6)
 		{
 			it->NumDelivery[1] = jank;
+		}
+		if (it->NumDelivery[0] == 7)
+		{
+			it->NumDelivery[3] = WaveNumber-1;
 		}
 	}
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
@@ -910,7 +915,10 @@ void SceneGame::addUi(int Uitype)
 		}
 	}
 
-
+	if (Uitype == 7)
+	{
+		Ui->NumDelivery[3] = WaveNumber;
+	}
 
 	Ui->Initialize();
 	
@@ -938,23 +946,27 @@ void SceneGame::UiGetUpdate()
 					//UŒ‚‘¬“x
 					attack += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					attack_lv++;
 					jank -= 100;
 					break;
 				case 1:
 					//’e‘¬“x
 					speed += 0.01f;
 					it->NumDelivery[6] = 0;
+					speed_lv++;
 					jank -= 100;
 					break;
 				case 2:
 					//ŠÑ’Ê—Í
 					HP += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					HP_lv++;
 					jank -= 100;
 					break;
 				case 3:
 					//UŒ‚—Í
 					damage += 5;
+					damage_lv++;
 					it->NumDelivery[6] = 0;
 					jank -= 100;
 					break;
@@ -962,6 +974,7 @@ void SceneGame::UiGetUpdate()
 					//ƒvƒŒƒCƒ„[
 					Player_HP += it->NumDelivery[6];
 					Player_MAXHP += it->NumDelivery[6];
+					Player_MAXHP_Lv++;
 					it->NumDelivery[6] = 0;
 					jank -= 100;
 

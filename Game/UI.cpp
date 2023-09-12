@@ -42,41 +42,39 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize = { 200.0f,200.0f };
 		ui->Uiposition.x = 300.0 + 250 * ui->NumDelivery[1];
 		ui->Uiposition.y = 130.0f;
-		ui->Uiposition_[0].x = 300.0 + 250 * ui->NumDelivery[1];
-		ui->Uiposition_[0].y = 100.0f;
-		ui->Uisize_[0] = { 75,75 };
+
 		switch (ui->NumDelivery[2])
 		{
 		case 0:
 			//攻撃速度
 			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\attack_speed.png");
 			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\attckspeedUp.png");
-			ui->price = 100;
+			ui->price = 100 * ui->NumDelivery[3];
 			break;
 
 		case 1:
 			//弾速度
 			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\bullet_velocity.png");
 			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SpeedUp.png");
-			ui->price = 100;
+			ui->price = 100 * ui->NumDelivery[3];
 			break;
 		case 2:
 			//貫通力
 			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\penetration_force.png");
 			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\bretHPUp.png");
-			ui->price = 100;
+			ui->price = 100 * ui->NumDelivery[3];
 			break;
 		case 3:
 			//攻撃力
 			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\offensive_power.png");
 			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\powerUp.png");
-			ui->price = 100;
+			ui->price = 100*ui->NumDelivery[3];
 			break;
 		case 4:
 			//HP
 			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HP.png");
 			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HPUp.png");
-			ui->price = 100;
+			ui->price = 100 * ui->NumDelivery[3];
 			break;
 		}
 
@@ -100,6 +98,14 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize2 = { 20,40 };
 		ui->Uiposition = { 45,80 };
 		ui->Uisize = { 80,40 };
+		break;
+	case 7:
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\WAVE.png");
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
+		ui->Uiposition2 = { 560,30 };
+		ui->Uisize2 = { 20,45 };
+		ui->Uiposition = { 550,20 };
+		ui->Uisize = { 140,65 };
 		break;
 	}
 	ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
@@ -170,8 +176,12 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			ui->junkDigits = 1;
 		}
 
-		ui->Uiposition2 = { 350.0f + 250.0f * ui->NumDelivery[1],130.0f };
-		ui->Uisize2 = { 20,40 };
+		ui->Uiposition2 = { 345.0f + 250.0f * ui->NumDelivery[1],280.0f };
+		ui->Uisize2 = { 13,22 };
+		//ジャンク
+		ui->Uiposition_[0].x = 355.0 + 250 * ui->NumDelivery[1];
+		ui->Uiposition_[0].y = 285.0f;
+		ui->Uisize_[0] = { 60,20 };
 
 
 		break;
@@ -252,6 +262,38 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 		}
 
 		break;
+	case 7:
+		ui->jank = ui->NumDelivery[3];
+		ui->junkDigits = 0;
+		while (ui->jank != 0)
+		{
+			ui->jank /= 10;
+			// 割った回数をカウント
+			++ui->junkDigits;
+		}
+		ui->jankdig_ = ui->junkDigits;
+		ui->jank = ui->NumDelivery[3];
+		if (ui->jank > 0)
+		{
+			for (int i = 0; i < ui->junkDigits; i++)
+			{
+	
+				ui->saveJank[i] = ui->jank / pow(10, ui->jankdig_ - 1);
+				
+				int n = pow(10, ui->jankdig_ - 1);
+				if (ui->jank > 10)
+				{
+					ui->jank -= ui->saveJank[i] * pow(10, ui->jankdig_-1);
+				}
+				ui->jankdig_--;
+			}
+		}
+		else
+		{
+			ui->saveJank[0] = 0;
+			ui->junkDigits = 1;
+		};
+
 	}
 }
 
@@ -268,7 +310,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		{
 			UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			UiBase[1]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
-			UiBase[2]->render(immediate_context, ui->Uiposition_[0].x, ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+			UiBase[2]->render(immediate_context, ui->Uiposition_[0].x+(ui->Uisize2.x * ui->junkDigits), ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			for (int i = 0; i < ui->junkDigits; i++)
 			{
 			//値段用
@@ -299,6 +341,14 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		break;
 	case 6:
+
+		UiBase[0]->render(immediate_context, ui->Uiposition.x + (ui->Uisize2.x * ui->junkDigits), ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+		for (int i = 0; i < ui->junkDigits; i++)
+		{
+			UiBase[1]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
+		}
+		break;
+	case 7:
 
 		UiBase[0]->render(immediate_context, ui->Uiposition.x + (ui->Uisize2.x * ui->junkDigits), ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		for (int i = 0; i < ui->junkDigits; i++)
