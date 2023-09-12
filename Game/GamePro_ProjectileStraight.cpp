@@ -60,11 +60,11 @@ void GamePro_ProjectileStraightGraphicsComponent::Render(GameObject* gameobj, fl
 
     BulletModel->render(immediate_context, world, project->material_color, nullptr, replaced_pixel_shader);
 
-	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-
-	//Õ“Ë”»’è—p‚ÌƒfƒoƒbƒO‰~’Œ‚ð•`‰æ
-
-	debugRenderer->DrawSphere(project->position, project->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+	//
+	////Õ“Ë”»’è—p‚ÌƒfƒoƒbƒO‰~’Œ‚ð•`‰æ
+	//
+	//debugRenderer->DrawSphere(project->position, project->radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 
 }
 
@@ -131,6 +131,23 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	
 	project->projectEffect->SetPosition(project->handle, project->position);
 
+	DirectX::XMFLOAT3 playerPos = project->player_->position; // ƒvƒŒƒCƒ„[‚ÌˆÊ’u
+	DirectX::XMFLOAT3 projPos = project->position; // ’e‚ÌˆÊ’u
+
+	// ˆÊ’u·‚ðŒvŽZ
+	float distance = sqrt(
+		(playerPos.x - projPos.x) * (playerPos.x - projPos.x) +
+		(playerPos.y - projPos.y) * (playerPos.y - projPos.y) +
+		(playerPos.z - projPos.z) * (playerPos.z - projPos.z)
+	);
+
+	if (distance >= 25.0f)
+	{
+		project->projectEffect->Stop(project->handle);
+		project->Death = true; // ’e‚ð”jŠü
+
+	}
+
 	///“–‚½‚è”»’è
 	//DirectX::XMFLOAT3 p_p = project->position;
 	//float p_r = project->radius;
@@ -164,6 +181,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 
 	if (project->HP <= 0)
 	{
+		project->projectEffect->Stop(project->handle);
 		project->Death = true;
 	}
 }

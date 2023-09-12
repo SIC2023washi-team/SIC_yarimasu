@@ -61,6 +61,8 @@ public:
     }
 
 public:
+    bool EnemyHitSave[100];
+
     DirectX::XMFLOAT4X4 World;
 
     DirectX::XMFLOAT3 velocity{ 0, 0, 0 };  // ‘¬—Í
@@ -81,7 +83,9 @@ public:
     float radius = 1.0f;
     float height;
 
+    bool Ishit;
 
+    int hitNum;
 
     float damage = 1.0f;
 
@@ -107,6 +111,7 @@ public:
     std::vector<GameObject*> enemys_;
 
     bool Death = false;
+
 private:
     InputComponent* input;
     PhysicsComponent* physics;

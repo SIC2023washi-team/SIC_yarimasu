@@ -114,6 +114,7 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(2);
 	addUi(2);
+	addUi(7);
 
 	UiCount = {};
 
@@ -214,6 +215,7 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+	BGM->volume(0.5);
 	BGM->play();
 	interval<1000>::run([&] {
 		Timer++;
@@ -247,6 +249,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		if (it->NumDelivery[0] == 6)
 		{
 			it->NumDelivery[1] = jank;
+		}
+		if (it->NumDelivery[0] == 7)
+		{
+			it->NumDelivery[3] = WaveNumber-1;
 		}
 	}
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
@@ -847,11 +853,11 @@ void SceneGame::ProjectileVSEnemy()
 					outPosition)
 					)
 				{
-					if (ene->NumDelivery[9] == 0)
+					if (ene->NumDelivery[9] == 0&&!pro->EnemyHitSave[i])
 					{
 						ene->NumDelivery[9] = pro->damage;
-						ene->HP--;
-						pro->HP = -1;
+						pro->HP -= 1;
+						pro->EnemyHitSave[i] = true;
 					}
 				}
 			}
@@ -892,9 +898,45 @@ void SceneGame::addUi(int Uitype)
 			}
 			continue;
 		}
+		Ui->NumDelivery[2] = ShopItemsNum[SaveShopUi];
+		Ui->NumDelivery[1] = SaveShopUi;
+		switch (ShopItemsNum[SaveShopUi])
+		{
+		case 0:
+			//UŒ‚‘¬“x
+			if (Uitype == 2)Ui->NumDelivery[3] = attack_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] = attack_MAXlv;
+			break;
+		case 1:
+			//’e‘¬“x
+			if (Uitype == 2)Ui->NumDelivery[3] = speed_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] = speed_MAXlv;
+			break;
+		case 2:
+			//ŠÑ’Ê—Í
+			if (Uitype == 2)Ui->NumDelivery[3] = HP_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] =HP_MAXlv;
+			break;
+		case 3:
+			//UŒ‚—Í
+			if (Uitype == 2)Ui->NumDelivery[3] = damage_lv;
+			if (Uitype == 2)Ui->NumDelivery[4] = damage_MAXlv;
+			break;
+		case 4:
+			//ƒvƒŒƒCƒ„[
+			if (Uitype == 2)Ui->NumDelivery[3] = Player_MAXHP_Lv;
+
+			if (Uitype == 2)Ui->NumDelivery[4] = Player_MAXHP_MAXLv;
+
+
+			break;
+		}
 	}
-	if (Uitype == 2)Ui->NumDelivery[2] = ShopItemsNum[SaveShopUi];
-	if (Uitype == 2)Ui->NumDelivery[1] = SaveShopUi;
+
+	if (Uitype == 7)
+	{
+		Ui->NumDelivery[3] = WaveNumber;
+	}
 
 	Ui->Initialize();
 	
@@ -923,23 +965,27 @@ void SceneGame::UiGetUpdate()
 					//UŒ‚‘¬“x
 					attack += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					attack_lv++;
 					jank -= 100;
 					break;
 				case 1:
 					//’e‘¬“x
 					speed += 0.01f;
 					it->NumDelivery[6] = 0;
+					speed_lv++;
 					jank -= 100;
 					break;
 				case 2:
 					//ŠÑ’Ê—Í
 					HP += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
+					HP_lv++;
 					jank -= 100;
 					break;
 				case 3:
 					//UŒ‚—Í
 					damage += 5;
+					damage_lv++;
 					it->NumDelivery[6] = 0;
 					jank -= 100;
 					break;
@@ -947,6 +993,7 @@ void SceneGame::UiGetUpdate()
 					//ƒvƒŒƒCƒ„[
 					Player_HP += it->NumDelivery[6];
 					Player_MAXHP += it->NumDelivery[6];
+					Player_MAXHP_Lv++;
 					it->NumDelivery[6] = 0;
 					jank -= 100;
 

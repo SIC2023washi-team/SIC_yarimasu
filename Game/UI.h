@@ -36,10 +36,15 @@ public:
     int junkDigits = 1;
     float AddParameter;
     int saveJank[30];
+    int price;
+    int jank;
+    int jankdig_;
     DirectX::XMFLOAT2 Uiposition;
     DirectX::XMFLOAT2 Uiposition2;
+    DirectX::XMFLOAT2 Uiposition_[10];
     DirectX::XMFLOAT2 Uisize;
     DirectX::XMFLOAT2 Uisize2;
+    DirectX::XMFLOAT2 Uisize_[10];
     DirectX::XMFLOAT4 UiColor;
     DirectX::XMFLOAT4 HPUiColor[30];
 

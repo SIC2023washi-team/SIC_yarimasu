@@ -49,32 +49,30 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	default:
 		break;
 	case 0://小さいの
-		enemy->HP = 1.0f;
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.005f;// 速度
 		enemy->AnimSpeed = 3.0f;// アニメーションの速度
 		break;
 		enemy->EnemyMoney = 10;
 	case 1://中くらいの
-		enemy->HP = 1.0f;
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.003f;
 		enemy->AnimSpeed = 1.5f;
 		enemy->EnemyMoney = 25;
 		break;
 	case 2://大きいの
-		enemy->HP = 1.0f;
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.001f;
 		enemy->EnemyMoney = 50;
 		break;
 	case 3://小さいしくそ早
-		enemy->HP = 1.0f;
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.01f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
 		enemy->EnemyMoney = 25;
 		break;
 	}
-
-
 
 	switch (int(Pos(mt)))
 
@@ -127,20 +125,31 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	default:
 		break;
 	case 0://小さいの
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.001f;
 		enemy->AnimSpeed = 1.5f;
+		enemy->EnemyMoney = 25;
+		enemy->radius = 0.5f;
 		break;
 	case 1://中くらいの
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.0008f;
 		enemy->AnimSpeed = 1.0f;
+		enemy->EnemyMoney = 25;
+		enemy->radius = 0.5f;
 		break;
 	case 2://大きいの
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.0005f;
+		enemy->EnemyMoney = 25;
 		break;
 	case 3://小さいしくそ早
+		enemy->HP = 3.0f;
 		enemy->Speed = 0.003f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 25;
+		enemy->radius = 0.5f;
 		break;
 	}
 
@@ -161,28 +170,29 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+
 	//enemy->UpdataHorizontalVelocity(elapsedTime);
 	//enemy->UpdateHorizontalMove(elapsedTime);
 
 	if (enemy->StartTime <= SceneGame::Timer)
 	{
-		float px = (enemy->player_->position.x - enemy->position.x);
-		float pz = (enemy->player_->position.z - enemy->position.z);
-		//DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
-		//DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
-		//vec_x  = DirectX::XMVector3Normalize(vec_x);
-		//vec_z  = DirectX::XMVector3Normalize(vec_z);
-		//float floatX = DirectX::XMVectorGetX(vec_x);
-		//float floatZ = DirectX::XMVectorGetX(vec_z);
+		//float px = (enemy->player_->position.x - enemy->position.x);
+		//float pz = (enemy->player_->position.z - enemy->position.z);
+		////DirectX::XMVECTOR vec_x  = DirectX::XMLoadFloat(&px);
+		////DirectX::XMVECTOR vec_z  = DirectX::XMLoadFloat(&pz);
+		////vec_x  = DirectX::XMVector3Normalize(vec_x);
+		////vec_z  = DirectX::XMVector3Normalize(vec_z);
+		////float floatX = DirectX::XMVectorGetX(vec_x);
+		////float floatZ = DirectX::XMVectorGetX(vec_z);
 
 
-		float d = sqrt(px * px + pz * pz);
-		px /= d;
-		pz /= d;
+		//float d = sqrt(px * px + pz * pz);
+		//px /= d;
+		//pz /= d;
 
-		enemy->position.x += px * enemy->Speed;
-		//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
-		enemy->position.z += pz * enemy->Speed;
+		//enemy->position.x += px * enemy->Speed;
+		////enemy->position.z += cos(enemy->rotation.y) * 0.001f;
+		//enemy->position.z += pz * enemy->Speed;
 
 		///自機の回転
 		//B-Aのベクトル
@@ -199,6 +209,8 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 		if (enemy->HP <= 0)
 		{
+			//TODO エフェクト止める
+			enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			enemy->clip_index = 1;
 			enemy->AnimSpeed = 1.0f;
 			if (enemy->NumDelivery[3] == 0 && enemy->NumDelivery[4] == 0)
@@ -392,7 +404,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	}
 
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-
+	
 	//衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
 
