@@ -51,12 +51,17 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\UiBase.png");
 		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\junk.png");
 		UiBase[3] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
+		UiBase[5] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\Lv.png");
 		ui->Uisize = { 200.0f,200.0f };
 		ui->Uiposition.x = 300.0 + 250 * ui->NumDelivery[1];
 		ui->Uiposition.y = 130.0f;
-		ui->Uiposition_[1].x = 300.0 + 250 * ui->NumDelivery[1];
-		ui->Uiposition_[1].y = 200;
-		ui->Uisize_[1] = { 20,20 };
+		ui->Uiposition_[1].x = 407.0 + 250 * ui->NumDelivery[1];
+		ui->Uiposition_[1].y = 303;
+		ui->Uisize_[1] = { 16,22 };
+		ui->Uiposition_[2].x = 380.0 + 250 * ui->NumDelivery[1];
+		ui->Uiposition_[2].y = 302;
+		ui->Uisize_[2] = { 28,26 };
+	
 		switch (ui->NumDelivery[2])
 		{
 		case 0:
@@ -90,8 +95,13 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HPUp.png");
 			ui->price = 100 * ui->NumDelivery[3];
 			break;
+		case 5:
+			//‰ñ•œ
+			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\heal.png");
+			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\healicon.png");
+			ui->price = 100;
+			break;
 		}
-
 
 		break;
 	case 3:
@@ -122,6 +132,11 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize2 = { 20,45 };
 		ui->Uiposition = { 550,20 };
 		ui->Uisize = { 140,65 };
+		break;
+	case 8://ƒŠƒUƒ‹ƒg
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
+		
 		break;
 	}
 	ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
@@ -372,10 +387,11 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 			UiBase[3]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
 			}
 			
-			UiBase[1]->render(immediate_context, ui->Uiposition_[1].x, ui->Uiposition_[1].y, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->HPUiColor[0].x, ui->HPUiColor[0].y, ui->HPUiColor[0].z, ui->HPUiColor[0].w, (0));
+			
 			////level—p
 			
 			UiBase[3]->render(immediate_context, ui->Uiposition_[1].x, ui->Uiposition_[1].y, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->NumDelivery[3], 0, 134.6, 211);
+			UiBase[5]->render(immediate_context, ui->Uiposition_[2].x, ui->Uiposition_[2].y, ui->Uisize_[2].x, ui->Uisize_[2].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 	
 		}
 		break;
@@ -413,6 +429,13 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 			UiBase[1]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
 		}
 		break;
+	case8:
+		if (ui->NumDelivery[5] == 1)
+		{
+			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w - 0.1f, (0));
+		}
+		break;
+
 	}
 
 

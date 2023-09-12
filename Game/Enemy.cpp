@@ -269,13 +269,13 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 
 		}
 		//‰Œo‚Ä‚é“G‚ªŽ€‚Ê‚Æ‚«‚É‰ŒŽ~‚ß‚é—p
-		if (enemy->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] > 0)
+		if (enemy->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Call)] > 0)
 		{
 			if (enemy->EnemyType == 3)
 			{
 				enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			}
-			//enemy->Death = true;
+			enemy->Death = true;
 		}
 		if (enemy->EnemyType == 3)
 		{

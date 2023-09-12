@@ -41,6 +41,7 @@ public:
     int price;
     int jank;
     int jankdig_;
+    float uitimer;
     DirectX::XMFLOAT2 Uiposition;
     DirectX::XMFLOAT2 Uiposition2;
     DirectX::XMFLOAT2 Uiposition_[10];

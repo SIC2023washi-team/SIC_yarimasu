@@ -966,7 +966,7 @@ void SceneGame::addUi(int Uitype)
 		std::mt19937 mt{ std::random_device{}() };
 		for (int i = 0; i < 1;)
 		{
-			std::uniform_int_distribution<int> Type(0, 4);
+			std::uniform_int_distribution<int> Type(0, 5);
 			ShopItemsNum[SaveShopUi] = int(Type(mt));
 			judge = false;
 			for (int j = 0; j < SaveShopUi; j++)
@@ -1014,8 +1014,12 @@ void SceneGame::addUi(int Uitype)
 			if (Uitype == 2)Ui->NumDelivery[3] = Player_MAXHP_Lv;
 
 			if (Uitype == 2)Ui->NumDelivery[4] = Player_MAXHP_MAXLv;
+			break;
+		case 5:
+			//回復
+				if (Uitype == 2)Ui->NumDelivery[3] = 1;
 
-
+				if (Uitype == 2)Ui->NumDelivery[4] = Player_MAXHP_MAXLv;
 			break;
 		}
 	}
@@ -1079,11 +1083,21 @@ void SceneGame::UiGetUpdate()
 					break;
 				case 4:
 					//プレイヤー
-					Player_HP += it->NumDelivery[6];
-					Player_MAXHP += it->NumDelivery[6];
+					Player_HP += 1;
+					Player_MAXHP += 1;
 					Player_MAXHP_Lv++;
 					it->NumDelivery[6] = 0;
-					
+
+					break;
+				case 5:
+					//プレイヤー回復
+					if (Player_HP < Player_MAXHP)
+					{
+						Player_HP += 1;
+					}
+					it->NumDelivery[6] = 0;
+
+
 
 					break;
 				}
@@ -1091,12 +1105,12 @@ void SceneGame::UiGetUpdate()
 				int newshopitems;
 				for (int i = 0; i < 1;)
 				{
-					std::uniform_int_distribution<int> Type(0, 4);
+					std::uniform_int_distribution<int> Type(0, 5);
 					newshopitems = int(Type(mt));
 					judge = false;
 					for (int j = 0; j < SaveShopUi; j++)
 					{
-						if (newshopitems == ShopItemsNum[j])
+						if (newshopitems == ShopItemsNum[j]|| JudgeState(newshopitems))
 						{
 							judge = true;
 							break;
@@ -1113,6 +1127,43 @@ void SceneGame::UiGetUpdate()
 				it->NumDelivery[2] = newshopitems;
 				shop_int = 0;
 				isPaused = false;
+				switch (newshopitems)
+				{
+				case 0:
+					//攻撃速度
+					it->NumDelivery[3] = attack_lv;
+					it->NumDelivery[4] = attack_MAXlv;
+					break;
+				case 1:
+					//弾速度
+					it->NumDelivery[3] = speed_lv;
+					it->NumDelivery[4] = speed_MAXlv;
+					break;
+				case 2:
+					//貫通力
+					it->NumDelivery[3] = HP_lv;
+					it->NumDelivery[4] = HP_MAXlv;
+					break;
+				case 3:
+					//攻撃力
+					it->NumDelivery[3] = damage_lv;
+					it->NumDelivery[4] = damage_MAXlv;
+					break;
+				case 4:
+					//プレイヤー
+					it->NumDelivery[3] = Player_MAXHP_Lv;
+					it->NumDelivery[4] = Player_MAXHP_MAXLv;
+					break;
+				case 5:
+					//回復
+					it->NumDelivery[3] = 1;
+					it->NumDelivery[4] = Player_MAXHP_MAXLv;
+					break;
+				}
+				
+				
+				
+				
 				it->Initialize();
 				for (auto& it : UiList)
 				{
@@ -1219,7 +1270,7 @@ void SceneGame::EnemyGetUpdate()
 
 			it->Death = true;
 			it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)] = 0;
-			//it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Call)]++;
+			it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Call)]++;
 		}
 	}
 }
@@ -1227,7 +1278,7 @@ void SceneGame::EnemyGetUpdate()
 bool SceneGame::JudgeState(int i)
 {
 
-	switch (ShopItemsNum[SaveShopUi])
+	switch (i)
 	{
 	case 0:
 		//攻撃速度
@@ -1267,5 +1318,5 @@ bool SceneGame::JudgeState(int i)
 
 		break;
 	}
-
+	return false;
 }

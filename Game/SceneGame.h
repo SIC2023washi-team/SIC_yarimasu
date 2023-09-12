@@ -64,7 +64,7 @@ public:
     void UiGetUpdate();
     void EnemyGetUpdate();
 
-    bool SceneGame::JudgeState(int i);
+    bool JudgeState(int i);
 
     // ’e‚Ì’Ç‰Á
     void addProjectile();
