@@ -1,5 +1,6 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneLoading.h"
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
 
@@ -67,7 +68,6 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
 	}
 
 	if (mouse.GetButton() == mouse.BTN_LEFT)
@@ -75,8 +75,11 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 		DirectX::XMFLOAT3 screenPosition;
 		screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
 		screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
-		//if (screenPosition.x < ui->Uiposition.x + ui->Uisize.x
-		//	&& ui->Uiposition.x < static_cast<float>(mouse.GetOldPositionX()))
+		if (screenPosition.x < start.pos.x + start.size.x
+			&& start.pos.x < static_cast<float>(mouse.GetOldPositionX()))
+		{
+			Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
+		}
 		//if(screenPosition.x)
 	}
 
@@ -322,7 +325,8 @@ void SceneTitle::Render(float elapsedTime)
 			}
 			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			sprTitle->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			//sprStart->render(immediate_context, , startSize.x, startSize.y);
+			sprStart->render(immediate_context, start.pos.x,start.pos.y, start.size.x, start.size.y);
+			sprEnd->render(immediate_context, end.pos.x, end.pos.y, end.size.x, end.size.y);
 			//sprEnd->render(immediate_context, , endSize.x, endSize.y);
 		}
 	}

@@ -112,6 +112,7 @@ public:
 
     bool Death = false;
 
+    bool HitReaction = false;
 private:
     InputComponent* input;
     PhysicsComponent* physics;
