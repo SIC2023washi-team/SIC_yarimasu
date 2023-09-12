@@ -83,7 +83,7 @@ void PlayerGraphicsComponent::Initialize(GameObject* gameobj)
 	PlayerModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botcanon_player_v001.fbx");
 	//BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botcanon_player_v001.fbx");
 
-	player->radius = 1.0f;
+	player->radius = 0.8f;
 }
 
 void PlayerGraphicsComponent::Update(GameObject* gameobj)
