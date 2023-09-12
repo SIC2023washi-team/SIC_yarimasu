@@ -336,6 +336,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			else
 			{
 				it->NumDelivery[3] = 0;
+				it->NumDelivery[4] = WaveNumber-1;
+				it->NumDelivery[6] = jank;
 				
 			}
 			break;

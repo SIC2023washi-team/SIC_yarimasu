@@ -127,7 +127,8 @@ public:
     int SaveShopUi = {};
     int shop_int;
     int UiCount = {};
-    int jank = 1000;
+    int jank = 0;
+
     bool isPaused = false;
 
     bool hit=false;

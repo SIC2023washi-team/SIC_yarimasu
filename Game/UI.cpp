@@ -45,6 +45,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 	{
 	case 1:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\shadow.png");
+		ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
 		break;
 	case 2:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\UiBase.png");
@@ -101,19 +102,23 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 			ui->price = 100;
 			break;
 		}
+		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 
 		break;
 	case 3:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
+		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
 	case 4:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HP_bit.png");
+		ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
 		break;
 	case 5:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\return.png");
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SHOP.png");
 		ui->Uisize = { 130.0f, 60.0f };
 		ui->Uisize2 = { 400.0f, 30.0f };
+		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
 	case 6:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\junk.png");
@@ -123,6 +128,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize2 = { 20,40 };
 		ui->Uiposition = { 45,80 };
 		ui->Uisize = { 80,40 };
+		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
 	case 7:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\WAVE.png");
@@ -131,15 +137,22 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize2 = { 20,45 };
 		ui->Uiposition = { 560,10 };
 		ui->Uisize = { 140,65 };
+		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
 	case 8://リザルト
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\result.png");
 		
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
 		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\backtitle.png");
-		ui->Uiposition_[0] = { 30,680 };
+		ui->uitimer = 0;
+		ui->Uiposition_[0] = { 30,640 };
 		ui->Uisize_[0] = { 150,65 };
-		
+		ui->Uiposition_[1] = { 230,40 };
+		ui->Uisize_[1] = { 20,37 };
+		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
+		ui->HPUiColor[0] = {1.0f,1.0f,1.0f,1.0f};
+		ui->HPUiColor[1] = {2.0f,2.0f,2.0f,1.0f};
+		ui->UiColor.w = 0;
 		break;
 	case 9:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
@@ -158,10 +171,11 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize_[1] = { 30,40 };
 		ui->Uiposition_[2] = { 15,185 };
 		ui->Uisize_[2] = { 45,45 };
+		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
 
 	}
-	ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
+	//ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
 }
 
 void UiGraphicsComponent::Update(GameObject* gameobj)
@@ -384,9 +398,12 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			ui->saveJank[0] = 0;
 			ui->junkDigits = 1;
 		};
+		break;
 	case 8:
 		if (ui->NumDelivery[3])
 		{
+			
+			//判定のやーつ
 			if (static_cast<float>(mouse.GetOldPositionX()) < ui->Uiposition_[0].x + ui->Uisize_[0].x
 				&& ui->Uiposition_[0].x < static_cast<float>(mouse.GetOldPositionX()))
 				//static_cast<float>(mouse.GetOldPositionY());
@@ -394,7 +411,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 				if (static_cast<float>(mouse.GetOldPositionY()) < ui->Uiposition_[0].y + ui->Uisize_[0].y
 					&& ui->Uiposition_[0].y < static_cast<float>(mouse.GetOldPositionY()))
 				{
-					ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
+					ui->HPUiColor[0] = { 0.6f,0.6f,0.6f,1.0f };
 					if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 					{
 						ui->NumDelivery[9] = 1;
@@ -403,9 +420,52 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 				}
 				else
 				{
-					ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
+					ui->HPUiColor[0] = {1.0f,1.0f,1.0f,1.0f};
 				}
 			}
+			//表示
+			ui->uitimer++;
+			if(0 == int(ui->uitimer)%10 && ui->UiColor.w < 0.8f)
+			{
+				ui->UiColor.w += 0.05f;
+			}
+
+			//wave
+				ui->jank = ui->NumDelivery[4];
+				ui->junkDigits = 0;
+				while (ui->jank != 0)
+				{
+					ui->jank /= 10;
+					// 割った回数をカウント
+					++ui->junkDigits;
+				}
+				ui->jankdig_ = ui->junkDigits;
+				ui->laveldig_[0] = ui->junkDigits;
+				ui->jank = ui->NumDelivery[4];
+				if (ui->jank > 0)
+				{
+					for (int i = 0; i < ui->junkDigits; i++)
+					{
+
+						ui->savelavel_min[0][i] = ui->jank / pow(10, ui->jankdig_ - 1);
+
+						int n = pow(10, ui->jankdig_ - 1);
+						if (ui->jank > 10)
+						{
+							ui->jank -= ui->savelavel_min[0][i] * pow(10, ui->jankdig_ - 1);
+						}
+						ui->jankdig_--;
+					}
+				}
+				else
+				{
+					ui->savelavel_min[0][0] = 0;
+					ui->laveldig_[0] = 1;
+				}
+
+		
+
+
 		}
 		break;
 	case 9:
@@ -432,7 +492,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 					int n = pow(10, ui->jankdig_ - 1);
 					if (ui->jank > 10)
 					{
-						ui->jank -= ui->saveJank[i] * pow(10, ui->jankdig_ - 1);
+						ui->jank -= ui->savelavel_min[j][i] * pow(10, ui->jankdig_ - 1);
 					}
 					ui->jankdig_--;
 				}
@@ -518,7 +578,13 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		if (ui->NumDelivery[3] == 1)
 		{
 			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
-			UiBase[1]->render(immediate_context, ui->Uiposition_[0].x, ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+			UiBase[2]->render(immediate_context, ui->Uiposition_[0].x, ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->HPUiColor[0].x, ui->HPUiColor[0].y, ui->HPUiColor[0].z, ui->UiColor.w, (0));
+		}
+		for (int j = 0; j < ui->laveldig_[0]; j++)
+		{
+			j = j;
+			//値段用
+			UiBase[1]->render(immediate_context, ui->Uiposition_[1].x + j * (ui->Uisize_[1].x), ui->Uiposition_[1].y, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->HPUiColor[1].x, ui->HPUiColor[1].y, ui->HPUiColor[1].z, ui->UiColor.w, (0), 134.6 * ui->savelavel_min[0][j], 0, 134.6, 211);
 		}
 		break;
 	case 9:
