@@ -121,6 +121,8 @@ public:
     int UiCount = {};
     int jank = 1000;
     bool isPaused = false;
+
+    //ステータス
     float speed = 0.005f;
     float damage = 5.0f;
     float attack = 1.0f;
@@ -132,6 +134,19 @@ public:
     bool SetPhase = false;
     int WaveNumber=1;
     //std::vector<GameObject> waves;
+    // 
+    //ステータスレベル
+    int speed_lv;
+    int damage_lv;
+    int attack_lv;
+    int HP_lv;
+    int Player_MAXHP_Lv;
+    int speed_MAXlv;
+    int damage_MAXlv;
+    int attack_MAXlv;
+    int HP_MAXlv;
+    int Player_MAXHP_MAXLv;
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
