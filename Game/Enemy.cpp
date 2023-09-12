@@ -109,7 +109,7 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	enemy->scale.x = 16.0f;
 	enemy->scale.y = 16.0f;
 	enemy->scale.z = 16.0f;
-	enemy->position.y = 0.0f;
+	enemy->position.y = -0.18f;
 	enemy->radius = 1.0f;
 	enemy->height = 1.0f;
 	enemy->StartTime = startTime;

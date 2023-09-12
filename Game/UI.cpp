@@ -152,8 +152,8 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		Uiitem[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HPUp.png");
 		//Uiitem[5] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\healicon.png");
 		
-		ui->Uiposition_[0] = { 180,190 };
-		ui->Uisize_[0] = { 20,40 };
+		ui->Uiposition_[0] = { 100,195 };
+		ui->Uisize_[0] = { 15,30 };
 		ui->Uiposition_[1] = { 60,190 };
 		ui->Uisize_[1] = { 30,40 };
 		ui->Uiposition_[2] = { 15,185 };
@@ -518,6 +518,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		if (ui->NumDelivery[3] == 1)
 		{
 			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+			UiBase[1]->render(immediate_context, ui->Uiposition_[0].x, ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		}
 		break;
 	case 9:
@@ -525,10 +526,12 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				for (int j = 0; j < ui->junkDigits; i++)
+				int num = i;
+				for (int j = 0; j < ui->laveldig_[i]; j++)
 				{
+					j = j;
 					//’l’i—p
-					UiBase[0]->render(immediate_context, ui->Uiposition_[0].x + i * (ui->Uisize_[0].x + 5), ui->Uiposition_[0].y+50*i, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->savelavel_min[i][j], 0, 134.6, 211);
+					UiBase[0]->render(immediate_context, ui->Uiposition_[0].x + j * (ui->Uisize_[0].x), ui->Uiposition_[0].y+50*i, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->savelavel_min[i][j], 0, 134.6, 211);
 				}
 				UiBase[1]->render(immediate_context, ui->Uiposition_[1].x, ui->Uiposition_[1].y + 50 * i, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 				Uiitem[i]->render(immediate_context, ui->Uiposition_[2].x, ui->Uiposition_[2].y + 50 * i, ui->Uisize_[2].x, ui->Uisize_[2].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));

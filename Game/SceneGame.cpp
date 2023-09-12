@@ -339,6 +339,17 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 				
 			}
 			break;
+		case 9:
+			it->itemLevelsave[0] = attack_lv;
+
+			it->itemLevelsave[1] = speed_lv;
+
+			it->itemLevelsave[2] = HP_lv;
+
+			it->itemLevelsave[3] = damage_lv;
+
+			it->itemLevelsave[4] = Player_MAXHP_Lv;
+			break;
 		}
 	}
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
@@ -580,7 +591,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			OutputDebugStringA("Unintersected...\n");
 		}
 
-		if (attack*15+attacktimer >= 150)
+		if (attack*15+attacktimer >= 165)
 
 		{
 			shot->stop();
