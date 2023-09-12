@@ -923,7 +923,7 @@ void SceneGame::addUi(int Uitype)
 
 void SceneGame::UiGetUpdate()
 {
-
+	bool judge = false;
 	for (auto& it : UiList)
 	{
 		//Uitype2ÅBî\óÕëùâ¡ÇÃUIÇÃíTçı
@@ -966,9 +966,33 @@ void SceneGame::UiGetUpdate()
 
 					break;
 				}
+				std::mt19937 mt{ std::random_device{}() };
+				int newshopitems;
+				for (int i = 0; i < 1;)
+				{
+					std::uniform_int_distribution<int> Type(0, 4);
+					newshopitems = int(Type(mt));
+					judge = false;
+					for (int j = 0; j < SaveShopUi; j++)
+					{
+						if (newshopitems == ShopItemsNum[j])
+						{
+							judge = true;
+							break;
+						}
+
+					}
+					if (!judge)
+					{
+						break;
+					}
+					continue;
+				}
+				ShopItemsNum[it->NumDelivery[1]] = newshopitems;
+				it->NumDelivery[2] = newshopitems;
 				shop_int = 0;
 				isPaused = false;
-
+				it->Initialize();
 				for (auto& it : UiList)
 				{
 					if (it->NumDelivery[0] == 5)
@@ -1033,3 +1057,4 @@ void SceneGame::EnemyGetUpdate()
 //	);
 //
 //}
+
