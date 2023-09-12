@@ -13,8 +13,6 @@ DirectX::XMFLOAT3 GiftAngle = { 0,0,0 };
 DirectX::XMFLOAT4 GiftPosition = { 0,0,0,0 };
 int SceneGame::Timer = 0;
 
-
-
 using namespace DirectX;
 DirectX::XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
 {
@@ -115,6 +113,23 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(2);
 	addUi(7);
+
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
+	addEnemy(0, 0);
 
 	UiCount = {};
 
@@ -399,7 +414,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 					outPosition)
 					)
 				{
-					enemyB->position = outPosition;
+					enemyB->position.x+=1;
 				}
 			}
 		}
@@ -854,7 +869,7 @@ void SceneGame::addEnemy(int enemyType, int startTime)
 	e->EnemyInitialize(enemyType, startTime);
 	e->pixelShader = chara_ps.Get();
 	enemyList.push_back(e);
-	}
+}
 void SceneGame::addProjectile()
 {
 	GameObject* p;
@@ -1169,6 +1184,8 @@ void SceneGame::EnemyGetUpdate()
 		if (it->NumDelivery[3] >= 1)
 		{
 			jank += it->NumDelivery[2];
+
+			it->Death = true;
 			it->NumDelivery[3] = 0;
 			it->NumDelivery[4]++;
 		}

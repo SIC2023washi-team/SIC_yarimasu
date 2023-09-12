@@ -41,7 +41,14 @@ void SceneTitle::Initialize()
 	skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
+	sprTitle = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\titile.png");
+	sprStart = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\start.png");
+	sprEnd = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\end.png");
 
+	start.size = { 185,76 };
+	end.size = { 102, 68 };
+	start.pos = { SCREEN_WIDTH / 2 - start.size.x / 2, SCREEN_HEIGHT / 2 + start.size.y / 2 };
+	end.pos = { (SCREEN_WIDTH / 2 - end.size.x / 2), (SCREEN_HEIGHT / 2 + end.size.y / 2) + 100 };
 }
 
 void SceneTitle::Finalize()
@@ -51,6 +58,7 @@ void SceneTitle::Finalize()
 void SceneTitle::Update(HWND hwnd,float elapsedTime)
 {
 	Camera& camera = Camera::Instance();
+	Mouse& mouse = Input::Instance().GetMouse();
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
@@ -60,6 +68,16 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
 		Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
+	}
+
+	if (mouse.GetButton() == mouse.BTN_LEFT)
+	{
+		DirectX::XMFLOAT3 screenPosition;
+		screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
+		screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
+		//if (screenPosition.x < ui->Uiposition.x + ui->Uisize.x
+		//	&& ui->Uiposition.x < static_cast<float>(mouse.GetOldPositionX()))
+		//if(screenPosition.x)
 	}
 
 	ImGui::Begin("ImGUI");
@@ -278,10 +296,11 @@ void SceneTitle::Render(float elapsedTime)
 	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
 
 	// ここにRender
+#endif
 
 	// sprite描画
 	{
-		if (dummy_sprite)
+		if (sprTitle)
 		{
 			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
@@ -302,9 +321,11 @@ void SceneTitle::Render(float elapsedTime)
 				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 			}
 			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			sprTitle->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			//sprStart->render(immediate_context, , startSize.x, startSize.y);
+			//sprEnd->render(immediate_context, , endSize.x, endSize.y);
 		}
 	}
-#endif
 
 	// 3Dエフェクト描画
 	{

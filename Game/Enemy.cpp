@@ -103,20 +103,20 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
 
 	enemy->HP = EnemyHitPoint;
-	enemy->scale.x = 16.f;
-	enemy->scale.y = 16.f;
-	enemy->scale.z = 16.f;
+	enemy->scale.x = 16.0f;
+	enemy->scale.y = 16.0f;
+	enemy->scale.z = 16.0f;
 	enemy->position.y = 0.0f;
 	enemy->radius = 1.0f;
 	enemy->height = 1.0f;
 	enemy->StartTime = startTime;
 
-	
 
 	std::mt19937 mt{ std::random_device{}() };
 	std::uniform_int_distribution<int> Pos(0, 1);
 	std::uniform_int_distribution<int> ePos_1(80, 160);
 	std::uniform_int_distribution<int> ePos_2(80, 160);
+	std::uniform_int_distribution<int> Ran(0, 1);
 
 	enemy->EnemyType = enemyType;
 
@@ -154,14 +154,13 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	}
 
 	switch (int(Pos(mt)))
-
 	{
 	case 0://ã‰º‚©‚ç‚­‚é
-		enemy->position.x = int(ePos_1(mt)) * 0.1f;
-		enemy->position.z = 8 * (-1 + (rand() % 2) * 2);
+		enemy->position.x = int(ePos_1(mt))*0.1f;
+		enemy->position.z = 8 * (-1 + (int(Ran(mt))) * 2);
 		break;
 	case 1://¶‰E‚©‚ç‚­‚é
-		enemy->position.x = 8 * (-1 + (rand() % 2) * 2);
+		enemy->position.x = 8 * (-1 + (int(Ran(mt))) * 2);
 		enemy->position.z = int(ePos_2(mt)) * 0.1f;
 		break;
 	}
@@ -219,7 +218,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 				enemy->NumDelivery[3]++;
 			}
 			// ‚±‚ê‚ÅÄ¶‚Å‚«‚é
-
 		}
 		else
 		{
@@ -275,8 +273,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			{
 				enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			}
-			
-			enemy->Death = true;
+			//enemy->Death = true;
 		}
 		if (enemy->EnemyType == 3)
 		{

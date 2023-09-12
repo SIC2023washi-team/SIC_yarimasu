@@ -13,6 +13,7 @@
 #include <wrl.h>
 #include "../Lemur/Audio/audio.h"
 
+#include <random>
 
 class Enemy :public GameObject
 {
@@ -34,6 +35,8 @@ public:
     Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
     IXAudio2MasteringVoice* master_voice = nullptr;
     std::unique_ptr<Lemur::Audio::audio> explosion;
+
+    //std::mt19937 mt{ std::random_device{}() };
 };
 
 class EnemyInputComponent :public InputComponent
