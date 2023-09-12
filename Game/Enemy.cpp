@@ -210,6 +210,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		if (enemy->HP <= 0)
 		{
 			//TODO エフェクト止める
+			
 			enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			enemy->clip_index = 1;
 			enemy->AnimSpeed = 1.0f;
@@ -219,7 +220,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 				enemy->NumDelivery[3]++;
 			}
 			// これで再生できる
-
+			
 		}
 		else
 		{
@@ -406,7 +407,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
 	
 	//衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
 
 
 }
