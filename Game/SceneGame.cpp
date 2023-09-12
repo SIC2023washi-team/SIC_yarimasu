@@ -1,10 +1,7 @@
 #include "SceneGame.h"
-<<<<<<< HEAD
 #include "SceneTitle.h"
-=======
-#include "SceneClear.h"
-#include "SceneOver.h"
->>>>>>> origin/washinao4
+
+
 #include <random>
 #include "Lemur/Input/Mouse.h"
 #include"./Lemur/Graphics/Camera.h"
@@ -587,7 +584,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 
-<<<<<<< HEAD
+
 	//ImGui::Begin("ImGUI");
 	//ImGui::DragFloat("light_direction.x", &light_direction.x);
 	//ImGui::DragFloat("light_direction.y", &light_direction.y);
@@ -597,30 +594,16 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//ImGui::DragFloat("light_view_size", &light_view_size);
 	//ImGui::DragFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
 	//ImGui::DragFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
-=======
-	
 
-	ImGui::Begin("ImGUI");
-	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
-	ImGui::SliderInt("Timer", &Timer, -10.0f, +10.0f);
-	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
-	ImGui::SliderFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
->>>>>>> origin/washinao4
 
 	//// BLOOM
 	//ImGui::DragFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold);
 	//ImGui::DragFloat("bloom_intensity", &bloomer->bloom_intensity);
 
-<<<<<<< HEAD
+
 	//ImGui::End();
 
-=======
-	ImGui::End();
->>>>>>> origin/washinao4
+
 }
 
 void SceneGame::Render(float elapsedTime)
@@ -1289,16 +1272,7 @@ void SceneGame::Wave()
 		{
 		case 1:
 			addEnemy(0, 2);
-<<<<<<< HEAD
 
-=======
-			addEnemy(2, 3);
-			addEnemy(3, 4);
-			addEnemy(2, 4);
-			addEnemy(3, 4);
-			
-			
->>>>>>> origin/washinao4
 			WaveNumber++;
 			SetPhase = false;
 			break;
@@ -1414,11 +1388,11 @@ void SceneGame::EnemyGetUpdate()
 	{
 		if (it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] >= 1)
 		{
-<<<<<<< HEAD
+
 			Player_HP -= it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)];
 			it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Flag)] = 0;
 			it->NumDelivery[int(SceneGame::enemyNum::EnemyPlayerDeath_Call)] = 1;
-=======
+
 			Player_HP -= it->NumDelivery[0];
 			if (Player_HP >= 1)
 			{
@@ -1433,7 +1407,7 @@ void SceneGame::EnemyGetUpdate()
 			}
 			it->NumDelivery[0] = 0;
 			it->NumDelivery[1] = 1;
->>>>>>> origin/washinao4
+
 		}
 		if (it->NumDelivery[int(SceneGame::enemyNum::EnemyDeath_Flag)] >= 1)
 		{

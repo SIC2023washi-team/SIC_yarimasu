@@ -185,15 +185,14 @@ public:
 
 
     std::unique_ptr<Lemur::Audio::audio> damageSE;
-<<<<<<< HEAD
-=======
+
     std::unique_ptr<Lemur::Audio::audio> BGM;
     std::unique_ptr<Lemur::Audio::audio> BGM2;
     std::unique_ptr<Lemur::Audio::audio> BGM3;
 
     //Effect
     Effect* explosionEffect;
->>>>>>> origin/washinao4
+
 
 private:
     // skkind_mesh
