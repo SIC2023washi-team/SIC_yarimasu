@@ -214,7 +214,7 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
-	//BGM->play();
+	BGM->play();
 	interval<1000>::run([&] {
 		Timer++;
 		});
