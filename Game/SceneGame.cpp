@@ -549,7 +549,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			OutputDebugStringA("Unintersected...\n");
 		}
 
-		if (attack*10+attacktimer >= 150)
+		if (attack*15+attacktimer >= 150)
 
 		{
 			shot->stop();
@@ -1071,10 +1071,7 @@ void SceneGame::addUi(int Uitype)
 void SceneGame::UiGetUpdate()
 {
 	bool judge = false;
-	for (int i = 0; i < 10; i++)
-	{
-		ShopItemsNum[i] = { 0 };
-	}
+
 	for (auto& it : UiList)
 	{
 		//Uitype2B”\—Í‘‰Á‚ÌUI‚Ì’Tõ

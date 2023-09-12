@@ -237,12 +237,14 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			//vec_z = DirectX::XMVector3Normalize(vec_z);
 			//float floatX = DirectX::XMVectorGetX(vec_x);
 			//float floatZ = DirectX::XMVectorGetX(vec_z);
-			float floatX = atan(px * px + pz * pz);
-			float floatz = atan(px * px + pz * pz);
 
-			enemy->position.x += floatX * enemy->Speed;
+			float d = sqrt(px * px + pz * pz);
+			px /= d;
+			pz /= d;
+
+			enemy->position.x += px * enemy->Speed;
 			//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
-			//enemy->position.z += floatZ * enemy->Speed;
+			enemy->position.z += pz * enemy->Speed;
 
 			float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
 			if (cross < 0)
