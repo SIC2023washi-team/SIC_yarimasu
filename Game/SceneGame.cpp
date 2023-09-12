@@ -1356,24 +1356,155 @@ void SceneGame::Wave()
 			SetPhase = false;
 			break;
 		case 10:
+			addEnemy(1, 2);
+			addEnemy(1, 3);
+			addEnemy(1, 4);
+			addEnemy(1, 5);
+			addEnemy(1, 6);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 11:
 			addEnemy(0, 2);
 			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(1, 5);
+			addEnemy(1, 6);
+			addEnemy(2, 9);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 12:
+			addEnemy(0, 2);
+			addEnemy(0, 2);
+			addEnemy(0, 3);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(0, 4);
+			addEnemy(0, 5);
+			addEnemy(0, 5);
+			addEnemy(0, 6);
+			addEnemy(0, 6);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 13:
+			addEnemy(1, 2);
+			addEnemy(0, 2);
+			addEnemy(1, 3);
+			addEnemy(1, 4);
+			addEnemy(0, 4);
+			addEnemy(1, 5);
+			addEnemy(1, 6);
+			addEnemy(0, 6);
+
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 14:
+			addEnemy(1, 2);
+			addEnemy(0, 2);
+			addEnemy(1, 3);
+			addEnemy(1, 4);
+			addEnemy(0, 4);
+			addEnemy(1, 5);
+			addEnemy(1, 6);
+			addEnemy(0, 6);
+
+
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 15:
+			addEnemy(2, 2);
 			addEnemy(0, 4);
 			addEnemy(0, 5);
 			addEnemy(0, 6);
 			addEnemy(0, 7);
 			addEnemy(0, 8);
-			addEnemy(0, 9);
-			addEnemy(0, 10);
+			addEnemy(1, 10);
+			addEnemy(1, 10);
 			WaveNumber++;
 			SetPhase = false;
 			break;
-		case 11:
+		case 16:
+			addEnemy(0, 2);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(1, 5);
+			addEnemy(1, 5);
+			addEnemy(3, 6);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 17:
 
 			WaveNumber++;
 			SetPhase = false;
 			break;
-		case 12:
+		case 18:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 19:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 20:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 21:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 22:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 23:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 24:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 25:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 26:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 27:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 28:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 29:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 30:
 
 			WaveNumber++;
 			SetPhase = false;
