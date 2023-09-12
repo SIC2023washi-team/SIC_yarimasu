@@ -7,13 +7,16 @@
 #include"./Lemur/Effekseer/EffekseerManager.h"
 #include "GamePro_ProjectileStraight.h"
 
+#include "interval.h"
+
 DirectX::XMFLOAT3 GiftAngle = { 0,0,0 };
 DirectX::XMFLOAT4 GiftPosition = { 0,0,0,0 };
+int SceneGame::Timer = 0;
 
 
 
 using namespace DirectX;
-XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
+DirectX::XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, float z/*ndc*/, D3D11_VIEWPORT vp, const DirectX::XMFLOAT4X4& view_projection)
 {
 	using namespace DirectX;
 	XMFLOAT4 p;
@@ -73,6 +76,9 @@ void SceneGame::Initialize()
 	Player_HP = 3.0f;
 	Player_MAXHP = 3.0f;
 
+
+	SetPhase = true;
+
 	speed_lv = 1;
 	damage_lv = 1;
 	attack_lv = 1;
@@ -84,6 +90,7 @@ void SceneGame::Initialize()
 	HP_MAXlv = 10;
 	Player_MAXHP_MAXLv = 10;
 
+
 	// Stage
 	stage = CreateStage();
 	stage->Initialize();
@@ -91,12 +98,7 @@ void SceneGame::Initialize()
 	player = CreatePlayer();
 	player->Initialize();
 
-	for (int i = 0; i < 5; i++)
-	{
-		addEnemy();
-	}
 
-	
 	//pauseバック
 	addUi(3);
 	//HP
@@ -112,21 +114,6 @@ void SceneGame::Initialize()
 	addUi(2);
 	addUi(2);
 	addUi(2);
-
-
-
-	
-	//for (auto& it : enemyList)
-	//{
-	//	it->Initialize();
-	//}
-
-
-	//enemy = CreateEnemy();
-	//enemy->Initialize();
-
-	//ui = CreateUi();
-	//ui->Initialize();
 
 	UiCount = {};
 
@@ -148,14 +135,10 @@ void SceneGame::Initialize()
 	{
 		it->pixelShader = zelda_ps.Get();
 	}
+
 	// SHADOW
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
-
-
-	// ヒットエフェクトにエフェクトのパスを入れる
-	hitEffect = new Effect("resources/Effect/Hit.efk");
-
 
 #if 0
 	// BLOOM
@@ -218,9 +201,15 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(HWND hwnd, float elapsedTime)
 {
+	interval<1000>::run([&] {
+		Timer++;
+		});
+
 	UiGetUpdate();
 	EnemyGetUpdate();
 
+
+	Wave();
 	Mouse& mouse = Input::Instance().GetMouse();
 
 	for (auto& it : UiList)
@@ -246,7 +235,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			it->NumDelivery[1] = jank;
 		}
 	}
-
+	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
+	{
+		// HACK これで現在の敵を全て削除
+		enemyList.clear();
+	}
 	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 	//{
 	//	if (!isPaused)
@@ -258,14 +251,17 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//	//{
 	//	//	shop_int = 0;
 	//	//	isPaused = false;
-
-
 	//	//}
 	//}
-
-
-
+	//if (isPaused && mouse.GetButtonDown() == mouse.BTN_RIGHT)isPaused = false;
 	if (isPaused)return;
+
+	// 敵が死んだときにタイマー初期化、敵をセットするフラグをON
+	if (enemyList.size() == 0)
+	{
+		Timer = 0;
+		SetPhase = true;
+	}
 
 	for (auto& it : enemyList)
 	{
@@ -307,7 +303,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		for (auto& it : enemyList)
 		{
 			it->Update(elapsedTime);
-
 		}
 	}
 	if (projectileList.size() != 0)
@@ -319,7 +314,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	}
 
 	// 空ノードの削除
-
 	auto it = enemyList.begin();
 	while (it != enemyList.end())
 	{
@@ -346,7 +340,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			Proj++;
 		}
 	}
-
 	auto Uiit = UiList.begin();
 	while (Uiit != UiList.end())
 	{
@@ -360,31 +353,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			Uiit++;
 		}
 	}
-	//auto it = enemyList.begin();
-	//while (it != enemyList.end())
-	//{
-	//	if(it->Death)
-	//	{
-	//		it = enemyList.erase(it);
-	//	}
-	//	else
-	//	{
-	//		it++;
-	//	}
-	//}
-	//for (int i = 0; i < enemyList.size(); i++)
-	//{
-	//	if (enemyList[i]->Death)
-	//	{
-	//		enemyList.erase(i);
-	//	}
-	//}
-
 
 	ProjectileVSEnemy();
 
-
 	// エネミー同士の当たり判定
+	if(enemyList.size()>=2)
 	{
 		// 全ての敵と総当たりで衝突判定
 		int enemyCount = enemyList.size();
@@ -407,29 +380,17 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 					)
 				{
 					enemyB->position = outPosition;
-
-					//const float power = 10.0f;
-					//DirectX::XMFLOAT3 impulse;
-					//DirectX::XMFLOAT3 e = enemyList.at(j)->position;
-					//DirectX::XMFLOAT3 p = enemyList.at(i)->position;
-					//float vx = e.x - p.x;
-					//float vz = e.z - p.z;
-					//float lengthXZ = sqrtf(vx * vx + vz * vz);
-					////正規化
-					//vx /= lengthXZ;
-					//vz /= lengthXZ;
-					//impulse.x = vx * power;
-					//impulse.y = power * 0.5f;
-					//impulse.z = vz * power;
-					//enemyList.at(j)->AddImpulse(impulse);
-
 				}
 			}
 		}
 	}
 	/////////////////////////////////////////////
 
-	if (mouse.GetButtonDown() == mouse.BTN_LEFT)
+
+	/////攻撃速度
+	attack++;
+
+	if (mouse.GetButton() == mouse.BTN_LEFT)
 	{
 		
 #if 0	
@@ -469,15 +430,15 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	
 
-		XMVECTOR L0 = Camera::Instance().GetEye();
-		XMFLOAT4 l0;
-		XMStoreFloat4(&l0, L0);
-		XMFLOAT4 l;
-		XMStoreFloat4(&l, XMVector3Normalize(WorldPosition0 - L0));
+		DirectX::XMVECTOR L0 = Camera::Instance().GetEye();
+		DirectX::XMFLOAT4 l0;
+		DirectX::XMStoreFloat4(&l0, L0);
+		DirectX::XMFLOAT4 l;
+		DirectX::XMStoreFloat4(&l, DirectX::XMVector3Normalize(WorldPosition0 - L0));
 
 		std::string intersected_mesh;
 		std::string intersected_material;
-		XMFLOAT3 intersected_normal;
+		DirectX::XMFLOAT3 intersected_normal;
 		if (stage->stageModel->raycast(l0, l, stage->transform, intersection_point, intersected_normal, intersected_mesh, intersected_material))
 		{
 			OutputDebugStringA("Intersected : ");
@@ -488,12 +449,12 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 			///自機の回転
 			//B-Aのベクトル
-			XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
+			DirectX::XMFLOAT3 rotationangle = { intersection_point.x - player->position.x,intersection_point.y - player->position.y,intersection_point.z - player->position.z };
 
 			GiftPosition = intersection_point;
 			GiftAngle = rotationangle;
 			//正規化
-			XMVECTOR tani = XMVector3Normalize(XMLoadFloat3(&rotationangle));
+			DirectX::XMVECTOR tani = DirectX::XMVector3Normalize(XMLoadFloat3(&rotationangle));
 
 			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
 			
@@ -502,24 +463,18 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
-		addProjectile();
-	}
-
-	if (mouse.GetButtonDown() == mouse.BTN_RIGHT)
-	{
-		// これで再生できる
-		hitEffect->Play(player->position);
-
+		if (attack >= 150)
+		{
+			addProjectile();
+			attack = 0;
+		}
 	}
 
 	ImGui::Begin("ImGUI");
 	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
 	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
-
-	//ImGui::SliderInt("", &numdebug, -10.0f, +10.0f);
-
-
+	ImGui::SliderInt("Timer", &Timer, -10.0f, +10.0f);
 	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
 	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
 	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
@@ -759,7 +714,7 @@ void SceneGame::Render(float elapsedTime)
 
 	// ここにRender
 #endif
-		// 3Dエフェクト描画
+	// 3Dエフェクト描画
 	{
 		DirectX::XMFLOAT4X4 view{};
 		DirectX::XMFLOAT4X4 projection{};
@@ -774,35 +729,30 @@ void SceneGame::Render(float elapsedTime)
 
 	}
 
-
-
 	// sprite描画
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
-			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-			immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	immediate_context->IASetInputLayout(sprite_input_layout.Get());
+	immediate_context->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
+	immediate_context->PSSetShader(sprite_pixel_shader.Get(), nullptr, 0);
+	immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
+	immediate_context->PSSetShaderResources(1, 1, mask_texture.GetAddressOf());
 
-			immediate_context->IASetInputLayout(sprite_input_layout.Get());
-			immediate_context->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
-			immediate_context->PSSetShader(sprite_pixel_shader.Get(), nullptr, 0);
-			immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
-			immediate_context->PSSetShaderResources(1, 1, mask_texture.GetAddressOf());
+	// 定数バッファの更新（ディゾルブ）
+	{
+		dissolve_constants dissolve{};
+		dissolve.parameters.x = dissolve_value;
+		immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
+		immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+		immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+	}
 
-			// 定数バッファの更新（ディゾルブ）
-			{
-				dissolve_constants dissolve{};
-				dissolve.parameters.x = dissolve_value;
-				immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
-				immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-			}
-			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-			//ui->Render(elapsedTime);
-			for (auto& it : UiList)
-			{
-				it->Render(elapsedTime);
-			}
+	for (auto& it : UiList)
+	{
+		it->Render(elapsedTime);
+	}
 
 	{
 		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
@@ -824,10 +774,6 @@ void SceneGame::Render(float elapsedTime)
 			immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 		}
 	}
-
-
-
-
 }
 
 void SceneGame::addEnemy()
@@ -838,6 +784,14 @@ void SceneGame::addEnemy()
 	enemyList.push_back(e);
 }
 
+void SceneGame::addEnemy(int enemyType, int startTime)
+{
+	GameObject* e;
+	e = CreateEnemy();
+	e->EnemyInitialize(enemyType, startTime);
+	e->pixelShader = chara_ps.Get();
+	enemyList.push_back(e);
+	}
 void SceneGame::addProjectile()
 {
 	GameObject* p;
@@ -876,14 +830,17 @@ void SceneGame::ProjectileVSEnemy()
 					outPosition)
 					)
 				{
-					ene->Death = true;
-					//ここお願いします
-
+					if (ene->NumDelivery[9] == 0)
+					{
+						ene->NumDelivery[9] = pro->damage;
+						ene->HP--;
+						pro->HP = -1;
+					}
 				}
 			}
 		}
 	}
-}
+} 
 
 void SceneGame::addUi(int Uitype)
 {
@@ -1069,12 +1026,67 @@ void SceneGame::UiGetUpdate()
 
 }
 
+void SceneGame::Wave()
+{
+	//TODO 三澤君
+	if (SetPhase)
+	{
+		switch (WaveNumber)
+		{
+		case 1:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 2:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			addEnemy(3, 5);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 3:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 4:
+			addEnemy(0, 2);
+			addEnemy(2, 3);
+			addEnemy(3, 4);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		case 8:
+			break;
+		case 9:
+			break;
+		case 10:
+			break;
+		}
+	}
+}
+
 void SceneGame::EnemyGetUpdate()
 {
-
 	for (auto& it : enemyList)
 	{
-
 		if (it->NumDelivery[0] >= 1)
 		{
 			Player_HP -= it->NumDelivery[0];
@@ -1083,22 +1095,9 @@ void SceneGame::EnemyGetUpdate()
 		}
 		if (it->NumDelivery[3] >= 1)
 		{
-			
 			jank += it->NumDelivery[2];
 			it->NumDelivery[3] = 0;
 			it->NumDelivery[4]++;
 		}
-
 	}
 }
-//
-//GamePro_ProjectileStraight* SceneGame::CreateProjectile()
-//{
-//	return new GamePro_ProjectileStraight(
-//		new GamePro_ProjectileStraightInputComponent(),
-//		new GamePro_ProjectileStraightPhysicsComponent(),
-//		new GamePro_ProjectileStraightGraphicsComponent()
-//	);
-//
-//}
-

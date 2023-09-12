@@ -44,5 +44,6 @@ class PhysicsComponent
 public:
     virtual ~PhysicsComponent() {}
     virtual void Initialize(GameObject* gameobj) = 0;
+    virtual void EnemyInitialize(GameObject* gameobj,int StartTime,int EnemyType) {};
     virtual void Update(GameObject* gameobj, float elapsedTime) = 0;
 };
