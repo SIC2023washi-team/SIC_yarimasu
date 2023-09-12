@@ -101,7 +101,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 	case 5:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\return.png");
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SHOP.png");
-		ui->Uisize = { 400.0f, 30.0f };
+		ui->Uisize = { 130.0f, 60.0f };
 		ui->Uisize2 = { 400.0f, 30.0f };
 		break;
 	case 6:
@@ -217,7 +217,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 		}
 		break;
 	case 5:
-		ui->Uiposition = { 1280 / 2 - ui->Uisize.x / 2, 720 - ui->Uisize.y };
+		ui->Uiposition = { 1280 - ui->Uisize.x, 720 - ui->Uisize.y };
 		if (static_cast<float>(mouse.GetOldPositionX()) < ui->Uiposition.x + ui->Uisize.x
 			&& ui->Uiposition.x < static_cast<float>(mouse.GetOldPositionX()))
 			//static_cast<float>(mouse.GetOldPositionY());
@@ -241,7 +241,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			}
 			else
 			{
-				ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
+				ui->UiColor = { 1.2f,1.2f,1.2f,1.0f };
 			}
 		}
 		break;
@@ -354,8 +354,8 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		break;
 	case 5:
 
-		UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
-		UiBase[1]->render(immediate_context, ui->Uiposition.x+120, ui->Uiposition.y-40, ui->Uisize.x-240, ui->Uisize.y+10, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+		//UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+		UiBase[1]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		break;
 	case 6:
 
