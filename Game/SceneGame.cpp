@@ -18,7 +18,7 @@ DirectX::XMFLOAT4 convert_screen_to_world(LONG x/*screen*/, LONG y/*screen*/, fl
 {
 	using namespace DirectX;
 	XMFLOAT4 p;
-	XMStoreFloat4(&p,
+	DirectX::XMStoreFloat4(&p,
 		XMVector3TransformCoord(
 			XMVector3TransformCoord(
 				XMVectorSet(static_cast<float>(x), static_cast<float>(y), z, 1),
@@ -65,7 +65,7 @@ void SceneGame::Initialize()
 	SaveShopUi = {};
 	shop_int = 0;
 	UiCount = {};
-	jank = 100000;
+	jank = 0;
 	isPaused = false;
 	speed = 0.05f;
 	damage = 1.0f;
@@ -89,6 +89,8 @@ void SceneGame::Initialize()
 	Player_MAXHP_MAXLv = 10;
 
 
+	player_dead = false;
+
 	// Stage
 	stage = CreateStage();
 	stage->Initialize();
@@ -99,6 +101,8 @@ void SceneGame::Initialize()
 
 	//pauseバック
 	addUi(3);
+	//shadow
+	addUi(1);
 	//HP
 	addUi(4);
 	//shop
@@ -106,8 +110,7 @@ void SceneGame::Initialize()
 	//ジャンク　お金
 	addUi(6);
 
-	//HP
-	addUi(1);
+	
 	//shop
 	addUi(2);
 	addUi(2);
@@ -238,6 +241,10 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	UiGetUpdate();
 	EnemyGetUpdate();
 
+	if (Player_HP <= 0)
+	{
+		player_dead = true;
+	}
 
 	Wave();
 	Mouse& mouse = Input::Instance().GetMouse();
@@ -251,8 +258,9 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	{
 		it->player_ = player;
 		it->NumDelivery[5] = shop_int;
-		if (it->NumDelivery[0] == 2)
+		switch (it->NumDelivery[0])
 		{
+		case 2:
 			it->NumDelivery[7] = jank;
 			switch (it->NumDelivery[2])
 			{
@@ -284,20 +292,30 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 				break;
 			}
-		
-		}
-		if (it->NumDelivery[0] == 4)
-		{
+
+			break;
+		case 4:
 			it->NumDelivery[2] = Player_MAXHP;
 			it->NumDelivery[1] = Player_HP;
-		}
-		if (it->NumDelivery[0] == 6)
-		{
+			break;
+
+		case 6:
 			it->NumDelivery[1] = jank;
-		}
-		if (it->NumDelivery[0] == 7)
-		{
-			it->NumDelivery[3] = WaveNumber-1;
+			break;
+
+		case 7:
+			it->NumDelivery[3] = WaveNumber - 1;
+			break;
+		case 9:
+			if (player_dead)
+			{
+				it->NumDelivery[3] = 1;
+			}
+			else
+			{
+				it->NumDelivery[3] = 0;
+			}
+			break;
 		}
 	}
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
@@ -1165,13 +1183,13 @@ void SceneGame::UiGetUpdate()
 				
 				
 				it->Initialize();
-				for (auto& it : UiList)
-				{
-					if (it->NumDelivery[0] == 5)
-					{
-						it->NumDelivery[6] = 0;
-					}
-				}
+				//for (auto& it : UiList)
+				//{
+				//	if (it->NumDelivery[0] == 5)
+				//	{
+				//		it->NumDelivery[6] = 0;
+				//	}
+				//}
 			}
 		}
 		//UItype5 shop

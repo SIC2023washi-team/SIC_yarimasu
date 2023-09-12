@@ -13,7 +13,7 @@ void PlayerPhysicsComponent::Initialize(GameObject* gameobj)
 
 
 	player->scale.x = player->scale.y = player->scale.z = 4.0f;
-	player->position.y = -1.0f;
+	player->position.y = -0.74f;
 
 	/*for (int i = 0; i < 100; i++)
 	{
@@ -81,6 +81,7 @@ void PlayerGraphicsComponent::Initialize(GameObject* gameobj)
 	Player* player = dynamic_cast<Player*> (gameobj);
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	PlayerModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botcanon_player_v001.fbx");
+	Player2Model = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botmain_v001.fbx");
 	//BulletModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\bot\\botcanon_player_v001.fbx");
 
 	player->radius = 0.8f;
@@ -156,11 +157,13 @@ void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D
 
 # endif
 		PlayerModel->render(immediate_context, world, player->material_color, &keyframe, replaced_pixel_shader);
+		Player2Model->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
 		//BulletModel->render(immediate_context, world, player->material_color, &keyframe, replaced_pixel_shader);
 	}
 	else
 	{
 		PlayerModel->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
+		Player2Model->render(immediate_context, world, player->material_color, nullptr, replaced_pixel_shader);
 	}
 
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();

@@ -7,6 +7,8 @@ void StagePhysicsComponent::Initialize(GameObject* gameobj)
 	Stage* stage = dynamic_cast<Stage*> (gameobj);
 	stage->scale.x = stage->scale.y = stage->scale.z = 10.0f;
 	stage->position.y = -0.75f;
+	stage->position.x = 0.35f;
+
 }
 
 void StagePhysicsComponent::Update(GameObject* gameobj, float elapsedTime)

@@ -53,6 +53,7 @@ class PlayerGraphicsComponent :public GraphicsComponent
 
 private:
     std::shared_ptr<skinned_mesh> PlayerModel;
+    std::shared_ptr<skinned_mesh> Player2Model;
     std::shared_ptr<skinned_mesh> BulletModel;
 public:
     GamePro_ProjectileManager gamepro_projectilemanager;

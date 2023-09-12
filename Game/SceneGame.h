@@ -158,7 +158,8 @@ public:
     int attack_MAXlv;
     int HP_MAXlv;
     int Player_MAXHP_MAXLv;
-
+    //
+    bool player_dead;
     //BGMÅESE
     Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
     IXAudio2MasteringVoice* master_voice = nullptr;

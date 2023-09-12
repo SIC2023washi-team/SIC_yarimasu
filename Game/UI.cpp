@@ -47,6 +47,9 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 
 	switch (ui->UiTypes)
 	{
+	case 1:
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\shadow.png");
+		break;
 	case 2:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\UiBase.png");
 		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\junk.png");
@@ -128,14 +131,19 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 	case 7:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\WAVE.png");
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
-		ui->Uiposition2 = { 560,30 };
+		ui->Uiposition2 = { 570,20 };
 		ui->Uisize2 = { 20,45 };
-		ui->Uiposition = { 550,20 };
+		ui->Uiposition = { 560,10 };
 		ui->Uisize = { 140,65 };
 		break;
 	case 8://ƒŠƒUƒ‹ƒg
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
+		
+		break;
+	case 9:
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
+		UiBase[2] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\Lv.png");
 		
 		break;
 	}
@@ -374,6 +382,9 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 	switch (ui->UiTypes)
 	{
+	case 1:
+		UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.5f, (0));
+		break;
 	case 2:
 		if (ui->NumDelivery[5] == 1)
 		{
