@@ -200,6 +200,10 @@ public:
     DirectX::XMVECTOR tani;
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/washinao4
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -229,7 +233,7 @@ private:
     GameObject* projectile;
     std::vector<GameObject*> projectileList;
 
-
+    
 
     // ポーズ（ショップ）
 

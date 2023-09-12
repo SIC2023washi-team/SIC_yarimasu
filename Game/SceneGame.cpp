@@ -531,9 +531,15 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		DirectX::XMVECTOR WorldPosition0 = XMLoadFloat4(&position_on_near_plane);
 #else
 		DirectX::XMFLOAT3 screenPosition;
-		screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
-		screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
+		
+		screenPosition.x = static_cast<float>(mouse.GetOldPositionX()); //1160
+		screenPosition.y = static_cast<float>(mouse.GetOldPositionY()); //660
 		screenPosition.z = 0.0f;
+
+		/*ImGui::Begin("Mouse");
+		ImGui::SliderFloat("Mouse.x", &screenPosition.x, 0, SCREEN_WIDTH);
+		ImGui::SliderFloat("Mouse.y", &screenPosition.y, 0, SCREEN_HEIGHT);
+		ImGui::End();*/
 
 		D3D11_VIEWPORT viewport;
 		UINT numViewports = 1;
@@ -592,9 +598,13 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
+<<<<<<< HEAD
 
 		if (attack*15+attacktimer >= 165)
 
+=======
+		if (150 <= attack * 10 + attacktimer && (screenPosition.x <= 1160 || screenPosition.y <= 660))
+>>>>>>> origin/washinao4
 		{
 			shot->stop();
 			addProjectile();
@@ -626,6 +636,12 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//ImGui::End();
 
 
+<<<<<<< HEAD
+=======
+	ImGui::End();
+
+	
+>>>>>>> origin/washinao4
 }
 
 void SceneGame::Render(float elapsedTime)
