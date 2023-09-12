@@ -36,7 +36,18 @@ private:
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, -10.0f, 1.0f };
     DirectX::XMFLOAT4 light_direction{ -0.113f, -0.556f, 1.0f, 0.0f };
 
+    std::shared_ptr<sprite> sprTitle;
+    std::shared_ptr<sprite> sprStart;
+    std::shared_ptr<sprite> sprEnd;
 
+    struct option
+    {
+        DirectX::XMFLOAT2 size;
+        DirectX::XMFLOAT2 pos;
+    };
+
+    option start;
+    option end;
     //----------------------------------------------------------------------------------------------------
     //  ↓シェーダー関連
     //----------------------------------------------------------------------------------------------------

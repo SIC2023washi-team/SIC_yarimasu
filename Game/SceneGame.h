@@ -166,6 +166,11 @@ public:
     std::unique_ptr<Lemur::Audio::audio> purchase;
     std::unique_ptr<Lemur::Audio::audio> explosion;
 
+    enum class enemyNum
+    {
+        ene,
+    };
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
