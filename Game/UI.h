@@ -34,8 +34,10 @@ public:
     int player_HP;
     int player_MAXHP;
     int junkDigits = 1;
+    int levelDigits = 1;
     float AddParameter;
     int saveJank[30];
+    int savelevel[5];
     int price;
     int jank;
     int jankdig_;

@@ -67,7 +67,7 @@ void SceneGame::Initialize()
 	SaveShopUi = {};
 	shop_int = 0;
 	UiCount = {};
-	jank = 1000;
+	jank = 100000;
 	isPaused = false;
 	speed = 0.05f;
 	damage = 5.0f;
@@ -239,6 +239,37 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		if (it->NumDelivery[0] == 2)
 		{
 			it->NumDelivery[7] = jank;
+			switch (it->NumDelivery[2])
+			{
+			case 0:
+				//UŒ‚‘¬“x
+				it->NumDelivery[3] = attack_lv;
+				it->NumDelivery[4] = attack_MAXlv;
+				break;
+			case 1:
+				//’e‘¬“x
+				it->NumDelivery[3] = speed_lv;
+				it->NumDelivery[4] = speed_MAXlv;
+				break;
+			case 2:
+				//ŠÑ’Ê—Í
+				it->NumDelivery[3] = HP_lv;
+				it->NumDelivery[4] = HP_MAXlv;
+				break;
+			case 3:
+				//UŒ‚—Í
+				it->NumDelivery[3] = damage_lv;
+				it->NumDelivery[4] = damage_MAXlv;
+				break;
+			case 4:
+				//ƒvƒŒƒCƒ„[
+				it->NumDelivery[3] = Player_MAXHP_Lv;
+				it->NumDelivery[4] = Player_MAXHP_MAXLv;
+
+
+				break;
+			}
+		
 		}
 		if (it->NumDelivery[0] == 4)
 		{
@@ -1174,4 +1205,11 @@ void SceneGame::EnemyGetUpdate()
 			it->NumDelivery[4]++;
 		}
 	}
+}
+
+void SceneGame::JudgeState(int i)
+{
+
+
+
 }

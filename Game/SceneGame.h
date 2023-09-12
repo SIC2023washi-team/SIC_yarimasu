@@ -64,6 +64,8 @@ public:
     void UiGetUpdate();
     void EnemyGetUpdate();
 
+    void SceneGame::JudgeState(int i);
+
     // ’e‚Ì’Ç‰Á
     void addProjectile();
 
@@ -118,6 +120,8 @@ public:
             new GamePro_ProjectileStraightGraphicsComponent()
         );
     }
+
+   
 
     int ShopItemsNum[10] = {};
     int SaveShopUi = {};

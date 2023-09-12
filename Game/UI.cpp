@@ -54,7 +54,9 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize = { 200.0f,200.0f };
 		ui->Uiposition.x = 300.0 + 250 * ui->NumDelivery[1];
 		ui->Uiposition.y = 130.0f;
-
+		ui->Uiposition_[1].x = 300.0 + 250 * ui->NumDelivery[1];
+		ui->Uiposition_[1].y = 200;
+		ui->Uisize_[1] = { 20,20 };
 		switch (ui->NumDelivery[2])
 		{
 		case 0:
@@ -145,7 +147,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 					&& ui->Uiposition.y < static_cast<float>(mouse.GetOldPositionY()))
 				{
 					ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
-					if (mouse.GetButtonDown() == mouse.BTN_LEFT && ui->NumDelivery[7] >= ui->price)
+					if (mouse.GetButtonDown() == mouse.BTN_LEFT && ui->NumDelivery[7] >= ui->price && ui->NumDelivery[3] < ui->NumDelivery[4])
 					{
 						ui->NumDelivery[6]++;
 						ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
@@ -190,6 +192,40 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 			ui->saveJank[0] = 0;
 			ui->junkDigits = 1;
 		}
+
+
+		//leval
+		ui->jank = ui->NumDelivery[3];
+		ui->levelDigits = 0;
+		while (ui->jank != 0)
+		{
+			ui->jank /= 10;
+			// 割った回数をカウント
+			++ui->levelDigits;
+		}
+		ui->jankdig_ = ui->levelDigits;
+		ui->jank = ui->NumDelivery[3];
+		if (ui->jank > 0)
+		{
+			for (int i = 0; i < ui->levelDigits; i++)
+			{
+				ui->savelevel[i] = ui->jank / pow(10, ui->jankdig_ - 1);
+				ui->jankdig_--;
+				int n = pow(10, ui->jankdig_ - 1);
+				if (ui->jank > 10)
+				{
+					ui->jank -= ui->savelevel[i] * pow(10, ui->jankdig_);
+				}
+				int a = 0;
+			}
+		}
+		else
+		{
+			ui->savelevel[0] = 0;
+			ui->levelDigits = 1;
+		}
+
+
 
 		ui->Uiposition2 = { 345.0f + 250.0f * ui->NumDelivery[1],280.0f };
 		ui->Uisize2 = { 13,22 };
@@ -336,9 +372,10 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 			UiBase[3]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
 			}
 			
-			//UiBase[1]->render(immediate_context, ui->Uiposition3.x, ui->Uiposition[3].y, 20,30, ui->HPUiColor[0].x, ui->HPUiColor[0].y, ui->HPUiColor[0].z, ui->HPUiColor[0].w, (0));
+			UiBase[1]->render(immediate_context, ui->Uiposition_[1].x, ui->Uiposition_[1].y, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->HPUiColor[0].x, ui->HPUiColor[0].y, ui->HPUiColor[0].z, ui->HPUiColor[0].w, (0));
 			////level用
-			//UiBase[3]->render(immediate_context, ui->Uiposition3.x, ui->Uiposition3.y, ui->Uisize3.x, ui->Uisize3.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->NumDelivery[3], 0, 134.6, 211);
+			
+			UiBase[3]->render(immediate_context, ui->Uiposition_[1].x, ui->Uiposition_[1].y, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->NumDelivery[3], 0, 134.6, 211);
 	
 		}
 		break;

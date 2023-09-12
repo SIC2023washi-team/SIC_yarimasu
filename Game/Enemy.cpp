@@ -38,8 +38,9 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	std::mt19937 mt{ std::random_device{}() };
 	std::uniform_int_distribution<int> Type(0, 3);
 	std::uniform_int_distribution<int> Pos(0, 1);
-	std::uniform_int_distribution<int> ePos_1(80, 160);
-	std::uniform_int_distribution<int> ePos_2(80, 160);
+	std::uniform_int_distribution<int> Pos2(0, 1);
+	std::uniform_int_distribution<int> ePos_1(-21, 21);
+	std::uniform_int_distribution<int> ePos_2(-12, 13);
 
 	enemy->EnemyType = int(Type(mt));
 
@@ -78,12 +79,12 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 	{
 	case 0://ã‰º‚©‚ç‚­‚é
-		enemy->position.x = int(ePos_1(mt)) * 0.1f;
-		enemy->position.z = 8 *(- 1 + (rand() % 2) * 2);
+		enemy->position.x = int(ePos_1(mt));
+		enemy->position.z = 15 *(-1 + (int(Pos2(mt)) * 2));
 		break;
 	case 1://¶‰E‚©‚ç‚­‚é
-		enemy->position.x = 8 * (-1 + (rand() % 2) * 2);
-		enemy->position.z = int(ePos_2(mt)) * 0.1f;
+		enemy->position.x = 23 * (-1 + (int(Pos2(mt)) * 2));
+		enemy->position.z = int(ePos_2(mt));
 		break;
 	}
 
