@@ -174,6 +174,8 @@ public:
     DirectX::XMFLOAT3 TANI_Effect;
     DirectX::XMVECTOR tani;
 
+
+
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -203,7 +205,7 @@ private:
     GameObject* projectile;
     std::vector<GameObject*> projectileList;
 
-
+    
 
     // ポーズ（ショップ）
 
