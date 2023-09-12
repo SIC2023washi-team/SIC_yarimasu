@@ -73,6 +73,17 @@ void SceneGame::Initialize()
 	Player_HP = 3.0f;
 	Player_MAXHP = 3.0f;
 
+	speed_lv = 1;
+	damage_lv = 1;
+	attack_lv = 1;
+	HP_lv = 1;
+	Player_MAXHP_Lv = 1;
+	speed_MAXlv = 10;
+	damage_MAXlv = 10;
+	attack_MAXlv = 10;
+	HP_MAXlv = 10;
+	Player_MAXHP_MAXLv = 10;
+
 	// Stage
 	stage = CreateStage();
 	stage->Initialize();

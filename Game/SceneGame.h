@@ -116,12 +116,26 @@ public:
     int UiCount = {};
     int jank = 1000;
     bool isPaused = false;
+
+    //ステータス
     float speed = 0.005f;
     float damage = 5.0f;
     float attack = 1.0f;
     float HP = 1.0f;
     float Player_HP = 3.0f;
     float Player_MAXHP = 3.0f;
+
+    //ステータスレベル
+    int speed_lv;
+    int damage_lv;
+    int attack_lv;
+    int HP_lv;
+    int Player_MAXHP_Lv;
+    int speed_MAXlv;
+    int damage_MAXlv;
+    int attack_MAXlv;
+    int HP_MAXlv;
+    int Player_MAXHP_MAXLv;
 
 private:
     // skkind_mesh
