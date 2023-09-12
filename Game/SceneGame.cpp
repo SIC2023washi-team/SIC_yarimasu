@@ -121,25 +121,8 @@ void SceneGame::Initialize()
 	addUi(8);
 
 
-<<<<<<< HEAD
-=======
-	addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
-	//addEnemy(0, 0);
->>>>>>> origin/muta_2
+
+
 
 	UiCount = {};
 
@@ -985,12 +968,12 @@ void SceneGame::ProjectileVSEnemy()
 						ene->NumDelivery[9] = pro->damage;
 						pro->HP -= 1;
 						pro->EnemyHitSave[i] = true;
-<<<<<<< HEAD
+
 						damageSE->stop();
 						damageSE->play();
-=======
+
 						ene->HitReaction = true;
->>>>>>> origin/muta_2
+
 					}
 				}
 			}
@@ -1101,7 +1084,7 @@ void SceneGame::UiGetUpdate()
 				{
 				case 0:
 					//UŒ‚‘¬“x
-					attack += it->NumDelivery[6];
+					attack += 1;
 					it->NumDelivery[6] = 0;
 					attack_lv++;
 					
@@ -1122,7 +1105,7 @@ void SceneGame::UiGetUpdate()
 					break;
 				case 3:
 					//UŒ‚—Í
-					damage += 5;
+					damage += 1;
 					damage_lv++;
 					it->NumDelivery[6] = 0;
 				
@@ -1252,49 +1235,111 @@ void SceneGame::Wave()
 		{
 		case 1:
 			addEnemy(0, 2);
-			addEnemy(2, 3);
-			addEnemy(3, 4);
+
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 2:
 			addEnemy(0, 2);
-			addEnemy(2, 3);
-			addEnemy(3, 4);
-			addEnemy(3, 5);
+			addEnemy(0, 5);
+			addEnemy(0, 8);
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 3:
-			addEnemy(0, 2);
-			addEnemy(2, 3);
-			addEnemy(3, 4);
-			addEnemy(3, 5);
-			addEnemy(3, 5);
+			addEnemy(0, 3);
+			addEnemy(0, 5);
+			addEnemy(0, 7);
+			addEnemy(0, 9);
+
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 4:
-			addEnemy(0, 2);
-			addEnemy(2, 3);
-			addEnemy(3, 4);
-			addEnemy(3, 5);
-			addEnemy(3, 5);
-			addEnemy(3, 5);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(0, 5);
+			addEnemy(0, 6);
+			addEnemy(0, 7);
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 5:
+			addEnemy(0, 2);
+			addEnemy(0, 2);
+			addEnemy(0, 4);
+			addEnemy(0, 4);
+			addEnemy(0, 6);
+			addEnemy(0, 6);
+			WaveNumber++;
+			SetPhase = false;
 			break;
 		case 6:
+			addEnemy(0, 2);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(0, 5);
+			addEnemy(0, 6);
+			addEnemy(1, 7);
+			WaveNumber++;
+			SetPhase = false;
 			break;
 		case 7:
+			addEnemy(0, 2);
+			addEnemy(0, 2);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(1, 5);
+			addEnemy(1, 6);
+			WaveNumber++;
+			SetPhase = false;
 			break;
 		case 8:
+			addEnemy(1, 2);
+			addEnemy(0, 2);
+			addEnemy(1, 3);
+			addEnemy(0, 3);
+			addEnemy(1, 4);
+			addEnemy(0, 4);
+			WaveNumber++;
+			SetPhase = false;
 			break;
 		case 9:
+			addEnemy(0, 2);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(0, 5);
+			addEnemy(0, 6);
+			addEnemy(0, 7);
+			addEnemy(0, 8);
+			addEnemy(0, 9);
+			addEnemy(0, 10);
+
+			WaveNumber++;
+			SetPhase = false;
 			break;
 		case 10:
+			addEnemy(0, 2);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(0, 5);
+			addEnemy(0, 6);
+			addEnemy(0, 7);
+			addEnemy(0, 8);
+			addEnemy(0, 9);
+			addEnemy(0, 10);
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 11:
+
+			WaveNumber++;
+			SetPhase = false;
+			break;
+		case 12:
+
+			WaveNumber++;
+			SetPhase = false;
 			break;
 		}
 	}

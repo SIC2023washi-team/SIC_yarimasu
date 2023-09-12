@@ -128,30 +128,30 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	default:
 		break;
 	case 0://¬‚³‚¢‚Ì
-		enemy->HP = 3.0f;
-		enemy->Speed = 0.001f;
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.01f;
 		enemy->AnimSpeed = 1.5f;
 		enemy->EnemyMoney = 25;
 		enemy->radius = 0.5f;
 		break;
 	case 1://’†‚­‚ç‚¢‚Ì
 		enemy->HP = 3.0f;
-		enemy->Speed = 0.0008f;
+		enemy->Speed = 0.0075f;
 		enemy->AnimSpeed = 1.0f;
-		enemy->EnemyMoney = 25;
+		enemy->EnemyMoney = 50;
 		enemy->radius = 0.5f;
 		break;
 	case 2://‘å‚«‚¢‚Ì
-		enemy->HP = 3.0f;
-		enemy->Speed = 0.0005f;
-		enemy->EnemyMoney = 25;
+		enemy->HP = 10.0f;
+		enemy->Speed = 0.009f;
+		enemy->EnemyMoney = 100;
 		break;
 	case 3://¬‚³‚¢‚µ‚­‚»‘
-		enemy->HP = 3.0f;
-		enemy->Speed = 0.003f;
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.02f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
-		enemy->EnemyMoney = 25;
+		enemy->EnemyMoney = 100;
 		enemy->radius = 0.5f;
 		break;
 	}
