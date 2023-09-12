@@ -561,21 +561,21 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 	}
 
-	ImGui::Begin("ImGUI");
-	ImGui::DragFloat("light_direction.x", &light_direction.x);
-	ImGui::DragFloat("light_direction.y", &light_direction.y);
-	ImGui::DragFloat("light_direction.z", &light_direction.z);
-	ImGui::DragInt("Timer", &Timer, -10.0f, +10.0f);
-	ImGui::DragFloat("light_view_distance", &light_view_distance);
-	ImGui::DragFloat("light_view_size", &light_view_size);
-	ImGui::DragFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
-	ImGui::DragFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
+	//ImGui::Begin("ImGUI");
+	//ImGui::DragFloat("light_direction.x", &light_direction.x);
+	//ImGui::DragFloat("light_direction.y", &light_direction.y);
+	//ImGui::DragFloat("light_direction.z", &light_direction.z);
+	//ImGui::DragInt("Timer", &Timer, -10.0f, +10.0f);
+	//ImGui::DragFloat("light_view_distance", &light_view_distance);
+	//ImGui::DragFloat("light_view_size", &light_view_size);
+	//ImGui::DragFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
+	//ImGui::DragFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
 
-	// BLOOM
-	ImGui::DragFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold);
-	ImGui::DragFloat("bloom_intensity", &bloomer->bloom_intensity);
+	//// BLOOM
+	//ImGui::DragFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold);
+	//ImGui::DragFloat("bloom_intensity", &bloomer->bloom_intensity);
 
-	ImGui::End();
+	//ImGui::End();
 
 }
 
@@ -1071,6 +1071,10 @@ void SceneGame::addUi(int Uitype)
 void SceneGame::UiGetUpdate()
 {
 	bool judge = false;
+	for (int i = 0; i < 10; i++)
+	{
+		ShopItemsNum[i] = { 0 };
+	}
 	for (auto& it : UiList)
 	{
 		//Uitype2ÅBî\óÕëùâ¡ÇÃUIÇÃíTçı
@@ -1087,28 +1091,28 @@ void SceneGame::UiGetUpdate()
 					attack += 1;
 					it->NumDelivery[6] = 0;
 					attack_lv++;
-					
+
 					break;
 				case 1:
 					//íeë¨ìx
 					speed += 0.01f;
 					it->NumDelivery[6] = 0;
 					speed_lv++;
-					
+
 					break;
 				case 2:
 					//ä—í óÕ
 					HP += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
 					HP_lv++;
-					
+
 					break;
 				case 3:
 					//çUåÇóÕ
 					damage += 1;
 					damage_lv++;
 					it->NumDelivery[6] = 0;
-				
+
 					break;
 				case 4:
 					//ÉvÉåÉCÉÑÅ[
@@ -1130,100 +1134,104 @@ void SceneGame::UiGetUpdate()
 
 					break;
 				}
-				std::mt19937 mt{ std::random_device{}() };
-				int newshopitems;
-				for (int i = 0; i < 1;)
+				for (auto& it : UiList)
 				{
-					std::uniform_int_distribution<int> Type(0, 5);
-					newshopitems = int(Type(mt));
-					judge = false;
-					for (int j = 0; j < SaveShopUi; j++)
+					if (it->NumDelivery[0] == 2)
 					{
-						if (newshopitems == ShopItemsNum[j]|| JudgeState(newshopitems))
+						std::mt19937 mt{ std::random_device{}() };
+						int newshopitems;
+						for (int i = 0; i < 1;)
 						{
-							judge = true;
+							std::uniform_int_distribution<int> Type(0, 5);
+							newshopitems = int(Type(mt));
+							judge = false;
+							for (int j = 0; j < SaveShopUi; j++)
+							{
+								if (newshopitems == ShopItemsNum[j] || JudgeState(newshopitems))
+								{
+									judge = true;
+									break;
+								}
+
+							}
+							if (!judge)
+							{
+								break;
+							}
+							continue;
+						}
+						ShopItemsNum[it->NumDelivery[1]] = newshopitems;
+						it->NumDelivery[2] = newshopitems;
+						shop_int = 0;
+						isPaused = false;
+						switch (newshopitems)
+						{
+						case 0:
+							//çUåÇë¨ìx
+							it->NumDelivery[3] = attack_lv;
+							it->NumDelivery[4] = attack_MAXlv;
+							break;
+						case 1:
+							//íeë¨ìx
+							it->NumDelivery[3] = speed_lv;
+							it->NumDelivery[4] = speed_MAXlv;
+							break;
+						case 2:
+							//ä—í óÕ
+							it->NumDelivery[3] = HP_lv;
+							it->NumDelivery[4] = HP_MAXlv;
+							break;
+						case 3:
+							//çUåÇóÕ
+							it->NumDelivery[3] = damage_lv;
+							it->NumDelivery[4] = damage_MAXlv;
+							break;
+						case 4:
+							//ÉvÉåÉCÉÑÅ[
+							it->NumDelivery[3] = Player_MAXHP_Lv;
+							it->NumDelivery[4] = Player_MAXHP_MAXLv;
+							break;
+						case 5:
+							//âÒïú
+							it->NumDelivery[3] = 1;
+							it->NumDelivery[4] = Player_MAXHP_MAXLv;
 							break;
 						}
 
+
+
+
+						it->Initialize();
+						//for (auto& it : UiList)
+						//{
+						//	if (it->NumDelivery[0] == 5)
+						//	{
+						//		it->NumDelivery[6] = 0;
+						//	}
+						//}
 					}
-					if (!judge)
-					{
-						break;
-					}
-					continue;
 				}
-				ShopItemsNum[it->NumDelivery[1]] = newshopitems;
-				it->NumDelivery[2] = newshopitems;
-				shop_int = 0;
-				isPaused = false;
-				switch (newshopitems)
-				{
-				case 0:
-					//çUåÇë¨ìx
-					it->NumDelivery[3] = attack_lv;
-					it->NumDelivery[4] = attack_MAXlv;
-					break;
-				case 1:
-					//íeë¨ìx
-					it->NumDelivery[3] = speed_lv;
-					it->NumDelivery[4] = speed_MAXlv;
-					break;
-				case 2:
-					//ä—í óÕ
-					it->NumDelivery[3] = HP_lv;
-					it->NumDelivery[4] = HP_MAXlv;
-					break;
-				case 3:
-					//çUåÇóÕ
-					it->NumDelivery[3] = damage_lv;
-					it->NumDelivery[4] = damage_MAXlv;
-					break;
-				case 4:
-					//ÉvÉåÉCÉÑÅ[
-					it->NumDelivery[3] = Player_MAXHP_Lv;
-					it->NumDelivery[4] = Player_MAXHP_MAXLv;
-					break;
-				case 5:
-					//âÒïú
-					it->NumDelivery[3] = 1;
-					it->NumDelivery[4] = Player_MAXHP_MAXLv;
-					break;
-				}
-				
-				
-				
-				
-				it->Initialize();
-				//for (auto& it : UiList)
-				//{
-				//	if (it->NumDelivery[0] == 5)
-				//	{
-				//		it->NumDelivery[6] = 0;
-				//	}
-				//}
 			}
+
 		}
+
 		//UItype5 shop
 		if (it->NumDelivery[0] == 5)
 		{
 			if (it->NumDelivery[6] == 1)
 			{
-				
+
 				shop_int = 1;
 				isPaused = true;
 			}
 			else
 			{
-				
+
 				shop_int = 0;
 				isPaused = false;
 			}
 		}
-
-
 	}
-
-
 }
 
 void SceneGame::Wave()

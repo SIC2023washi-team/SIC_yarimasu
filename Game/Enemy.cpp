@@ -13,15 +13,15 @@
 void EnemyInputComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	Enemy* enemy = dynamic_cast<Enemy*> (gameobj);
+	//if (ImGui::TreeNode("TreeNode"))
+	//{
+	//	ImGui::DragFloat3("pos", &enemy->position.x);
+	//	ImGui::DragFloat3("rotate", &enemy->rotation.x);
+	//	ImGui::DragFloat3("scale", &enemy->scale.x);
+	//	ImGui::DragFloat("HP", &enemy->HP);
+	//	ImGui::TreePop();
+	//}
 
-	if (ImGui::TreeNode("TreeNode"))
-	{
-		ImGui::DragFloat3("pos", &enemy->position.x);
-		ImGui::DragFloat3("rotate", &enemy->rotation.x);
-		ImGui::DragFloat3("scale", &enemy->scale.x);
-		ImGui::DragFloat("HP", &enemy->HP);
-		ImGui::TreePop();
-	}
 }
 
 void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
@@ -231,15 +231,18 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			enemy->clip_index = 0;
 			float px = (enemy->player_->position.x - enemy->position.x);
 			float pz = (enemy->player_->position.z - enemy->position.z);
-			DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
-			DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
-			vec_x = DirectX::XMVector3Normalize(vec_x);
-			vec_z = DirectX::XMVector3Normalize(vec_z);
-			float floatX = DirectX::XMVectorGetX(vec_x);
-			float floatZ = DirectX::XMVectorGetX(vec_z);
+			//DirectX::XMVECTOR vec_x = DirectX::XMLoadFloat(&px);
+			//DirectX::XMVECTOR vec_z = DirectX::XMLoadFloat(&pz);
+			//vec_x = DirectX::XMVector3Normalize(vec_x);
+			//vec_z = DirectX::XMVector3Normalize(vec_z);
+			//float floatX = DirectX::XMVectorGetX(vec_x);
+			//float floatZ = DirectX::XMVectorGetX(vec_z);
+			float floatX = atan(px * px + pz * pz);
+			float floatz = atan(px * px + pz * pz);
+
 			enemy->position.x += floatX * enemy->Speed;
 			//enemy->position.z += cos(enemy->rotation.y) * 0.001f;
-			enemy->position.z += floatZ * enemy->Speed;
+			//enemy->position.z += floatZ * enemy->Speed;
 
 			float cross = (enemy->position.z * enemy->player_->position.x) - (enemy->position.x * enemy->player_->position.z);
 			if (cross < 0)

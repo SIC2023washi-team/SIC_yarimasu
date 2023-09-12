@@ -74,14 +74,14 @@ void GamePro_ProjectileStraightInputComponent::Update(GameObject* gameobj, float
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
-	if (ImGui::TreeNode("pro"))
-	{
-		ImGui::DragFloat3("pos", &project->position.x);
-		ImGui::DragFloat3("rotate", &project->rotation.x);
-		ImGui::DragFloat3("scale", &project->scale.x);
-		ImGui::DragFloat("HP", &project->HP);
-		ImGui::TreePop();
-	}
+	//if (ImGui::TreeNode("pro"))
+	//{
+	//	ImGui::DragFloat3("pos", &project->position.x);
+	//	ImGui::DragFloat3("rotate", &project->rotation.x);
+	//	ImGui::DragFloat3("scale", &project->scale.x);
+	//	ImGui::DragFloat("HP", &project->HP);
+	//	ImGui::TreePop();
+	//}
 }
 
 void GamePro_ProjectileStraightPhysicsComponent::Initialize(GameObject* gameobj)
