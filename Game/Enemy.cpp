@@ -97,7 +97,7 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 	hr = enemy->xaudio2->CreateMasteringVoice(&enemy->master_voice);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-	enemy->explosion = std::make_unique<Lemur::Audio::audio>(enemy->xaudio2.Get(), L".\\resources\\Audio\\SE\\explosion.wav");
+	//enemy->explosion = std::make_unique<Lemur::Audio::audio>(enemy->xaudio2.Get(), L".\\resources\\Audio\\SE\\explosion.wav");
 }
 
 void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, int startTime)
@@ -262,6 +262,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			{
 				enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			}
+			
 			enemy->Death = true;
 		}
 		if (enemy->EnemyType == 3)

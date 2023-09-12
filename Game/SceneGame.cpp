@@ -151,6 +151,7 @@ void SceneGame::Initialize()
 	shot = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\shot.wav");
 	BGM = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Play.wav");
 	purchase = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\purchase.wav");
+	explosion = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\explosion.wav");
 
 #if 0
 	// BLOOM
@@ -272,6 +273,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	// 敵が死んだときにタイマー初期化、敵をセットするフラグをON
 	if (enemyList.size() == 0)
 	{
+		explosion->play();
 		Timer = 0;
 		SetPhase = true;
 	}
@@ -405,9 +407,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 	if (mouse.GetButton() == mouse.BTN_LEFT)
 	{
-		if(shot->queuing())
-		shot->stop(true);
-		shot->play(0);
 
 #if 0	
 		scene_constants scene_data{};
@@ -481,9 +480,9 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		}
 		if (attack >= 150)
 		{
-			//shot->stop();
+			shot->stop();
 			addProjectile();
-			//shot->play();
+			shot->play();
 			attack = 0;
 		}
 	}
