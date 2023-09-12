@@ -205,7 +205,6 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 		{
 			enemy->HP -= enemy->NumDelivery[9];
 			enemy->NumDelivery[9] = 0;
-
 		}
 
 		if (enemy->HP <= 0)

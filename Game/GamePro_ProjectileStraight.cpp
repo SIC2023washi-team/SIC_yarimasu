@@ -141,7 +141,7 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 		(playerPos.z - projPos.z) * (playerPos.z - projPos.z)
 	);
 
-	if (distance >= 25.0f)
+	if (distance >= 40.0f)
 	{
 		project->projectEffect->Stop(project->handle);
 		project->Death = true; // ’e‚ğ”jŠü

@@ -68,7 +68,7 @@ void SceneGame::Initialize()
 	jank = 100000;
 	isPaused = false;
 	speed = 0.05f;
-	damage = 5.0f;
+	damage = 1.0f;
 	attack = 1.0f;
 	HP = 1.0f;
 	Player_HP = 3.0f;
