@@ -56,7 +56,7 @@ void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
 	Lemur::Scene::SceneManager::Instance().Render(elapsed_time);
 
 	// ImGui表示（この下にも何も描画しない）
-	//IMGUI_CTRL_DISPLAY();
+	IMGUI_CTRL_DISPLAY();
 	graphics.render(elapsed_time);
 	// ↓この下は何も出ない
 }
