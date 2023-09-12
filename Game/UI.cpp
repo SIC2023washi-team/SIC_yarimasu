@@ -239,11 +239,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 				int n = pow(10, jankdig_2 - 1);
 				if (ui->jank > 10)
 				{
-<<<<<<< HEAD
 					ui->jank -= ui->saveJank[i]*pow(10, ui->jankdig_);
-=======
-					jank -= ui->saveJank[i] * pow(10, jankdig_);
->>>>>>> origin/washinao4
 				}
 				int a = 0;
 			}
