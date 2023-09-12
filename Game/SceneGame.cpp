@@ -159,6 +159,7 @@ void SceneGame::Initialize()
 	BGM3 = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\play3.wav");
 
 	explosionEffect = new Effect("resources/Effects/explosion.efk");
+	barelEffect = new Effect("resources/Effects/barel_stylize.efk");
 
 	// BLOOM
 	bloomer = std::make_unique<bloom>(graphics.GetDevice(), 1280, 720);
@@ -498,9 +499,15 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			GiftPosition = intersection_point;
 			GiftAngle = rotationangle;
 			//³‹K‰»
-			DirectX::XMVECTOR tani = DirectX::XMVector3Normalize(XMLoadFloat3(&rotationangle));
+			tani = DirectX::XMVector3Normalize(XMLoadFloat3(&rotationangle));
+			
+			DirectX::XMStoreFloat3(&TANI, tani);
+
+			TANI_Effect = { TANI.x * 1.0f, 0.0f, TANI.z * 1.0f };
 
 			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
+
+			
 			
 		}
 		else
@@ -511,6 +518,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			shot->stop();
 			addProjectile();
+			barelEffect->Play(TANI_Effect);
 			shot->play();
 			attacktimer = 0.0f;
 		}

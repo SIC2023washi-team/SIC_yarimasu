@@ -89,7 +89,6 @@ void PlayerGraphicsComponent::Render(GameObject* gameobj, float elapsedTime,ID3D
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMStoreFloat4x4(&world, C * S * R * T);
 
-
 	if (PlayerModel->animation_clips.size() > 0)
 	{
 		// アニメーション用
