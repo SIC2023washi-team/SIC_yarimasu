@@ -166,7 +166,7 @@ private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, -10.0f, 1.0f };
-    DirectX::XMFLOAT4 light_direction{ -0.113f, -0.556f, 1.0f, 0.0f };
+    DirectX::XMFLOAT4 light_direction{ 0.048f, -0.538f, -0.51f, 0.0f };
 
     DirectX::XMFLOAT4 intersection_point{};
     //DirectX::XMFLOAT4X4 island_transform{ -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 };
