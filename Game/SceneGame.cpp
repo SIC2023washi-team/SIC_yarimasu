@@ -65,7 +65,7 @@ void SceneGame::Initialize()
 	SaveShopUi = {};
 	shop_int = 0;
 	UiCount = {};
-	jank = 1000;
+	jank = 100000;
 	isPaused = false;
 	speed = 0.05f;
 	damage = 5.0f;
@@ -254,6 +254,37 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		if (it->NumDelivery[0] == 2)
 		{
 			it->NumDelivery[7] = jank;
+			switch (it->NumDelivery[2])
+			{
+			case 0:
+				//UŒ‚‘¬“x
+				it->NumDelivery[3] = attack_lv;
+				it->NumDelivery[4] = attack_MAXlv;
+				break;
+			case 1:
+				//’e‘¬“x
+				it->NumDelivery[3] = speed_lv;
+				it->NumDelivery[4] = speed_MAXlv;
+				break;
+			case 2:
+				//ŠÑ’Ê—Í
+				it->NumDelivery[3] = HP_lv;
+				it->NumDelivery[4] = HP_MAXlv;
+				break;
+			case 3:
+				//UŒ‚—Í
+				it->NumDelivery[3] = damage_lv;
+				it->NumDelivery[4] = damage_MAXlv;
+				break;
+			case 4:
+				//ƒvƒŒƒCƒ„[
+				it->NumDelivery[3] = Player_MAXHP_Lv;
+				it->NumDelivery[4] = Player_MAXHP_MAXLv;
+
+
+				break;
+			}
+		
 		}
 		if (it->NumDelivery[0] == 4)
 		{
@@ -508,18 +539,18 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	}
 
 	ImGui::Begin("ImGUI");
-	ImGui::SliderFloat("light_direction.x", &light_direction.x, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.y", &light_direction.y, -1.0f, +1.0f);
-	ImGui::SliderFloat("light_direction.z", &light_direction.z, -1.0f, +1.0f);
-	ImGui::SliderInt("Timer", &Timer, -10.0f, +10.0f);
-	ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
-	ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
-	ImGui::SliderFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
+	ImGui::DragFloat("light_direction.x", &light_direction.x);
+	ImGui::DragFloat("light_direction.y", &light_direction.y);
+	ImGui::DragFloat("light_direction.z", &light_direction.z);
+	ImGui::DragInt("Timer", &Timer, -10.0f, +10.0f);
+	ImGui::DragFloat("light_view_distance", &light_view_distance);
+	ImGui::DragFloat("light_view_size", &light_view_size);
+	ImGui::DragFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
+	ImGui::DragFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
 
 	// BLOOM
-	ImGui::SliderFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold, +0.0f, +5.0f);
-	ImGui::SliderFloat("bloom_intensity", &bloomer->bloom_intensity, +0.0f, +5.0f);
+	ImGui::DragFloat("bloom_extraction_threshold", &bloomer->bloom_extraction_threshold);
+	ImGui::DragFloat("bloom_intensity", &bloomer->bloom_intensity);
 
 	ImGui::End();
 
@@ -910,6 +941,7 @@ void SceneGame::ProjectileVSEnemy()
 				{
 					if (ene->NumDelivery[9] == 0&&!pro->EnemyHitSave[i])
 					{
+
 						ene->NumDelivery[9] = pro->damage;
 						pro->HP -= 1;
 						pro->EnemyHitSave[i] = true;
@@ -1190,4 +1222,11 @@ void SceneGame::EnemyGetUpdate()
 			it->NumDelivery[4]++;
 		}
 	}
+}
+
+void SceneGame::JudgeState(int i)
+{
+
+
+
 }
