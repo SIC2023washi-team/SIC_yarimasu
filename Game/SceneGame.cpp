@@ -1436,27 +1436,59 @@ void SceneGame::Wave()
 			addEnemy(0, 4);
 			addEnemy(1, 5);
 			addEnemy(1, 5);
-			addEnemy(3, 6);
+			addEnemy(3, 10);
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 17:
+			addEnemy(0, 2);
+			addEnemy(0, 3);
+			addEnemy(0, 4);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
+			addEnemy(3, 5);
 
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 18:
+			addEnemy(1, 2);
+			addEnemy(1, 2);
+			addEnemy(1, 2);
+			addEnemy(1, 2);
+			addEnemy(1, 3);
+			addEnemy(1, 3);
+			addEnemy(2, 5);
 
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 19:
-
+			addEnemy(1, 2);
+			addEnemy(1, 2);
+			addEnemy(2, 3);
+			addEnemy(2, 3);
+			addEnemy(0, 4);
+			addEnemy(0, 5);
+			addEnemy(0, 6);
+			addEnemy(3, 7);
+			addEnemy(3, 8);
 			WaveNumber++;
 			SetPhase = false;
 			break;
 		case 20:
-
+			addEnemy(2, 2);
+			addEnemy(2, 3);
+			addEnemy(2, 4);
+			addEnemy(2, 5);
+			addEnemy(2, 6);
+			addEnemy(0, 7);
+			addEnemy(0, 8);
+			addEnemy(1, 9);
+			addEnemy(1, 10);
+			addEnemy(3, 15);
+			addEnemy(3, 16);
+			addEnemy(3, 17);
 			WaveNumber++;
 			SetPhase = false;
 			break;
