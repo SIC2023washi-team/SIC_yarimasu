@@ -122,6 +122,9 @@ public:
     int jank = 1000;
     bool isPaused = false;
 
+    bool hit=false;
+
+
     //ステータス
     float speed = 0.005f;
     float damage = 5.0f;

@@ -124,6 +124,21 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	
 	project->projectEffect->Play(project->position);
 
+	DirectX::XMFLOAT3 playerPos = project->player_->position; // ƒvƒŒƒCƒ„[‚ÌˆÊ’u
+	DirectX::XMFLOAT3 projPos = project->position; // ’e‚ÌˆÊ’u
+
+	// ˆÊ’u·‚ğŒvZ
+	float distance = sqrt(
+		(playerPos.x - projPos.x) * (playerPos.x - projPos.x) +
+		(playerPos.y - projPos.y) * (playerPos.y - projPos.y) +
+		(playerPos.z - projPos.z) * (playerPos.z - projPos.z)
+	);
+
+	if (distance >= 20.0f)
+	{
+		project->Death = true; // ’e‚ğ”jŠü
+	}
+
 	///“–‚½‚è”»’è
 	//DirectX::XMFLOAT3 p_p = project->position;
 	//float p_r = project->radius;

@@ -830,11 +830,11 @@ void SceneGame::ProjectileVSEnemy()
 					outPosition)
 					)
 				{
-					if (ene->NumDelivery[9] == 0)
+					if (ene->NumDelivery[9] == 0&&!pro->EnemyHitSave[i])
 					{
 						ene->NumDelivery[9] = pro->damage;
-						ene->HP--;
-						pro->HP = -1;
+						pro->HP -= 1;
+						pro->EnemyHitSave[i] = true;
 					}
 				}
 			}
