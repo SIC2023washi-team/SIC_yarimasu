@@ -406,7 +406,7 @@ void EnemyGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D
 	DebugRenderer* debugRenderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
 	
 	//衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//debugRenderer->DrawCylinder(enemy->position, enemy->radius, enemy->height, DirectX::XMFLOAT4(0, 0, 0, 1));
 
 
 }
