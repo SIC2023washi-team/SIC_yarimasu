@@ -160,6 +160,7 @@ public:
     std::unique_ptr<Lemur::Audio::audio> shot;
     std::unique_ptr<Lemur::Audio::audio> BGM;
     std::unique_ptr<Lemur::Audio::audio> purchase;
+    std::unique_ptr<Lemur::Audio::audio> explosion;
 
 private:
     // skkind_mesh

@@ -111,6 +111,7 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	enemy->height = 1.0f;
 	enemy->StartTime = startTime;
 
+	
 
 	std::mt19937 mt{ std::random_device{}() };
 	std::uniform_int_distribution<int> Pos(0, 1);
@@ -274,6 +275,7 @@ void EnemyPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 			{
 				enemy->firesmokeEffect->Stop(enemy->Effecthandle);
 			}
+			
 			enemy->Death = true;
 		}
 		if (enemy->EnemyType == 3)

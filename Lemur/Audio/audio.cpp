@@ -177,6 +177,12 @@ namespace Lemur::Audio
 
 		hr = source_voice->FlushSourceBuffers();
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		while (voice_state.BuffersQueued)
+		{
+			source_voice->GetState(&voice_state);
+		}
+
 	}
 
 	void audio::volume(float volume)
