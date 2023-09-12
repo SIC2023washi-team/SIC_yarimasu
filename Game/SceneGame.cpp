@@ -580,6 +580,42 @@ void SceneGame::Render(float elapsedTime)
 	//
 
 #endif
+	
+	// SHADOW : make shadow map
+	{
+		using namespace DirectX;
+
+		const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
+		XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
+		XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
+		XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
+		XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
+		XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
+
+		DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
+		data.light_view_projection = data.view_projection;
+		immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
+		immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+
+		double_speed_z->clear(immediate_context, 1.0f);
+		double_speed_z->activate(immediate_context);
+
+		for (auto& it : enemyList)
+		{
+			it->Render(elapsedTime);
+		}
+		player->Render(elapsedTime);
+		double_speed_z->deactivate(immediate_context);
+	}
+	// Render scene
+	D3D11_VIEWPORT viewport;
+	UINT num_viewports{ 1 };
+	immediate_context->RSGetViewports(&num_viewports, &viewport);
+	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix()* camera.GetProjectionMatrix());
+
+	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
+	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
+	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
 
 	//3D•`‰æ
 	{
@@ -587,6 +623,7 @@ void SceneGame::Render(float elapsedTime)
 		framebuffers[0]->activate(immediate_context);
 		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+		immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
 		player->Render(elapsedTime);
 
 		stage->Render(elapsedTime);
@@ -618,47 +655,10 @@ void SceneGame::Render(float elapsedTime)
 		};
 		bit_block_transfer->blit(immediate_context, shader_resource_views, 0, 2, pixel_shaders[0].Get());
 	}
-	// SHADOW : make shadow map
-	{
-		using namespace DirectX;
-
-		const float aspect_ratio = double_speed_z->viewport.Width / double_speed_z->viewport.Height;
-		XMVECTOR F{ XMLoadFloat4(&light_view_focus) };
-		XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&light_direction)) * light_view_distance };
-		XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
-		XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
-		XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
-
-		DirectX::XMStoreFloat4x4(&data.view_projection, V * P);
-		data.light_view_projection = data.view_projection;
-		immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
-		immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-
-		double_speed_z->clear(immediate_context, 1.0f);
-		double_speed_z->activate(immediate_context);
-
-		for (auto& it : enemyList)
-		{
-			it->Render(elapsedTime);
-		}
-		player->Render(elapsedTime);
-		double_speed_z->deactivate(immediate_context);
-	}
-	// Render scene
-	D3D11_VIEWPORT viewport;
-	UINT num_viewports{ 1 };
-	immediate_context->RSGetViewports(&num_viewports, &viewport);
-	DirectX::XMStoreFloat4x4(&data.view_projection, camera.GetViewMatrix() * camera.GetProjectionMatrix());
-
-	immediate_context->UpdateSubresource(constant_buffers[0].Get(), 0, 0, &data, 0, 0);
-	immediate_context->VSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-	immediate_context->PSSetConstantBuffers(1, 1, constant_buffers[0].GetAddressOf());
-
 	//framebuffers[0]->clear(immediate_context);
 	//framebuffers[0]->activate(immediate_context);
 
 	// SHADOW : bind shadow map at slot 8
-	immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
 	//player->Render(elapsedTime);
 
 	//stage->Render(elapsedTime);
