@@ -74,7 +74,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 			//ŠÑ’Ê—Í
 			UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\penetration_force.png");
 			UiBase[4] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\bretHPUp.png");
-			ui->price = 100 * ui->NumDelivery[3];
+			ui->price = 250 + 50 * ui->NumDelivery[3];
 			break;
 		case 3:
 			//UŒ‚—Í
@@ -145,7 +145,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 					&& ui->Uiposition.y < static_cast<float>(mouse.GetOldPositionY()))
 				{
 					ui->UiColor = { 0.5f,0.5f,0.5f,1.0f };
-					if (mouse.GetButtonDown() == mouse.BTN_LEFT && ui->NumDelivery[7] > 99)
+					if (mouse.GetButtonDown() == mouse.BTN_LEFT && ui->NumDelivery[7] >= ui->price)
 					{
 						ui->NumDelivery[6]++;
 
@@ -197,7 +197,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 		ui->Uiposition_[0].y = 285.0f;
 		ui->Uisize_[0] = { 60,20 };
 
-
+		ui->NumDelivery[9] = ui->price;
 		break;
 	case 4:
 		ui->player_MAXHP = ui->NumDelivery[2];
