@@ -64,7 +64,6 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 			break;
 		}
 
-;
 
 		break;
 	case 3:
@@ -190,7 +189,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 				int n = pow(10, jankdig_ - 1);
 				if (jank > 10)
 				{
-					jank -= ui->saveJank[i]*pow(10, jankdig_);
+					jank -= ui->saveJank[i] * pow(10, jankdig_);
 				}
 				int a = 0;
 			}
@@ -203,9 +202,6 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 
 		break;
 	}
-
-
-
 }
 
 void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
@@ -228,26 +224,26 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		if (ui->NumDelivery[5] == 1)
 		{
 			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.9f, (0));
-			
+
 		}
 		break;
 	case 4:
-		for (int i = 0; i < ui->player_MAXHP;i++)
+		for (int i = 0; i < ui->player_MAXHP; i++)
 		{
-			UiBase[0]->render(immediate_context, 20.0f+27.0f*i, 15.0f, 40.0f, 50.0f, ui->HPUiColor[i].x, ui->HPUiColor[i].y, ui->HPUiColor[i].z, ui->HPUiColor[i].w, (0));
+			UiBase[0]->render(immediate_context, 20.0f + 27.0f * i, 15.0f, 40.0f, 50.0f, ui->HPUiColor[i].x, ui->HPUiColor[i].y, ui->HPUiColor[i].z, ui->HPUiColor[i].w, (0));
 		}
 		break;
 	case 5:
-			
-			UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y,ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+
+		UiBase[0]->render(immediate_context, ui->Uiposition.x, ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		break;
 	case 6:
-			
-			UiBase[0]->render(immediate_context, ui->Uiposition.x+(ui->Uisize2.x*ui->junkDigits), ui->Uiposition.y,ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
-			for (int i = 0; i < ui->junkDigits;i++)
-			{
-				UiBase[1]->render(immediate_context, ui->Uiposition2.x + i*(ui->Uisize2.x+5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 *ui->saveJank[i], 0, 134.6, 211);
-			}
+
+		UiBase[0]->render(immediate_context, ui->Uiposition.x + (ui->Uisize2.x * ui->junkDigits), ui->Uiposition.y, ui->Uisize.x, ui->Uisize.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+		for (int i = 0; i < ui->junkDigits; i++)
+		{
+			UiBase[1]->render(immediate_context, ui->Uiposition2.x + i * (ui->Uisize2.x + 5), ui->Uiposition2.y, ui->Uisize2.x, ui->Uisize2.y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0), 134.6 * ui->saveJank[i], 0, 134.6, 211);
+		}
 		break;
 	}
 

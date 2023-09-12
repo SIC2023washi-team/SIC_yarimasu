@@ -29,6 +29,13 @@ public:
         graphics->Initialize(this);
     }
 
+    virtual void EnemyInitialize(int e_t,int s_t)
+    {
+        input->Initialize(this);
+        physics->EnemyInitialize(this,e_t,s_t);
+        graphics->Initialize(this);
+    }
+
     void Update(float elapsedTime)
     {
         input->Update(this, elapsedTime);
@@ -53,21 +60,6 @@ public:
         delete graphics;
     }
 
-
-    // 水平移動更新処理
-    void UpdateHorizontalMove(float elapsedTime);
-
-    // 水平速力更新処理
-    void UpdataHorizontalVelocity(float elapsedFrame);
-
-    void AddImpulse(const DirectX::XMFLOAT3& impulse)
-    {
-        velocity.x += impulse.x;
-        velocity.y += impulse.y;
-        velocity.z += impulse.z;
-    }
-
-
 public:
     DirectX::XMFLOAT4X4 World;
 
@@ -89,6 +81,14 @@ public:
     float radius = 1.0f;
     float height;
 
+
+
+    float damage = 1.0f;
+
+    float HP = 10.0f;
+
+    int StartTime = 0;
+    int Timer;
     Mouse* mouse;
 
     ID3D11PixelShader* pixelShader = nullptr;

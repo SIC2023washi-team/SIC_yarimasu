@@ -125,27 +125,38 @@ void GamePro_ProjectileStraightPhysicsComponent::Update(GameObject* gameobj, flo
 	project->projectEffect->Play(project->position);
 
 	///“–‚½‚è”»’è
-	DirectX::XMFLOAT3 p_p = project->position;
-	float p_r = project->radius;
+	//DirectX::XMFLOAT3 p_p = project->position;
+	//float p_r = project->radius;
 
-	for (auto& it : project->enemyList_)
-	{
-		DirectX::XMFLOAT3 e_p = it->position;
-		float e_r = it->radius;
-		if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
-		{
-			if(it->NumDelivery[9] == 0)
-			{
-				it->NumDelivery[9] = project->damage;
-				project->HP -= 1;
-			}
-		}
-	}
+	//for (auto& it : project->enemyList_)
+	//{
+	//	DirectX::XMFLOAT3 e_p = it->position;
+	//	float e_r = it->radius;
+	//	if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+	//	{
+	//		it->NumDelivery[10] = project->damage;
+	//		project->HP -= 1;
+	//	}
+	//}
+
+//	if (project->HP <= 0)
+//	{
+//<<<<<<< HEAD
+//		DirectX::XMFLOAT3 e_p = it->position;
+//		float e_r = it->radius;
+//		if (Collision::IntersectSphereVsSphere(p_p, p_r, e_p, e_r))
+//		{
+//			if(it->NumDelivery[9] == 0)
+//			{
+//				it->NumDelivery[9] = project->damage;
+//				project->HP -= 1;
+//			}
+//		}
+//	}
 
 
 	if (project->HP <= 0)
 	{
 		project->Death = true;
 	}
-
 }

@@ -53,6 +53,8 @@ public:
 
     // 敵の追加
     void addEnemy();
+    void addEnemy(int enemyType,int startTime);
+
     //Uiの追加
     void addUi(int Uitype);
     void UiGetUpdate();
@@ -62,6 +64,8 @@ public:
     void addProjectile();
 
     void ProjectileVSEnemy();
+
+    void Wave();
 
     // プレイヤー生成
     Player* CreatePlayer()
@@ -100,6 +104,7 @@ public:
         );
     }
 
+    static int Timer;
     //GamePro_ProjectileStraight* CreateProjectile();
     GamePro_ProjectileStraight* CreateProjectile()
     {
@@ -123,6 +128,10 @@ public:
     float Player_HP = 3.0f;
     float Player_MAXHP = 3.0f;
 
+    // ウェーブ用
+    bool SetPhase = false;
+    int WaveNumber=1;
+    //std::vector<GameObject> waves;
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];

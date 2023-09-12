@@ -17,7 +17,6 @@ public:
     Enemy(InputComponent* input_,
         PhysicsComponent* physics_,
         GraphicsComponent* graphics_) :GameObject(input_, physics_, graphics_) {}
-    float HP = 10.0f;
     float Speed = 0.001f;
     float Atk;
     float AnimSpeed = 1.0f;
@@ -28,7 +27,6 @@ public:
     Effect* explosionEffect;
     Effect* firesmokeEffect;
     Effekseer::Handle Effecthandle;
-    //Effect* ef;
 };
 
 class EnemyInputComponent :public InputComponent
@@ -40,6 +38,7 @@ class EnemyInputComponent :public InputComponent
 class EnemyPhysicsComponent :public PhysicsComponent
 {
     void Initialize(GameObject* gameobj) override;
+    void EnemyInitialize(GameObject* gameobj,int StartTime,int EnemyTime) override;
     void Update(GameObject* gameobj, float elapsedTime) override;
 };
 
@@ -51,5 +50,5 @@ class EnemyGraphicsComponent :public GraphicsComponent
 
 private:
     std::shared_ptr<skinned_mesh> EnemyModel;
-
+    float animation_tick = 0;
 };
