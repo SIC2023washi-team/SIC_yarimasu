@@ -462,6 +462,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 					outPosition)
 					)
 				{
+					//if(enemyB->StartTime <= Timer)
 					enemyB->position.x+=1;
 				}
 			}
@@ -947,35 +948,38 @@ void SceneGame::ProjectileVSEnemy()
 		for (int i = 0; i < enemyCount; ++i)
 		{
 			GameObject* ene = enemyList.at(i);
-			if (enemyList.at(i)->NumDelivery[int(enemyNum::EnemyDeath_Flag)] != 1)
+			if (ene->StartTime <= Timer)
 			{
-				int projectileCount = projectileList.size();
-				for (int j = 0; j < projectileCount; ++j)
+				if (enemyList.at(i)->NumDelivery[int(enemyNum::EnemyDeath_Flag)] != 1)
 				{
-					GameObject* pro = projectileList.at(j);
-					// Õ“Ë”»’è
-					DirectX::XMFLOAT3 outPosition;
-					if (Collision::IntersectSphereVsCylinder
-					(pro->position,
-						pro->radius,
-						ene->position,
-						ene->radius,
-						ene->height,
-						outPosition)
-						)
+					int projectileCount = projectileList.size();
+					for (int j = 0; j < projectileCount; ++j)
 					{
-						if (ene->NumDelivery[9] == 0 && !pro->EnemyHitSave[i])
+						GameObject* pro = projectileList.at(j);
+						// Õ“Ë”»’è
+						DirectX::XMFLOAT3 outPosition;
+						if (Collision::IntersectSphereVsCylinder
+						(pro->position,
+							pro->radius,
+							ene->position,
+							ene->radius,
+							ene->height,
+							outPosition)
+							)
 						{
+							if (ene->NumDelivery[9] == 0 && !pro->EnemyHitSave[i])
+							{
 
-							ene->NumDelivery[9] = pro->damage;
-							pro->HP -= 1;
-							pro->EnemyHitSave[i] = true;
+								ene->NumDelivery[9] = pro->damage;
+								pro->HP -= 1;
+								pro->EnemyHitSave[i] = true;
 
-							damageSE->stop();
-							damageSE->play();
+								damageSE->stop();
+								damageSE->play();
 
-							ene->HitReaction = true;
+								ene->HitReaction = true;
 
+							}
 						}
 					}
 				}
