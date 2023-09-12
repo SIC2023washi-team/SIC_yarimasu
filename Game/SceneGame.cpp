@@ -999,6 +999,7 @@ void SceneGame::UiGetUpdate()
 			if (it->NumDelivery[6] == 1)
 			{
 				purchase->play();
+				jank -= it->NumDelivery[9];
 				switch (it->NumDelivery[2])
 				{
 				case 0:
@@ -1006,28 +1007,28 @@ void SceneGame::UiGetUpdate()
 					attack += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
 					attack_lv++;
-					jank -= 100;
+					
 					break;
 				case 1:
 					//’e‘¬“x
 					speed += 0.01f;
 					it->NumDelivery[6] = 0;
 					speed_lv++;
-					jank -= 100;
+					
 					break;
 				case 2:
 					//ŠÑ’Ê—Í
 					HP += it->NumDelivery[6];
 					it->NumDelivery[6] = 0;
 					HP_lv++;
-					jank -= 100;
+					
 					break;
 				case 3:
 					//UŒ‚—Í
 					damage += 5;
 					damage_lv++;
 					it->NumDelivery[6] = 0;
-					jank -= 100;
+				
 					break;
 				case 4:
 					//ƒvƒŒƒCƒ„[
@@ -1035,7 +1036,7 @@ void SceneGame::UiGetUpdate()
 					Player_MAXHP += it->NumDelivery[6];
 					Player_MAXHP_Lv++;
 					it->NumDelivery[6] = 0;
-					jank -= 100;
+					
 
 					break;
 				}
