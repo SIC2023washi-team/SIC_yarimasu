@@ -4,6 +4,7 @@
 #include"./Lemur/Graphics/shader.h"
 #include"./Lemur/Graphics/texture.h"
 #include"./Lemur/Graphics/framework.h"
+#include"./Lemur/Graphics/sprite_d.h"
 
 // Audio
 #include <wrl.h>
@@ -11,6 +12,7 @@
 
 // Effect
 #include"./Lemur/Effekseer/Effect.h"
+#include <random>
 
 class SceneTitle :public Lemur::Scene::BaseScene
 {
@@ -36,9 +38,16 @@ private:
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, -10.0f, 1.0f };
     DirectX::XMFLOAT4 light_direction{ -0.113f, -0.556f, 1.0f, 0.0f };
 
+    DirectX::XMFLOAT2 decoPosition[5];
+    float decoSize[5];
+    float decoW[5];
+
+    std::shared_ptr<sprite_d> sprdissolve;
+
     std::shared_ptr<sprite> sprTitle;
     std::shared_ptr<sprite> sprStart;
     std::shared_ptr<sprite> sprEnd;
+    std::shared_ptr<sprite> sprTitleDeco[5];
 
     struct option
     {
@@ -48,7 +57,11 @@ private:
 
     option start;
     option end;
-    //----------------------------------------------------------------------------------------------------
+
+    bool dissolveStart;
+
+
+    //-------------------------------------------------------------------------------------------
     //  ↓シェーダー関連
     //----------------------------------------------------------------------------------------------------
     std::unique_ptr<framebuffer> framebuffers[8];
@@ -88,7 +101,7 @@ private:
     struct dissolve_constants {
         DirectX::XMFLOAT4 parameters; // x : ディゾルブ適応量、yzw : 空き
     };
-    float dissolve_value{ 0.5f };
+    float dissolve_value{ 1.0f };
     Microsoft::WRL::ComPtr<ID3D11Buffer> dissolve_constant_buffer;
 
     D3D11_TEXTURE2D_DESC mask_texture2dDesc;
