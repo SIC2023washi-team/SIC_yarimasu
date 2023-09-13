@@ -32,6 +32,8 @@ public:
     // •`‰æˆ—
     void Render(float elapsedTime)override;
 
+
+    float color_[5];
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];
@@ -41,6 +43,7 @@ private:
     DirectX::XMFLOAT2 decoPosition[5];
     float decoSize[5];
     float decoW[5];
+    
 
     std::shared_ptr<sprite_d> sprdissolve;
 

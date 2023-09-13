@@ -109,18 +109,44 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 		}
 	}
 
-	if (mouse.GetButton() == mouse.BTN_LEFT)
-	{
 		DirectX::XMFLOAT3 screenPosition;
 		screenPosition.x = static_cast<float>(mouse.GetOldPositionX());
 		screenPosition.y = static_cast<float>(mouse.GetOldPositionY());
-		if (screenPosition.x < start.pos.x + start.size.x
-			&& start.pos.x < static_cast<float>(mouse.GetOldPositionX()))
+		if ((screenPosition.x < start.pos.x + start.size.x
+			&& start.pos.x < static_cast<float>(mouse.GetOldPositionX()))&& 
+			(screenPosition.y < start.pos.y + start.size.y
+				&& start.pos.y < static_cast<float>(mouse.GetOldPositionY())))
 		{
-			dissolveStart = true;
-			//Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+			color_[0] = 0.5f;
+			if (mouse.GetButton() == mouse.BTN_LEFT)
+			{
+				dissolveStart = true;
+				//Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+			}
 		}
-	}
+		else
+		{
+			color_[0] = 1.0f;
+		}
+		//END‚Ì•û‚Ì”»’è
+		if ((screenPosition.x < end.pos.x + end.size.x
+			&& end.pos.x < static_cast<float>(mouse.GetOldPositionX()))&&
+			(screenPosition.y < end.pos.y + end.size.y
+				&& end.pos.y < static_cast<float>(mouse.GetOldPositionY())))
+		{
+			color_[1] = 0.5f;
+			if (mouse.GetButton() == mouse.BTN_LEFT)
+			{
+				//‚±‚±‚ÉI—¹•`‚¢‚Ä‚Ë
+				//Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+			}
+		}
+		else
+		{
+			color_[1] = 1.0f;
+		}
+
+	
 
 	if (dissolveStart)
 	{
@@ -374,8 +400,8 @@ void SceneTitle::Render(float elapsedTime)
 
 			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			sprTitle->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			sprStart->render(immediate_context, start.pos.x, start.pos.y, start.size.x, start.size.y);
-			sprEnd->render(immediate_context, end.pos.x, end.pos.y, end.size.x, end.size.y);
+			sprStart->render(immediate_context, start.pos.x, start.pos.y, start.size.x, start.size.y,color_[0], color_[0], color_[0], 1.0f, (0));
+			sprEnd->render(immediate_context, end.pos.x, end.pos.y, end.size.x, end.size.y, color_[1], color_[1], color_[1], 1.0f, (0));
 			for (int i = 0; i < 5; i++)
 			{
 				sprTitleDeco[i]->render(immediate_context, decoPosition[i].x, decoPosition[i].y, decoSize[i], decoSize[i],1,1,1, decoW[i],0);
