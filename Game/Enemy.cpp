@@ -154,6 +154,22 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 		enemy->EnemyMoney = 100;
 		enemy->radius = 1.0f;
 		break;
+	case 8://¬‚³‚¢‚ÌÂ
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.02f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 100;
+		enemy->radius = 0.5f;
+		break;
+	case 9://¬‚³‚¢Ž‡
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.02f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 100;
+		enemy->radius = 1.0f;
+		break;
 	}
 	// F•Û‘¶—p
 	enemy->SaveColor = enemy->material_color;
@@ -162,10 +178,10 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 	{
 	case 0://ã‰º‚©‚ç‚­‚é
 		enemy->position.x = int(ePos_1(mt));
-		enemy->position.z = 13 * (-1 + (int(Ran(mt))) * 2);
+		enemy->position.z = 15 * (-1 + (int(Ran(mt))) * 2);
 		break;
 	case 1://¶‰E‚©‚ç‚­‚é
-		enemy->position.x = 21 * (-1 + (int(Ran(mt))) * 2);
+		enemy->position.x = 23 * (-1 + (int(Ran(mt))) * 2);
 		enemy->position.z = int(ePos_2(mt));
 		break;
 	}
@@ -363,6 +379,12 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	case 7:
 		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_high_redv002.fbx");
+		break;
+	case 8:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_bluev001.fbx");
+		break;
+	case 9:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_purplev001.fbx");
 		break;
 	}
 
