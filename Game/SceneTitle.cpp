@@ -167,11 +167,7 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 	}
 
 	//ImGui::Begin("ImGUI");
-<<<<<<< HEAD
-	//ImGui::SliderFloat("dissolve_value", &dissolve_value, 0.0f, +1.0f);
-=======
 
->>>>>>> origin/washinao4
 	//ImGui::End();
 }
 
@@ -425,8 +421,7 @@ void SceneTitle::Render(float elapsedTime)
 		}
 	}
 
-<<<<<<< HEAD
-=======
+
 	//// 3Dエフェクト描画
 	//{
 	//	DirectX::XMFLOAT4X4 view{};
@@ -437,6 +432,6 @@ void SceneTitle::Render(float elapsedTime)
 
 	//	EffectManager::Instance().Render(view, projection);
 	//}
->>>>>>> origin/washinao4
+
 
 }

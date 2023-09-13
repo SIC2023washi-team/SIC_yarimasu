@@ -57,7 +57,7 @@ void Camera::Update(float elapsedTime)
     float speed = rollSpeed * elapsedTime;
 
     // スティックの入力値に合わせてX軸とY軸を回転
-<<<<<<< HEAD
+
 
     //angle.x -= ay * speed;
     //angle.y += ax * speed;
@@ -65,13 +65,7 @@ void Camera::Update(float elapsedTime)
     //target.x  += lx * speed;
     //target.y  += ly * speed;
 
-=======
-    /*angle.x -= ay * speed;
-    angle.y += ax * speed;
 
-    target.x  += lx * speed;
-    target.y  += ly * speed;*/
->>>>>>> origin/washinao4
 
     // カメラの回転値を回転行列に変換
     DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);

@@ -365,7 +365,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			}
 		}
 	}
-<<<<<<< HEAD
+
 	//if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
 	//{
 	//	// HACK これで現在の敵を全て削除
@@ -385,13 +385,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//	//}
 	//}
 	//if (isPaused && mouse.GetButtonDown() == mouse.BTN_RIGHT)isPaused = false;
-=======
-	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
-	{
-		// HACK これで現在の敵を全て削除
-		enemyList.clear();
-	}
->>>>>>> origin/washinao4
+
 	if (isPaused)return;
 
 	// 敵が死んだときにタイマー初期化、敵をセットするフラグをON
@@ -610,12 +604,9 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
-<<<<<<< HEAD
 
-		if (165 <= attack * 10 + attacktimer && (screenPosition.x <= 1160 || screenPosition.y <= 660))
-=======
 		if (attack * 15 + attacktimer >= 165 && (screenPosition.x <= 1160 || screenPosition.y <= 660))
->>>>>>> origin/washinao4
+
 		{
 			shot->stop();
 			addProjectile();
@@ -648,10 +639,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//ImGui::End();
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/washinao4
 }
 
 void SceneGame::Render(float elapsedTime)
