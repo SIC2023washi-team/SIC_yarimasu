@@ -35,7 +35,7 @@ bool framework::initialize()
 void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
 {
 	// ImGui更新
-	IMGUI_CTRL_CLEAR_FRAME();
+	//IMGUI_CTRL_CLEAR_FRAME();
 
 	// 入力更新処理
 	input.Update();

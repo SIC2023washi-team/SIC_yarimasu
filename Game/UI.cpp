@@ -21,6 +21,7 @@ void UiPhysicsComponent::Initialize(GameObject* gameobj)
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 	ui->shop = std::make_unique<Lemur::Audio::audio>(ui->xaudio2.Get(), L".\\resources\\Audio\\SE\\shop.wav");
+	ui->result = std::make_unique<Lemur::Audio::audio>(ui->xaudio2.Get(), L".\\resources\\Audio\\BGM\\Result.wav");
 }
 
 void UiPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
@@ -140,6 +141,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
 	case 8://ƒŠƒUƒ‹ƒg
+		
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\result.png");
 		
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\font.png");
@@ -400,6 +402,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 		};
 		break;
 	case 8:
+		
 		if (ui->NumDelivery[3])
 		{
 			
@@ -575,6 +578,7 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		}
 		break;
 	case 8:
+		
 		if (ui->NumDelivery[3] == 1)
 		{
 			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));

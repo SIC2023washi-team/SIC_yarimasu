@@ -168,7 +168,7 @@ public:
     std::unique_ptr<Lemur::Audio::audio> shot;
     std::unique_ptr<Lemur::Audio::audio> purchase;
     std::unique_ptr<Lemur::Audio::audio> explosion;
-
+    std::unique_ptr<Lemur::Audio::audio> result;
 
     enum class enemyNum
     {
@@ -191,6 +191,8 @@ public:
     std::unique_ptr<Lemur::Audio::audio> BGM2;
     std::unique_ptr<Lemur::Audio::audio> BGM3;
 
+    bool DeathCheack;
+
     //Effect
     Effect* explosionEffect;
     Effect* barelEffect;
@@ -200,10 +202,7 @@ public:
     DirectX::XMVECTOR tani;
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/washinao4
 private:
     // skkind_mesh
     std::shared_ptr<skinned_mesh> skinned_meshes[8];

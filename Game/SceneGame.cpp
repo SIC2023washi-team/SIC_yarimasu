@@ -165,7 +165,8 @@ void SceneGame::Initialize()
 	damageSE = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\SE\\damage.wav");
 	BGM = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Play.wav");
 	BGM2 = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\play2.wav");
-	BGM3 = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\play3.wav");
+	BGM3 = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\play3.wav"); 
+	result = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Result.wav");
 
 	explosionEffect = new Effect("resources/Effects/explosion.efk");
 	barelEffect = new Effect("resources/Effects/barel_stylize.efk");
@@ -236,19 +237,23 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	BGM2->volume(0.25);
 	BGM3->volume(0.25);
 
-	if (WaveNumber < 11)
+	if (Player_HP > 0)
 	{
-		BGM->play(10);
-	}
-	if (WaveNumber < 21 && WaveNumber > 10)
-	{
-		BGM2->play(10);
-	}
-	if (WaveNumber < 31 && WaveNumber > 20)
-	{
-		BGM3->play(10);
+		if (WaveNumber < 12)
+		{
+			BGM->play(10);
+		}
+		if (WaveNumber < 22 && WaveNumber > 11)
+		{
+			BGM2->play(10);
+		}
+		if (WaveNumber < 32 && WaveNumber > 21)
+		{
+			BGM3->play(10);
+		}
 	}
 
+	
 	
 	interval<1000>::run([&] {
 		Timer++;
@@ -359,20 +364,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		// HACK これで現在の敵を全て削除
 		enemyList.clear();
 	}
-	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
-	//{
-	//	if (!isPaused)
-	//	{
-	//		shop_int = 1;
-	//		isPaused = true;
-	//	}
-	//	//else
-	//	//{
-	//	//	shop_int = 0;
-	//	//	isPaused = false;
-	//	//}
-	//}
-	//if (isPaused && mouse.GetButtonDown() == mouse.BTN_RIGHT)isPaused = false;
 	if (isPaused)return;
 
 	// 敵が死んだときにタイマー初期化、敵をセットするフラグをON
@@ -536,10 +527,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		screenPosition.y = static_cast<float>(mouse.GetOldPositionY()); //660
 		screenPosition.z = 0.0f;
 
-		/*ImGui::Begin("Mouse");
-		ImGui::SliderFloat("Mouse.x", &screenPosition.x, 0, SCREEN_WIDTH);
-		ImGui::SliderFloat("Mouse.y", &screenPosition.y, 0, SCREEN_HEIGHT);
-		ImGui::End();*/
+		
 
 		D3D11_VIEWPORT viewport;
 		UINT numViewports = 1;
@@ -589,22 +577,13 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 			TANI_Effect = { TANI.x * 1.0f, 0.0f, TANI.z * 1.0f };
 
-			player->rotation.y = atan2(rotationangle.x,rotationangle.z);
-
-			
-			
+			player->rotation.y = atan2(rotationangle.x,rotationangle.z);	
 		}
 		else
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
-<<<<<<< HEAD
-
-		if (attack*15+attacktimer >= 165)
-
-=======
-		if (150 <= attack * 10 + attacktimer && (screenPosition.x <= 1160 || screenPosition.y <= 660))
->>>>>>> origin/washinao4
+		if (attack * 15 + attacktimer >= 165 && (screenPosition.x <= 1160 || screenPosition.y <= 660))
 		{
 			shot->stop();
 			addProjectile();
@@ -636,12 +615,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//ImGui::End();
 
 
-<<<<<<< HEAD
-=======
-	ImGui::End();
-
-	
->>>>>>> origin/washinao4
 }
 
 void SceneGame::Render(float elapsedTime)
@@ -1605,6 +1578,10 @@ void SceneGame::EnemyGetUpdate()
 				explosionEffect->Play(player->position,2.0f);
 				explosion->stop();
 				explosion->play();
+				BGM->stop();
+				BGM2->stop();
+				BGM3->stop();
+				result->play();
 			}
 			it->NumDelivery[0] = 0;
 			it->NumDelivery[1] = 1;
