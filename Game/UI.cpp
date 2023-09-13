@@ -112,6 +112,9 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	case 4:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\HP_bit.png");
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\gear.png");
+		ui->Uiposition2 = { 25,80 };
+		ui->Uisize2 = { 50,50 };
 		ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
 		break;
 	case 5:
@@ -299,6 +302,7 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 		ui->Timer++;
 		break;
 	case 4:
+		ui->Timer += 1;
 		ui->player_MAXHP = ui->NumDelivery[2];
 		ui->player_HP = ui->NumDelivery[1];
 
@@ -569,6 +573,8 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		}
 		break;
 	case 4:
+		UiBase[1]->render(immediate_context, -140, -140, 350, 350, 1.0f, 1.0f, 1.0f, 0.5f, (ui->Timer*0.5f), 0, 0, 474, 474);
+		UiBase[1]->render(immediate_context, 95, 60, 140, 140, 1.0f, 1.0f, 1.0f, 0.5f, (ui->Timer*0.5f), 0, 0, 474, 474);
 		for (int i = 0; i < ui->player_MAXHP; i++)
 		{
 			UiBase[0]->render(immediate_context, 20.0f + 27.0f * i, 15.0f, 35.0f, 50.0f, ui->HPUiColor[i].x, ui->HPUiColor[i].y, ui->HPUiColor[i].z, ui->HPUiColor[i].w, (0));
