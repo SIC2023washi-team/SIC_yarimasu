@@ -42,14 +42,45 @@ void SceneTitle::Initialize()
 	//skinned_meshes[1] = std::make_unique<skinned_mesh>(graphics.GetDevice(), ".\\resources\\grid.fbx");
 	double_speed_z = std::make_unique<shadow_map>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
+	sprdissolve = std::make_unique<sprite_d>(graphics.GetDevice(), L".\\resources\\Image\\black.png");
 	sprTitle = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\titile.png");
 	sprStart = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\start.png");
 	sprEnd = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\end.png");
+	for (int i = 0; i < 5; i++)
+	{
+		sprTitleDeco[i] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\point.png");
+	}
+
+	load_texture_from_file(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png",mask_texture.GetAddressOf(), &mask_texture2dDesc);
 
 	start.size = { 185,76 };
 	end.size = { 102, 68 };
 	start.pos = { SCREEN_WIDTH / 2 - start.size.x / 2, SCREEN_HEIGHT / 2 + start.size.y / 2 };
 	end.pos = { (SCREEN_WIDTH / 2 - end.size.x / 2), (SCREEN_HEIGHT / 2 + end.size.y / 2) + 100 };
+
+
+	//std::mt19937 mt{ std::random_device{}() };
+	//std::uniform_int_distribution<int> pos_1(0, 1920);
+	//std::uniform_int_distribution<int> pos_2(0, 1920);
+	//std::uniform_int_distribution<int> pos_3(0, 1920);
+
+	decoPosition[0] = { float(rand() % 1280)- 64,float(rand() % 720)};
+	decoPosition[1] = { float(rand() % 1280)- 64,float(rand() % 720)};
+	decoPosition[2] = { float(rand() % 1280)- 64,float(rand() % 720)};
+	decoPosition[3] = { float(rand() % 1280)- 64,float(rand() % 720)};
+	decoPosition[4] = { float(rand() % 1280)- 64,float(rand() % 720)};
+
+	decoSize[0] = { float(rand() % 55)+10};
+	decoSize[1] = { float(rand() % 55)+10};
+	decoSize[2] = { float(rand() % 55)+10};
+	decoSize[3] = { float(rand() % 55)+10};
+	decoSize[4] = { float(rand() % 55)+10};
+
+	decoW[0] = { float(rand() % 10) *0.1f+0.1f};
+	decoW[1] = { float(rand() % 10) *0.1f+0.1f};
+	decoW[2] = { float(rand() % 10) *0.1f+0.1f};
+	decoW[3] = { float(rand() % 10) *0.1f+0.1f};
+	decoW[4] = { float(rand() % 10) *0.1f+0.1f};
 }
 
 void SceneTitle::Finalize()
@@ -66,8 +97,16 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 
 	camera.Update(elapsedTime);
 
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	for (int i = 0; i < 5; ++i)
 	{
+		decoPosition[i].y -= 500.0f * elapsedTime;
+		if (decoPosition[i].y < 0)
+		{
+			decoPosition[i].y = 720;
+			decoPosition[i].x = float(rand() % 1280) - 64;
+			decoSize[i] = { float(rand() % 60) + 4 };
+			decoW[i] = { float(rand() % 10) * 0.1f + 0.1f };
+		}
 	}
 
 	if (mouse.GetButton() == mouse.BTN_LEFT)
@@ -78,14 +117,23 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 		if (screenPosition.x < start.pos.x + start.size.x
 			&& start.pos.x < static_cast<float>(mouse.GetOldPositionX()))
 		{
-			Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
+			dissolveStart = true;
+			//Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 		}
-		//if(screenPosition.x)
 	}
 
-	ImGui::Begin("ImGUI");
+	if (dissolveStart)
+	{
+		dissolve_value -= elapsedTime;
+		if (dissolve_value <= 0.0f)
+		{
+			Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+		}
+	}
 
-	ImGui::End();
+	//ImGui::Begin("ImGUI");
+	//ImGui::SliderFloat("dissolve_value", &dissolve_value, 0.0f, +1.0f);
+	//ImGui::End();
 }
 
 void SceneTitle::Render(float elapsedTime)
@@ -323,23 +371,20 @@ void SceneTitle::Render(float elapsedTime)
 				immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 				immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
 			}
+
 			//dummy_sprite->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			sprTitle->render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			sprStart->render(immediate_context, start.pos.x,start.pos.y, start.size.x, start.size.y);
+			sprStart->render(immediate_context, start.pos.x, start.pos.y, start.size.x, start.size.y);
 			sprEnd->render(immediate_context, end.pos.x, end.pos.y, end.size.x, end.size.y);
+			for (int i = 0; i < 5; i++)
+			{
+				sprTitleDeco[i]->render(immediate_context, decoPosition[i].x, decoPosition[i].y, decoSize[i], decoSize[i],1,1,1, decoW[i],0);
+			}
+			sprdissolve->render(immediate_context,0,0, 1280,720);
+
 			//sprEnd->render(immediate_context, , endSize.x, endSize.y);
 		}
 	}
 
-	// 3Dエフェクト描画
-	{
-		DirectX::XMFLOAT4X4 view{};
-		DirectX::XMFLOAT4X4 projection{};
-
-		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
-		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
-
-		EffectManager::Instance().Render(view, projection);
-	}
 
 }
