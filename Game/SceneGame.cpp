@@ -360,11 +360,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			}
 		}
 	}
-	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
-	{
-		// HACK ‚±‚ê‚ÅŒ»İ‚Ì“G‚ğ‘S‚Äíœ
-		enemyList.clear();
-	}
+	//if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
+	//{
+	//	// HACK ‚±‚ê‚ÅŒ»İ‚Ì“G‚ğ‘S‚Äíœ
+	//	enemyList.clear();
+	//}
 	//if (mouse.GetButtonDown() == mouse.BTN_LEFT)
 	//{
 	//	if (!isPaused)
