@@ -3,7 +3,6 @@
 #include "SceneLoading.h"
 #include"./Lemur/Graphics/Camera.h"
 #include"./Lemur/Resource/ResourceManager.h"
-
 #include"./Lemur/Effekseer/EffekseerManager.h"
 
 void SceneTitle::Initialize()
@@ -148,6 +147,8 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 			{
 				//Ç±Ç±Ç…èIóπï`Ç¢ÇƒÇÀ
 				//Lemur::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+				//TODO
+				PostMessage(hwnd, WM_CLOSE, 0, 0);
 			}
 		}
 		else
