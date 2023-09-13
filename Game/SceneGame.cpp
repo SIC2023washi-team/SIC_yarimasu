@@ -380,7 +380,6 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//ui->Update(elapsedTime);
 
 
-
 	if (enemyList.size() != 0)
 	{
 		for (auto& it : enemyList)
