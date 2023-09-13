@@ -56,6 +56,7 @@ public:
     Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
     IXAudio2MasteringVoice* master_voice = nullptr;
     std::unique_ptr<Lemur::Audio::audio> shop;
+    std::unique_ptr<Lemur::Audio::audio> result;
     
 
 };

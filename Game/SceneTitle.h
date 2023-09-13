@@ -84,6 +84,7 @@ private:
     // Audio
     Microsoft::WRL::ComPtr<IXAudio2> xaudio2;
     IXAudio2MasteringVoice* master_voice = nullptr;
+    std::unique_ptr<Lemur::Audio::audio> title;
     std::unique_ptr<Lemur::Audio::audio> bgm[8];
     std::unique_ptr<Lemur::Audio::audio> se[8];
 

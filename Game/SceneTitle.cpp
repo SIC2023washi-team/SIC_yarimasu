@@ -35,6 +35,13 @@ void SceneTitle::Initialize()
 	framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
 	bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
 
+	hr = XAudio2Create(xaudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+	hr = xaudio2->CreateMasteringVoice(&master_voice);
+	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	title = std::make_unique<Lemur::Audio::audio>(xaudio2.Get(), L".\\resources\\Audio\\BGM\\Play.wav");
+
 	// ZELDA
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/zelda_ps.cso", zelda_ps.GetAddressOf());
 
@@ -89,6 +96,8 @@ void SceneTitle::Finalize()
 
 void SceneTitle::Update(HWND hwnd,float elapsedTime)
 {
+	title->volume(0.5f);   ///0.0f～1.0fの間で音量調整可
+	title->play(10);
 	Camera& camera = Camera::Instance();
 	Mouse& mouse = Input::Instance().GetMouse();
 
@@ -158,7 +167,11 @@ void SceneTitle::Update(HWND hwnd,float elapsedTime)
 	}
 
 	//ImGui::Begin("ImGUI");
+<<<<<<< HEAD
 	//ImGui::SliderFloat("dissolve_value", &dissolve_value, 0.0f, +1.0f);
+=======
+
+>>>>>>> origin/washinao4
 	//ImGui::End();
 }
 
@@ -412,5 +425,18 @@ void SceneTitle::Render(float elapsedTime)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	//// 3Dエフェクト描画
+	//{
+	//	DirectX::XMFLOAT4X4 view{};
+	//	DirectX::XMFLOAT4X4 projection{};
+
+	//	DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+	//	DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+
+	//	EffectManager::Instance().Render(view, projection);
+	//}
+>>>>>>> origin/washinao4
 
 }
