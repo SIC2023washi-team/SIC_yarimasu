@@ -122,6 +122,7 @@ void SceneGame::Initialize()
 	addUi(7);
 	addUi(8);
 	addUi(9);
+	addUi(10);
 
 
 
@@ -352,6 +353,11 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 
 			it->itemLevelsave[4] = Player_MAXHP_Lv;
 			break;
+		case 10:
+			if (165 <= attack * 10 + attacktimer && it->NumDelivery[3] < 1&& mouse.GetButtonDown() == mouse.BTN_LEFT)
+			{
+				it->NumDelivery[3]++;
+			}
 		}
 	}
 	if (mouse.GetButtonDown() == mouse.BTN_MIDDLE)
@@ -598,13 +604,8 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 		{
 			OutputDebugStringA("Unintersected...\n");
 		}
-<<<<<<< HEAD
 
-		if (attack*15+attacktimer >= 165)
-
-=======
-		if (150 <= attack * 10 + attacktimer && (screenPosition.x <= 1160 || screenPosition.y <= 660))
->>>>>>> origin/washinao4
+		if (165 <= attack * 10 + attacktimer && (screenPosition.x <= 1160 || screenPosition.y <= 660))
 		{
 			shot->stop();
 			addProjectile();
@@ -612,6 +613,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 			shot->play();
 
 			attacktimer = 0;
+
 
 		}
 	}
@@ -636,12 +638,7 @@ void SceneGame::Update(HWND hwnd, float elapsedTime)
 	//ImGui::End();
 
 
-<<<<<<< HEAD
-=======
-	ImGui::End();
 
-	
->>>>>>> origin/washinao4
 }
 
 void SceneGame::Render(float elapsedTime)
@@ -1287,7 +1284,13 @@ void SceneGame::UiGetUpdate()
 		{
 			if (it->NumDelivery[6] == 1)
 			{
-
+				for (auto& it : UiList)
+				{
+					if (it->NumDelivery[0] == 10)
+					{
+					it->NumDelivery[4] = 1;
+					}
+				}
 				shop_int = 1;
 				isPaused = true;
 			}

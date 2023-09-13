@@ -46,36 +46,6 @@ void EnemyPhysicsComponent::Initialize(GameObject* gameobj)
 
 	enemy->EnemyType = int(Type(mt));
 
-	//TODO 三澤君
-	switch (enemy->EnemyType)
-	{
-	default:
-		break;
-	case 0://小さいの
-		enemy->HP = 3.0f;
-		enemy->Speed = 0.005f;// 速度
-		enemy->AnimSpeed = 3.0f;// アニメーションの速度
-		break;
-		enemy->EnemyMoney = 10;
-	case 1://中くらいの
-		enemy->HP = 3.0f;
-		enemy->Speed = 0.003f;
-		enemy->AnimSpeed = 1.5f;
-		enemy->EnemyMoney = 25;
-		break;
-	case 2://大きいの
-		enemy->HP = 3.0f;
-		enemy->Speed = 0.001f;
-		enemy->EnemyMoney = 50;
-		break;
-	case 3://小さいしくそ早
-		enemy->HP = 3.0f;
-		enemy->Speed = 0.01f;
-		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
-		enemy->AnimSpeed = 2.0f;
-		enemy->EnemyMoney = 25;
-		break;
-	}
 
 	switch (int(Pos(mt)))
 
@@ -148,11 +118,41 @@ void EnemyPhysicsComponent::EnemyInitialize(GameObject* gameobj, int enemyType, 
 		break;
 	case 3://小さいしくそ早
 		enemy->HP = 1.0f;
+		enemy->Speed = 0.05f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 3.0f;
+		enemy->EnemyMoney = 25;
+		enemy->radius = 0.5f;
+		break;
+	case 4://普通の青
+		enemy->HP = 1.0f;
 		enemy->Speed = 0.02f;
 		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
 		enemy->AnimSpeed = 2.0f;
 		enemy->EnemyMoney = 100;
 		enemy->radius = 0.5f;
+		break;
+	case 5://大きいの青
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.02f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 100;
+		enemy->radius = 1.0f;
+	case 6://普通の赤
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.02f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 100;
+		enemy->radius = 0.5f;
+	case 7://大きいの赤
+		enemy->HP = 1.0f;
+		enemy->Speed = 0.02f;
+		enemy->material_color = { 3.0f,1.5,1.5f,1.0f };
+		enemy->AnimSpeed = 2.0f;
+		enemy->EnemyMoney = 100;
+		enemy->radius = 1.0f;
 		break;
 	}
 	// 色保存用
@@ -351,6 +351,18 @@ void EnemyGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	case 3:
 		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_low_v001.fbx");
+		break;
+	case 4:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_mid_blue_v001.fbx");
+		break;
+	case 5:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_high_bluev002.fbx");
+		break;
+	case 6:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_mid_redv001.fbx");
+		break;
+	case 7:
+		EnemyModel = ResourceManager::Instance().LoadModelResource(graphics.GetDevice(), ".\\resources\\Model\\jank\\jank_high_redv002.fbx");
 		break;
 	}
 

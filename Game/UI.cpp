@@ -107,6 +107,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		break;
 	case 3:
 		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\pause.png");
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\gear.png");
 		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
 	case 4:
@@ -173,7 +174,15 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->Uisize_[2] = { 45,45 };
 		ui->UiColor = { 2.0f,2.0f,2.0f,1.0f };
 		break;
-
+	case 10:
+		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\Lmouse.png");
+		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\arrow.png");
+		ui->Uiposition_[0] = { 630,340 };
+		ui->Uisize_[0] = { 150,150 };
+		ui->Uiposition_[1] = { 1160,500 };
+		ui->Uisize_[1] = { 150,150 };
+		ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
+		break;
 	}
 	//ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
 }
@@ -286,6 +295,9 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 		ui->Uisize_[0] = { 60,20 };
 
 		ui->NumDelivery[9] = ui->price;
+		break;
+	case 3:
+		ui->Timer++;
 		break;
 	case 4:
 		ui->player_MAXHP = ui->NumDelivery[2];
@@ -505,6 +517,14 @@ void UiGraphicsComponent::Update(GameObject* gameobj)
 
 		}
 		break;
+	case 10:
+		ui->uitimer++;
+
+		
+		ui->UiColor.w = sin(ui->uitimer * 0.03);
+
+
+		break;
 	}
 }
 
@@ -544,6 +564,8 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 		if (ui->NumDelivery[5] == 1)
 		{
 			UiBase[0]->render(immediate_context, 0, 0, 1280.0f, 720.0f, 1.0f, 1.0f, 1.0f, 0.9f, (0));
+			UiBase[1]->render(immediate_context, 0 + (780/ 2), 400, 780,780, 1.0f, 1.0f, 1.0f, 0.9f, (ui->Timer), 0,0, 474, 474);
+			UiBase[1]->render(immediate_context, 1280-(780/2), 400, 780, 780, 1.0f, 1.0f, 1.0f, 0.9f, (ui->Timer), 0, 0, 474, 474);
 
 		}
 		break;
@@ -602,6 +624,16 @@ void UiGraphicsComponent::Render(GameObject* gameobj, float elapsedTime, ID3D11P
 				UiBase[1]->render(immediate_context, ui->Uiposition_[1].x, ui->Uiposition_[1].y + 50 * i, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 				Uiitem[i]->render(immediate_context, ui->Uiposition_[2].x, ui->Uiposition_[2].y + 50 * i, ui->Uisize_[2].x, ui->Uisize_[2].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 			}
+		}
+		break;
+	case 10:
+		if (ui->NumDelivery[3] < 1&&ui->NumDelivery[5] != 1)
+		{
+			UiBase[0]->render(immediate_context, ui->Uiposition_[0].x, ui->Uiposition_[0].y, ui->Uisize_[0].x, ui->Uisize_[0].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
+		}
+		if (ui->NumDelivery[4] < 1)
+		{
+			UiBase[1]->render(immediate_context, ui->Uiposition_[1].x, ui->Uiposition_[1].y, ui->Uisize_[1].x, ui->Uisize_[1].y, ui->UiColor.x, ui->UiColor.y, ui->UiColor.z, ui->UiColor.w, (0));
 		}
 		break;
 	}
