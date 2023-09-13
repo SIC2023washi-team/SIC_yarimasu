@@ -115,7 +115,7 @@ void UiGraphicsComponent::Initialize(GameObject* gameobj)
 		ui->UiColor = { 1.0f,1.0f,1.0f,1.0f };
 		break;
 	case 5:
-		UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\return.png");
+		//UiBase[0] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\return.png");
 		UiBase[1] = std::make_unique<sprite>(graphics.GetDevice(), L".\\resources\\Image\\SHOP.png");
 		ui->Uisize = { 130.0f, 60.0f };
 		ui->Uisize2 = { 400.0f, 30.0f };
